@@ -1,0 +1,18 @@
+# -*- mode: org -*-
+# Last modified: <2012-07-26 07:48:20 Thursday by richard>
+#+STARTUP: showall
+#+TITLE:   README
+
+* For.
+  This file is another repo for compatible with emacs 24.
+
+* Purpose.
+  At now, this project is used *ONLY* by me.
+  Who want to make it can be generally use can email me.
+
+* packages.
+  All packages will be put inside a customized folder.(that is to say, I
+  won't using elpa.)
+
+* Testing environment.
+  Archlinux(latest) + GNU Emacs 24.1.1
