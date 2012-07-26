@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-26 08:58:13 Thursday by richard>
+;; Last modified: <2012-07-26 09:01:21 Thursday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -33,7 +33,7 @@
 (require 'theme-settings)
 (require 'modeline-settings)
 (require 'font-settings)
-
+(require 'auto-color-settings)
 
 (provide 'emacs-dealM)
 ;; emacs-dealM ends here.
