@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-26 08:44:35 Thursday by richard>
+;; Last modified: <2012-07-26 08:58:13 Thursday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -26,7 +26,13 @@
 (add-to-list 'load-path settings-path-r)
 (add-to-list 'load-path plugins-path-r)
 
+
+
+;; Theme, color and fonts settings.
+;; ------------------------------------------------------------------
 (require 'theme-settings)
+(require 'modeline-settings)
+(require 'font-settings)
 
 
 (provide 'emacs-dealM)
