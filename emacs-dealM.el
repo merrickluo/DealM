@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-26 09:01:21 Thursday by richard>
+;; Last modified: <2012-07-26 09:21:01 Thursday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -26,6 +26,11 @@
 (add-to-list 'load-path settings-path-r)
 (add-to-list 'load-path plugins-path-r)
 
+
+
+;; tools
+;; ------------------------------------------------------------------
+(require 'git-settings)
 
 
 ;; Theme, color and fonts settings.

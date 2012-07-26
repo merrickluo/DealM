@@ -4,3 +4,6 @@
 [submodule "plugins/rainbow-mode"]
 	path = plugins/rainbow-mode
 	url = git://github.com/emacsmirror/rainbow-mode.git
+[submodule "plugins/magit"]
+	path = plugins/magit
+	url = git://github.com/magit/magit.git
