@@ -1,3 +1,6 @@
 [submodule "plugins/emacs-color-theme-solarized"]
 	path = plugins/emacs-color-theme-solarized
 	url = git://github.com/sellout/emacs-color-theme-solarized.git
+[submodule "plugins/rainbow-mode"]
+	path = plugins/rainbow-mode
+	url = git://github.com/emacsmirror/rainbow-mode.git
