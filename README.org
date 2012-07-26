@@ -1,10 +1,8 @@
 # -*- mode: org -*-
-# Last modified: <2012-07-26 07:48:20 Thursday by richard>
+# Last modified: <2012-07-26 13:11:42 Thursday by richard>
 #+STARTUP: showall
 #+TITLE:   README
 
-* For.
-  This file is another repo for compatible with emacs 24.
 
 * Purpose.
   At now, this project is used *ONLY* by me.
@@ -14,5 +12,17 @@
   All packages will be put inside a customized folder.(that is to say, I
   won't using elpa.)
 
+* Install procudure.
+  add emacs-dealM.el to your .emacs. that is to say:
+  add:
+
+  #+begin_src emacs-lisp :tangle yes
+  (load-file '/path/to/emacs-dealM.el)
+  #+end_src
+
 * Testing environment.
   Archlinux(latest) + GNU Emacs 24.1.1
+
+* emacs settings *ONLY* for emacs 24.
+  This file is another repo for compatible with emacs 24.
+  This project is a emacs 24 transport version for We Master Changes.
