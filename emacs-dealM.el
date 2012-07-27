@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-27 21:39:11 Friday by richard>
+;; Last modified: <2012-07-27 22:26:04 Friday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -50,6 +50,7 @@
 ;; ------------------------------------------------------------------
 (require 'default-behavior-settings)
 (require 'window-buffer-settings)
+(require 'edit-settings)
 
 
 ;; Programming settings

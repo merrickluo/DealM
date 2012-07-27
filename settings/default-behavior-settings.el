@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-27 08:24:08 Friday by richard>
+;; Last modified: <2012-07-27 22:53:32 Friday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -114,6 +114,17 @@
 ;; 先格式化再补全
 (setq tab-always-indent 'complete)
 
+
+;; 缩进设置
+;; 不用TAB字符来indent
+;; TAB 宽度设置为4
+(setq-default indent-tabs-mode nil)
+(setq tab-width 4)
+(setq tab-stop-list nil)
+(loop for x downfrom 40 to 1 do
+      (setq tab-stop-list (cons (* x tab-width) tab-stop-list)))
+;; Automatically add a line in the end of file
+(setq require-final-newline t)
 
 (provide 'default-behavior-settings)
 ;; default-behavior-settings ends here.

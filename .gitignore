@@ -4,3 +4,4 @@
 *.elc
 *.ropeproject*
 *.pyc
+*.emacs.desktop
