@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-27 08:12:58 Friday by richard>
+;; Last modified: <2012-07-27 08:24:33 Friday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -19,8 +19,6 @@
   (concat emacs-root-path "settings/") "Personel prefer setting of lisp package")
 (defconst template-path-r
   (concat emacs-root-path "templates/") "Path for template")
-
-(setq default-directory emacs-root-path)
 
 ;; add load path
 (add-to-list 'load-path settings-path-r)
@@ -42,6 +40,12 @@
 (require 'font-settings)
 (require 'auto-color-settings)
 (require 'encoding-settings)
+
+
+;; default emacs behavior settings(keys and common settings)
+;; ------------------------------------------------------------------
+(require 'default-behavior-settings)
+
 
 (provide 'emacs-dealM)
 ;; emacs-dealM ends here.
