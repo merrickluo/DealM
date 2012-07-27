@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-26 12:51:50 Thursday by richard>
+;; Last modified: <2012-07-27 08:12:58 Friday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -35,12 +35,13 @@
 (require 'unicode-settings)
 
 
-;; Theme, color and fonts settings.
+;; Theme, color and fonts, encoding settings.
 ;; ------------------------------------------------------------------
 (require 'theme-settings)
 (require 'modeline-settings)
 (require 'font-settings)
 (require 'auto-color-settings)
+(require 'encoding-settings)
 
 (provide 'emacs-dealM)
 ;; emacs-dealM ends here.
