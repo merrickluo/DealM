@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-27 08:32:22 Friday by richard>
+;; Last modified: <2012-07-27 21:39:11 Friday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -32,6 +32,8 @@
 (require 'yasnippet-settings)
 (require 'unicode-settings)
 (require 'command-frequence)
+(require 'auto-complete-setting)
+(require 'flymake-settings)
 
 
 
@@ -48,6 +50,11 @@
 ;; ------------------------------------------------------------------
 (require 'default-behavior-settings)
 (require 'window-buffer-settings)
+
+
+;; Programming settings
+;; ------------------------------------------------------------------
+(require 'python-settings)
 
 (provide 'emacs-dealM)
 ;; emacs-dealM ends here.

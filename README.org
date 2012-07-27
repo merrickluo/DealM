@@ -1,5 +1,5 @@
 # -*- mode: org -*-
-# Last modified: <2012-07-26 13:15:32 Thursday by richard>
+# Last modified: <2012-07-27 21:49:18 Friday by richard>
 #+STARTUP: showall
 #+TITLE:   README
 
@@ -23,13 +23,44 @@
 * Testing environment.
   Archlinux(latest) + GNU Emacs 24.1.1
 
-* You need to add this thing by your own.
+* Something out of the project.
+  You may need to add this thing by your own.
   1. fonts:
      Inconsolata for English.
      Yayuan for Chinese.
-  2. [[http://sourceforge.net/projects/python-xlib/][python-xlib]]:
-     For input-chinese use.
+  2. Install python package by your own:
+     - for ibus-mode
+       [[http://sourceforge.net/projects/python-xlib/][python-xlib][xlib]]
+     - python plugins:
+       [[][ropemacs]]
+       [[][rope]]
+       [[][pymacs]]
+       [[][pyflake]]
+       [[][pep8]]
+       [[][pylint]]
+       [[][epylint]]
+       ATTENTION:You need to make the pymacs by your own.
+  3. Flymake:
+     You need to make pychecker.sh executable.
+     #+begin_src shell
+     chmod +x plugins/pychecker.sh
+     #+end_src
 
+
+
+* Package description
+
+** Python
+    - Ropemacs (Custom) : A refactoring library
+    - Auto Completion with rope (Custom) : Tested to work well with Rope
+    - Flymake + pyflakes (Custom): Highlight errors on the fly, improved
+      from the standard version
+    - Virtualenv : Original, In-development tool for using virtualenv in
+      emacs.
+    - Custom Yasnippet Snippets
+    - Cython Mode: a mode for highlighting cython files
+    - latest python.el (fgallina/python.el)
+    - nosetests integration (nose.el)
 
 * about this project
   This project is about emacs settings *ONLY* for emacs 24.
