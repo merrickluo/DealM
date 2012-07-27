@@ -47,7 +47,7 @@
 ;; default emacs behavior settings(keys and common settings)
 ;; ------------------------------------------------------------------
 (require 'default-behavior-settings)
-
+(require 'window-buffer-settings)
 
 (provide 'emacs-dealM)
 ;; emacs-dealM ends here.
