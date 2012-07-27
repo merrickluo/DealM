@@ -2,3 +2,5 @@
 *#
 *TAGS*
 *.elc
+*.ropeproject*
+*.pyc
