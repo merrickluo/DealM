@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-27 08:24:33 Friday by richard>
+;; Last modified: <2012-07-27 08:32:22 Friday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -31,6 +31,8 @@
 (require 'git-settings)
 (require 'yasnippet-settings)
 (require 'unicode-settings)
+(require 'command-frequence)
+
 
 
 ;; Theme, color and fonts, encoding settings.
