@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-27 22:26:04 Friday by richard>
+;; Last modified: <2012-07-28 09:00:40 Saturday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -34,6 +34,7 @@
 (require 'command-frequence)
 (require 'auto-complete-setting)
 (require 'flymake-settings)
+(require 'compile-settings)
 
 
 

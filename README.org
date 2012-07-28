@@ -1,5 +1,5 @@
 # -*- mode: org -*-
-# Last modified: <2012-07-27 21:49:18 Friday by richard>
+# Last modified: <2012-07-28 10:06:24 Saturday by richard>
 #+STARTUP: showall
 #+TITLE:   README
 
@@ -47,20 +47,34 @@
      #+end_src
 
 
-
 * Package description
 
 ** Python
     - Ropemacs (Custom) : A refactoring library
     - Auto Completion with rope (Custom) : Tested to work well with Rope
-    - Flymake + pyflakes (Custom): Highlight errors on the fly, improved
-      from the standard version
+    - Flymake
+      - latest flymake package
+        It contains pep8, epylint, and pyflake, run them all.
     - Virtualenv : Original, In-development tool for using virtualenv in
       emacs.
     - Custom Yasnippet Snippets
     - Cython Mode: a mode for highlighting cython files
     - latest python.el (fgallina/python.el)
     - nosetests integration (nose.el)
+    - It use nose tests to test buffer.
+
+** Compile-settings
+   - mainly reference the Drew Adams' package.
+     package info:
+     compile-settings:
+     + compile+
+       * compile-
+         - fit-frame
+         - frame-fns
+       * compile (emacs built-in package)
+       * misc-fns
+     + compile-misc(add some addition function)
+       * smart-compile
 
 * about this project
   This project is about emacs settings *ONLY* for emacs 24.
