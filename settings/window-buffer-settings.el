@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-28 13:28:25 Saturday by richard>
+;; Last modified: <2012-07-28 13:43:10 Saturday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -100,6 +100,16 @@ otherwise restore."
              (split-window-vertically))))))
 
 (global-set-key [(meta return)]       ' smart-window-customize)
+
+
+;; Wheel settings
+;; ==================================================================
+
+;; Wheel up.
+(global-set-key (kbd "<C-mouse-4>") 'font-small)
+
+;; Wheel down.
+(global-set-key (kbd "<C-mouse-5>") 'font-big)
 
 
 (provide 'window-buffer-settings)
