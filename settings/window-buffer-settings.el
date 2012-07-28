@@ -1,13 +1,52 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-27 08:22:07 Friday by richard>
+;; Last modified: <2012-07-28 13:09:49 Saturday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
 ;; Author: Richard Wong
 ;; Email: chao787@gmail.com
 
-;; Version: 0.1
+;; Version: 0.2
 ;; PUBLIC LICENSE: GPLv3
+
+
+;; Buffer settings
+;; ------------------------------------------------------------------
+;;recentf
+(require 'recentf)
+(recentf-mode 1)
+(setq recentf-max-saved-items 500)
+(setq recentf-max-menu-items 60)
+
+(defun xsteve-ido-choose-from-recentf ()
+  "Use ido to select a recently opened file from the `recentf-list'"
+  (interactive)
+  (let ((home (expand-file-name (getenv "HOME"))))
+    (find-file
+     (ido-completing-read "Recentf open: "
+                          (mapcar (lambda (path)
+                                    (replace-regexp-in-string home "~" path))
+                                  recentf-list)
+                          nil t))))
+(defalias 'recent-files 'recentf-open-files "Open recent file list.")
+
+
+(global-set-key (kbd "C-M-o") 'xsteve-ido-choose-from-recentf)
+;; Immediately close the current buffer.
+(global-set-key (kbd "C-x k")   'kill-this-buffer)
+
+
+;; buffer-move settings.
+(require 'buffer-move)
+(global-set-key [M-S-up]    'buf-move-up)
+(global-set-key [M-S-down]  'buf-move-down)
+(global-set-key [M-S-left]  'buf-move-left)
+(global-set-key [M-S-right] 'buf-move-right)
+
+(global-set-key [M-left]    'windmove-left)
+(global-set-key [M-right]   'windmove-right)
+(global-set-key [M-up]      'windmove-up)
+(global-set-key [M-down]    'windmove-down)
 
 
 ;; fullscreen settings
@@ -28,6 +67,26 @@
 
 (fullscreen)
 
+;; Window settings
+;; ------------------------------------------------------------------
+(defvar temp-window-configuration nil "store temp window configuration.")
+
+(defun smart-window-customize()
+  "Delete all other-window when not occupy whole window.
+otherwise restore."
+  (interactive)
+  (let ((wincount 0))
+    (walk-windows (lambda(w)
+                    (setq wincount (1+ wincount))))
+    (cond ((> wincount 1)
+           (setq temp-window-configuration (current-window-configuration))
+           (delete-other-windows))
+          ((= wincount 1)
+           (if temp-window-configuration
+               (set-window-configuration temp-window-configuration)
+             (split-window-vertically))))))
+
+(global-set-key [(meta return)]       ' smart-window-customize)
 
 
 (provide 'window-buffer-settings)

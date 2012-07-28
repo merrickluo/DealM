@@ -1,12 +1,7 @@
 # -*- mode: org -*-
-# Last modified: <2012-07-28 10:06:24 Saturday by richard>
+# Last modified: <2012-07-28 13:16:10 Saturday by richard>
 #+STARTUP: showall
 #+TITLE:   README
-
-
-* Purpose.
-  At now, this project is used *ONLY* by me.
-  Who want to make it can be generally use can email me.
 
 * packages.
   All packages will be put inside a customized folder.(that is to say, I
@@ -75,6 +70,12 @@
        * misc-fns
      + compile-misc(add some addition function)
        * smart-compile
+
+* Known bugs:
+  desktop and pymacs starting bug.
+  temp solve method:
+  1. kill Pymacs buffer and restart emacs.
+  2. disable desktop
 
 * about this project
   This project is about emacs settings *ONLY* for emacs 24.

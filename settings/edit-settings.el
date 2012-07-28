@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-27 23:28:59 Friday by richard>
+;; Last modified: <2012-07-28 13:06:54 Saturday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -66,8 +66,36 @@
 (global-set-key (kbd "M-q")          'fill-paragraph-justify)
 (global-set-key (kbd "<escape> SPC") 'just-one-space)
 
+;; pager: Fix windows lines bugs in scroll-up and down.
+(require 'pager)
+(global-set-key "\C-v"	   'pager-page-down)
+(global-set-key [next] 	   'pager-page-down)
+(global-set-key "\ev"	   'pager-page-up)
+(global-set-key [prior]	   'pager-page-up)
+(global-set-key '[M-up]    'pager-row-up)
+(global-set-key '[M-kp-8]  'pager-row-up)
+(global-set-key '[M-down]  'pager-row-down)
+(global-set-key '[M-kp-2]  'pager-row-down)
+
+(global-set-key [(shift home)] '(lambda () (interactive) (other-window -1)))
+(global-set-key [(shift end)]  '(lambda () (interactive) (other-window 1)))
+
+(global-set-key '[kp-home]  'beginning-of-buffer) ; [Home]
+(global-set-key '[home]     'beginning-of-buffer) ; [Home]
+(global-set-key '[kp-end]   'end-of-buffer)       ; [End]
+(global-set-key '[end]      'end-of-buffer)       ; [End]
+
 (if window-system
     (global-set-key (kbd "C-z")      'undo))
+
+(defun revert-buffer-no-confirm ()
+  "Revert buffer without confirmation."
+  (interactive)
+  (revert-buffer t t))
+
+(global-set-key (kbd "C-x u")    'revert-buffer-no-confirm)
+(global-set-key (kbd "C-x M-K")  'revert-buffer-with-gbk)
+(global-set-key (kbd "C-x U")    'revert-buffer-with-coding-system-no-confirm-sb)
 
 
 ;; registers.
