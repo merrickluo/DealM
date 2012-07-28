@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-27 23:27:24 Friday by richard>
+;; Last modified: <2012-07-28 08:37:52 Saturday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -642,6 +642,13 @@ otherwise, change current buffer to that window.
             nil
           (funcall pasteMe))
       (funcall pasteMe))))
+
+;;;###autoload
+(defmacro am-def-active-fun (symbol &optional fun-name)
+  "Make definition of function judge variable is active or not."
+  `(defun ,(if fun-name fun-name symbol) ()
+     ,(concat "`" (symbol-name symbol) "' is t or not.")
+     (am-variable-is-t ',symbol)))
 
 (am-def-active-fun rm-mark-active rm-mark-active)
 
