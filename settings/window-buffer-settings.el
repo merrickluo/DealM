@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-28 13:09:49 Saturday by richard>
+;; Last modified: <2012-07-28 13:28:25 Saturday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -47,6 +47,19 @@
 (global-set-key [M-right]   'windmove-right)
 (global-set-key [M-up]      'windmove-up)
 (global-set-key [M-down]    'windmove-down)
+
+;; select buffer-stable one
+(global-set-key (kbd "M-N") 'next-buffer)
+(global-set-key (kbd "M-P") 'previous-buffer)
+
+(defun switch-to-other-buffer ()
+  "切换到最近访问的buffer"
+  (interactive)
+  (unless (minibufferp)
+    (switch-to-buffer (other-buffer))))
+
+(global-set-key (kbd "M-'") 'previous-buffer)
+
 
 
 ;; fullscreen settings

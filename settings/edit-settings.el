@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-28 13:06:54 Saturday by richard>
+;; Last modified: <2012-07-28 13:39:48 Saturday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -44,7 +44,6 @@
 (global-set-key (kbd "M-C-k")        'kill-whole-paragraph)
 (global-set-key (kbd "M-C-y")        'browse-kill-ring)
 (global-set-key (kbd "M-w")          'smart-copy)
-(global-set-key (kbd "C-z")          'undo)
 (global-set-key (kbd "M-k")          'kill-paragraph)
 (global-set-key (kbd "M-C")          'copy-whole-paragraph)
 (global-set-key (kbd "C-M-w")        'smart-insert-line)
@@ -88,6 +87,12 @@
 (if window-system
     (global-set-key (kbd "C-z")      'undo))
 
+;; replace global keys
+(global-set-key (kbd "M-r")     'query-replace)
+(global-set-key (kbd "C-x M-r") 'query-replace-regexp)
+(global-set-key (kbd "C-j")     'goto-line)
+(global-set-key (kbd "C-x ?")   'help-command)
+
 (defun revert-buffer-no-confirm ()
   "Revert buffer without confirmation."
   (interactive)
@@ -95,15 +100,25 @@
 
 (global-set-key (kbd "C-x u")    'revert-buffer-no-confirm)
 (global-set-key (kbd "C-x M-K")  'revert-buffer-with-gbk)
-(global-set-key (kbd "C-x U")    'revert-buffer-with-coding-system-no-confirm-sb)
+(global-set-key (kbd "C-x U")    'revert-buffer-with-coding-system-no-confirm)
 
-
-;; registers.
+;; Fastnav
 ;; ------------------------------------------------------------------
-(set-register ?e '(file . "~/.emacs"))               ;; C-x r j e: register jump to the .emacs(home).
-(set-register ?w '(file . "~/.words.org"))           ;; C-x r j w: register jump to words.
-(set-register ?t '(file . "/tmp/test.py"))           ;; C-x r j t: goto test python file.
+(autoload 'fastnav-sprint-forward "fastnav" "\
+Performs a sequence of jumping forward to the next character
+matching the keyboard event.
 
+\(fn ARG)" t nil)
+
+(autoload 'fastnav-sprint-backward "fastnav" "\
+Performs a sequence of jumping backward to the next character
+matching the keyboard event.
+
+\(fn ARG)" t nil)
+
+(global-set-key "\M-S" 'fastnav-sprint-backward)
+;; an isearch style.
+(global-set-key "\M-s" 'fastnav-sprint-forward)
 
 
 

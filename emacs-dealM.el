@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-28 12:09:00 Saturday by richard>
+;; Last modified: <2012-07-28 13:40:03 Saturday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -61,6 +61,14 @@
 ;; Programming settings
 ;; ------------------------------------------------------------------
 (require 'python-settings)
+
+
+
+;; registers.
+;; ------------------------------------------------------------------
+(set-register ?e '(file . "~/.emacs"))               ;; C-x r j e: register jump to the .emacs(home).
+(set-register ?w '(file . "~/.words.org"))           ;; C-x r j w: register jump to words.
+(set-register ?t '(file . "/tmp/test.py"))           ;; C-x r j t: goto test python file.
 
 (provide 'emacs-dealM)
 ;; emacs-dealM ends here.
