@@ -1,11 +1,11 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-27 08:27:52 Friday by richard>
+;; Last modified: <2012-07-28 11:27:37 Saturday by richard>
 
 ;; Author: Unknown
 
 
 (require 'desktop)
-;; (require 'display-line-number)
+(require 'display-line-number)
 
 (defvar cf-frequence-threshrold 1 "*显示命令报告的时候命令频率大于等于该值的时候才显示")
 (defvar cf-stat-self-insert-command nil "*Non-nil means also statistic `self-insert-command'")

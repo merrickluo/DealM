@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-28 11:10:49 Saturday by richard>
+;; Last modified: <2012-07-28 11:25:09 Saturday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -37,6 +37,7 @@
 (require 'compile-settings)
 (require 'auto-insert-settings)
 (require 'autopair-settings)
+(require 'desktop-settings)
 
 
 
