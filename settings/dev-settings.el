@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-29 22:38:33 Sunday by richard>
+;; Last modified: <2012-07-29 23:39:50 Sunday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -20,7 +20,18 @@
      (set-face-background 'highlight-indentation-current-column-face "grey50")
      ))
 
+
+;; Find-things-fast settings.
+;; ------------------------------------------------------------------
+(add-to-list 'load-path (concat plugins-path-r "find-things-fast"))
+(autoload 'ftf-grepsource    "find-things-fast" "" t)
+(autoload 'ftf-find-file     "find-things-fast" "" t)
+(autoload 'ftf-compile       "find-things-fast" "" t)
+(autoload 'ftf-gdb           "find-things-fast" "" t)
+(autoload 'ftf-add-filetypes "find-things-fast")
 
+(global-set-key '[f1] 'ftf-find-file)
+(global-set-key '[f2] 'ftf-grepsource)
 
 
 ;; parenthses settings
@@ -59,6 +70,9 @@
 (defun lisp-short-cut()
   "Lisp Specific mode short-cut key settings."
   (start-program-short-cut)
+
+  (ftf-add-filetypes '("*.el" "*.elisp"))
+
   (local-set-key (kbd "C-c C-k") 'kill-function)
   (local-set-key (kbd "C-M-h")   'mark-function)
   (local-set-key (kbd "C-c D")   'edebug-defun)
