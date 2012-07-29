@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-29 22:16:34 Sunday by richard>
+;; Last modified: <2012-07-30 00:14:15 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -140,6 +140,12 @@ matching the keyboard event.
 ;; align settings.
 (global-set-key (kbd "C-x a")   'align-current)
 (global-set-key (kbd "C-x M-a") 'align-regexp)
+
+;; hungry delete
+;; ------------------------------------------------------------------
+(autoload 'turn-on-hungry-delete-mode "hungry-delete")
+(define-globalized-minor-mode global-hungry-delete-mode hungry-delete-mode turn-on-hungry-delete-mode)
+(global-hungry-delete-mode t)
 
 
 ;; smart-operator

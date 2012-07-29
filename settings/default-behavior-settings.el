@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-29 22:23:21 Sunday by richard>
+;; Last modified: <2012-07-29 23:55:20 Sunday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -126,11 +126,11 @@
 ;; Automatically add a line in the end of file
 (setq require-final-newline t)
 
+;; More generic highlight settings.
+(require 'generic-x)
 ;; time-stamp settings. Change modified style
 (add-hook 'write-file-hooks 'time-stamp)
 (setq time-stamp-start "Last modified:[ \t]+\\\\?[\"<]+")
-
-
 (setq time-stamp-format "%04y-%02m-%02d %02H:%02M:%02S %:a by %u")
 (setq time-stamp-end "\\\\?[\">]")
 

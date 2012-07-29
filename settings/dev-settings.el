@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-29 23:39:50 Sunday by richard>
+;; Last modified: <2012-07-29 23:49:21 Sunday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -61,6 +61,9 @@
   (local-set-key (kbd "C-c RET") 'compile-buffer)
   (local-set-key (kbd "C-c C-c") 'comment)
   (add-to-list 'write-file-functions 'delete-trailing-whitespace)
+  (linum-mode t)
+  ;; highlight settings by mode.
+  (hl-line-mode t)
   (highlight-parentheses-mode t)
   (highlight-indentation-mode t))
 

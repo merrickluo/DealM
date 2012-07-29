@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-27 17:59:42 Friday by richard>
+;; Last modified: <2012-07-30 00:41:43 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -28,7 +28,7 @@
 
 
 ;; custom keybindings to use tab, enter and up and down arrows
-(define-key ac-complete-mode-map "\t" 'ac-expand)
+(define-key ac-complete-mode-map (kbd "<tab>") 'ac-expand)
 (define-key ac-complete-mode-map "\r" 'ac-complete)
 (define-key ac-complete-mode-map "\M-n" 'ac-next)
 (define-key ac-complete-mode-map "\M-p" 'ac-previous)
