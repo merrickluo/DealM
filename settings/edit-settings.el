@@ -123,7 +123,6 @@ matching the keyboard event.
 
 ;; goto settings.
 ;; ------------------------------------------------------------------
-;; (autoload 'def-goto "edit-functions")
 
 (def-position-command goto-plugins
   (kbd "C-x g p") plugins-path-r)

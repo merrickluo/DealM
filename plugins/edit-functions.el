@@ -9,6 +9,8 @@
 ;; Version: 1.4
 ;; PUBLIC LICENSE: GPLv3
 
+(require 'ahei-misc)
+
 ;;;###autoload
 (defun gbk-to-utf-8()
   "Set current buffer from gbk to UTF-8"
@@ -69,12 +71,13 @@ to access the high privilige files...."
   (if (rm-mark-active)
       (call-interactively 'rm-kill-region)
     (if mark-active
-        (if cua--rectangle
+        (if (and (boundp 'use-cua) cua--rectangle)
             (progn
               (cua-cut-rectangle t)
               (cua-cancel))
           (call-interactively 'kill-region))
       (call-interactively 'backward-kill-word))))
+
 
 ;;;###autoload
 (defun mark-whole-sexp (&optional not-whole)
