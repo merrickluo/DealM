@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-28 14:14:43 Saturday by richard>
+;; Last modified: <2012-07-29 22:38:33 Sunday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -20,6 +20,24 @@
      (set-face-background 'highlight-indentation-current-column-face "grey50")
      ))
 
+
+
+
+;; parenthses settings
+;; ------------------------------------------------------------------
+(autoload 'highlight-parentheses-mode "highlight-parentheses")
+
+(setq hl-paren-colors '("red" "yellow" "cyan" "magenta" "green" "red"))
+
+(setq paren-message-show-linenumber 'absolute)
+(autoload 'paren-activate                         "mic-paren" "" t)
+(autoload 'paren-deactivate                       "mic-paren" "" t)
+(autoload 'paren-toggle-matching-paired-delimiter "mic-paren" "" t)
+(autoload 'paren-toggle-matching-quoted-paren     "mic-paren" "" t)
+(autoload 'paren-toggle-open-paren-context        "mic-paren" "" t)
+(show-paren-mode t)
+
+
 
 ;;----------------------------------------------------------
 ;; Mode specific shortcut settings.
@@ -32,6 +50,7 @@
   (local-set-key (kbd "C-c RET") 'compile-buffer)
   (local-set-key (kbd "C-c C-c") 'comment)
   (add-to-list 'write-file-functions 'delete-trailing-whitespace)
+  (highlight-parentheses-mode t)
   (highlight-indentation-mode t))
 
 
@@ -56,6 +75,7 @@
   (start-program-short-cut)
   (smart-operator-mode-on)
 
+  (paren-toggle-open-paren-context 1)
   ;; Cedet settings.
   ;; (require 'cedet-settings)
   (local-set-key (kbd "C-c C-k") 'kill-function)
@@ -105,6 +125,9 @@
   "shell mode short-cut key settings."
   (start-program-short-cut)
   ;; compatible with flyspell.
+
+  (paren-toggle-matching-quoted-paren 1)
+  (paren-toggle-matching-paired-delimiter 1)
   (ac-flyspell-workaround))
 
 ;; js2-mode settings

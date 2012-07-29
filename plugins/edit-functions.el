@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-28 08:37:52 Saturday by richard>
+;; Last modified: <2012-07-29 22:12:59 Sunday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -663,6 +663,28 @@ otherwise, change current buffer to that window.
        (interactive)
        (dired ,position))
      (global-set-key ,key ',fun-name)))
+
+;;;###autoload
+(defun goto-paren ()
+  "跳到匹配的括号"
+  (interactive)
+  (cond
+   ((looking-at "[ \t]*[[\"({]") (forward-sexp) (backward-char))
+   ((or (looking-at "[]\")}]") (looking-back "[]\")}][ \t]*")) (if (< (point) (point-max)) (forward-char)) (backward-sexp))
+   (t (message "找不到匹配的括号"))))
+
+;;;###autoload
+(defun ywb-indent-accoding-to-paren ()
+  "按块([]{}())来格式化代码"
+  (interactive)
+  (let ((prev-char (char-to-string (preceding-char)))
+        (next-char (char-to-string (following-char)))
+        (pos (point)))
+    (save-excursion
+      (cond ((string-match "[[{(<]" next-char)
+             (indent-region pos (progn (forward-sexp 1) (point)) nil))
+            ((string-match "[\]})>]" prev-char)
+             (indent-region (progn (backward-sexp 1) (point)) pos nil))))))
 
 
 (provide 'edit-functions)

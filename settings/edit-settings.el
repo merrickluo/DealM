@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-28 13:39:48 Saturday by richard>
+;; Last modified: <2012-07-29 22:16:34 Sunday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -92,13 +92,14 @@
 (global-set-key (kbd "C-x M-r") 'query-replace-regexp)
 (global-set-key (kbd "C-j")     'goto-line)
 (global-set-key (kbd "C-x ?")   'help-command)
+(global-set-key (kbd "C-x /")   'help-command)
 
-(defun revert-buffer-no-confirm ()
-  "Revert buffer without confirmation."
-  (interactive)
-  (revert-buffer t t))
 
-(global-set-key (kbd "C-x u")    'revert-buffer-no-confirm)
+(global-set-key (kbd "C-x u")
+                '(lambda ()
+                   "Revert buffer without confirmation."
+                   (interactive)
+                   (revert-buffer t t)))
 (global-set-key (kbd "C-x M-K")  'revert-buffer-with-gbk)
 (global-set-key (kbd "C-x U")    'revert-buffer-with-coding-system-no-confirm)
 
@@ -133,6 +134,8 @@ matching the keyboard event.
 (def-position-command goto-tmp
   (kbd "C-x g t") "/tmp")
 
+(global-set-key (kbd "C-]")     'goto-paren)
+(global-set-key (kbd "C-M-]")   'ywb-indent-accoding-to-paren)
 
 ;; align settings.
 (global-set-key (kbd "C-x a")   'align-current)
