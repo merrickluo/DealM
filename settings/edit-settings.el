@@ -120,6 +120,24 @@ matching the keyboard event.
 ;; an isearch style.
 (global-set-key "\M-s" 'fastnav-sprint-forward)
 
+
+;; goto settings.
+;; ------------------------------------------------------------------
+;; (autoload 'def-goto "edit-functions")
+
+(def-position-command goto-plugins
+  (kbd "C-x g p") plugins-path-r)
+(def-position-command goto-settings
+  (kbd "C-x g s") settings-path-r)
+(def-position-command goto-emacs-root
+  (kbd "C-x g e") emacs-root-path)
+(def-position-command goto-tmp
+  (kbd "C-x g t") "/tmp")
+
+
+;; align settings.
+(global-set-key (kbd "C-x a")   'align-current)
+(global-set-key (kbd "C-x M-a") 'align-regexp)
 
 
 ;; smart-operator

@@ -652,6 +652,16 @@ otherwise, change current buffer to that window.
 
 (am-def-active-fun rm-mark-active rm-mark-active)
 
+;;;###autoload
+(defmacro def-position-command (fun-name key position)
+  "Add postion command to specific key and position."
+  `(progn
+     (defun ,fun-name ()
+       (interactive)
+       (dired ,position))
+     (global-set-key ,key ',fun-name)))
+
+
 (provide 'edit-functions)
 ;; edit-functions ends here.
 ;;;

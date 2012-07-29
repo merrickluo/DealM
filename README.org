@@ -72,10 +72,15 @@
        * smart-compile
 
 * Known bugs:
-  desktop and pymacs starting bug.
-  temp solve method:
-  1. kill Pymacs buffer and restart emacs.
-  2. disable desktop
+**  desktop and pymacs starting bug.
+    temp solve method:
+    1. kill Pymacs buffer and restart emacs.
+    2. disable desktop.
+** Autocomplete in elisp bug.
+   autocomplete will stuck emacs when using auto-complete in elisp
+   especially when starts a new string.
+   temp solve method:
+       stop autocomplete auto-complete when editing elisp.
 
 * about this project
   This project is about emacs settings *ONLY* for emacs 24.
