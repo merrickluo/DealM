@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-29 23:49:21 Sunday by richard>
+;; Last modified: <2012-07-30 02:20:25 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -19,6 +19,14 @@
      (set-face-background 'highlight-indentation-face "grey30")
      (set-face-background 'highlight-indentation-current-column-face "grey50")
      ))
+
+;; show-wspace settings.
+;; ------------------------------------------------------------------
+(autoload 'toggle-highlight-tabs "show-wspace" "" t)
+(autoload 'toggle-highlight-hard-spaces "show-wspace" "" t)
+(autoload 'toggle-highlight-other-chars "show-wspace" "" t)
+(autoload 'toggle-highlight-trailing-whitespace "show-wspace" "" t)
+
 
 
 ;; Find-things-fast settings.
@@ -64,9 +72,12 @@
   (linum-mode t)
   ;; highlight settings by mode.
   (hl-line-mode t)
+  (toggle-highlight-trailing-whitespace)
+  (toggle-highlight-tabs)
+  (toggle-highlight-hard-spaces)
+  (toggle-highlight-other-chars)
   (highlight-parentheses-mode t)
   (highlight-indentation-mode t))
-
 
 ;; lisp short cut Settings.
 ;; ==================================================================
