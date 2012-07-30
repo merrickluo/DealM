@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-29 21:31:52 Sunday by richard>
+;; Last modified: <2012-07-30 15:43:02 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -63,6 +63,7 @@
 ;; ------------------------------------------------------------------
 (require 'dev-settings)
 (require 'python-settings)
+(require 'molo-settings)
 
 
 ;; registers.
