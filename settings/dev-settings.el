@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-30 02:20:25 Monday by richard>
+;; Last modified: <2012-07-30 12:13:35 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -27,6 +27,20 @@
 (autoload 'toggle-highlight-other-chars "show-wspace" "" t)
 (autoload 'toggle-highlight-trailing-whitespace "show-wspace" "" t)
 
+;; watch specific word color
+;; ------------------------------------------------------------------
+(defun esk-add-watchwords ()
+  (font-lock-add-keywords
+   nil '(("\\<\\(FIX\\(ME\\)?\\|TODO\\|HACK\\|REFACTOR\\|NOCOMMIT\\)"
+          1 font-lock-warning-face t))))
+
+(defun esk-pretty-lambdas ()
+  (font-lock-add-keywords
+   nil `(("(?\\(lambda\\>\\)"
+          (0 (progn (compose-region (match-beginning 1) (match-end 1)
+                                    ,(make-char 'greek-iso8859-7 107))
+                    nil))))))
+
 
 
 ;; Find-things-fast settings.
@@ -40,6 +54,7 @@
 
 (global-set-key '[f1] 'ftf-find-file)
 (global-set-key '[f2] 'ftf-grepsource)
+(define-key dired-mode-map '[f1] 'ftf-find-file)
 
 
 ;; parenthses settings
@@ -77,7 +92,9 @@
   (toggle-highlight-hard-spaces)
   (toggle-highlight-other-chars)
   (highlight-parentheses-mode t)
-  (highlight-indentation-mode t))
+  (highlight-indentation-mode t)
+  (esk-add-watchwords)
+  (esk-pretty-lambdas))
 
 ;; lisp short cut Settings.
 ;; ==================================================================
