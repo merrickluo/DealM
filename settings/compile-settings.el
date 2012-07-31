@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-28 10:11:11 Saturday by richard>
+;; Last modified: <2012-07-31 11:24:47 Tuesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -12,18 +12,21 @@
 
 (autoload 'smart-compile "smart-compile" "" t)
 
+
+;; compile-misc need smart compile inside.
 (autoload 'compile-buffer "compile-misc" "" t)
-(autoload 'run-program "compile-misc" "" t)
-(autoload 'make "compile-misc" "" t)
-(autoload 'make-check "compile-misc" "" t)
-(autoload 'make-clean "compile-misc" "" t)
-(autoload 'ant "compile-misc" "" t)
-(autoload 'ant-clean "compile-misc" "" t)
-(autoload 'ant-test "compile-misc" "" t)
-(autoload 'make-install "compile-misc" "" t)
+(autoload 'run-program    "compile-misc" "" t)
+(autoload 'make           "compile-misc" "" t)
+(autoload 'make-check     "compile-misc" "" t)
+(autoload 'make-clean     "compile-misc" "" t)
+(autoload 'ant            "compile-misc" "" t)
+(autoload 'ant-clean      "compile-misc" "" t)
+(autoload 'ant-test       "compile-misc" "" t)
+(autoload 'make-install   "compile-misc" "" t)
 
 
-
+(eval-after-load "smart-compile"
+                '(add-to-list 'smart-compile-alist '(python-mode    .  "python2 %f")))
 
 (defun compile-settings ()
   "Settings for `compile'."
