@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-30 17:07:36 Monday by richard>
+;; Last modified: <2012-07-31 17:18:14 Tuesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -9,6 +9,7 @@
 ;; Version: 0.1
 ;; PUBLIC LICENSE: GPLv3
 
+;; molo is short for Markdown Org latex and orz..
 ;; file contains about all org-related settings.
 ;; 1. markdown-mode settings.
 ;; 2. org-mode settings.
@@ -30,9 +31,65 @@
   (setq org-startup-folded nil
         org-cycle-include-plain-lists t
         org-export-kill-product-buffer-when-displayed t)
-  (setq org-export-latex-classes nil)
+
+  ;; #+LaTeX_CLASS: beamer in org files
+  (unless (boundp 'org-export-latex-classes)
+    (setq org-export-latex-classes nil))
   (add-to-list 'org-export-latex-classes
-               '("latex-org-report-article"
+               ;; beamer class, for presentations
+               '("beamer"
+                 "\\documentclass[11pt]{beamer}\n
+      % UTF-8 encoding\n
+      \\mode<{{{beamermode}}}>\n
+      \\usetheme{{{{beamertheme}}}}\n
+      \\usecolortheme{{{{beamercolortheme}}}}\n
+      \\beamertemplateballitem\n
+      \\setbeameroption{show notes}
+      \\usepackage{xeCJK}
+      \\usepackage[utf8]{inputenc}\n
+      \\usepackage[T1]{fontenc}\n
+      \\usepackage{hyperref}\n
+      \\usepackage{color}
+      \\usepackage{listings}
+      \\setCJKmainfont{Microsoft YaHei}
+      \\lstset{numbers=none,language=[ISO]C++,tabsize=4,
+  frame=single,
+  basicstyle=\\small,
+  showspaces=false,showstringspaces=false,
+  showtabs=false,
+  keywordstyle=\\color{blue}\\bfseries,
+  commentstyle=\\color{red},
+  }\n
+      \\usepackage{verbatim}\n
+      \\institute{{{{beamerinstitute}}}}\n
+       \\subject{{{{beamersubject}}}}\n"
+
+                 ("\\section{%s}" . "\\section*{%s}")
+
+                 ("\\begin{frame}[fragile]\\frametitle{%s}"
+                  "\\end{frame}"
+                  "\\begin{frame}[fragile]\\frametitle{%s}"
+                  "\\end{frame}")))
+
+
+  ;; letter class, for formal letters
+
+  (add-to-list 'org-export-latex-classes
+
+               '("letter"
+                 "\\documentclass[11pt]{letter}\n
+      \\usepackage[utf8]{inputenc}\n
+      \\usepackage[T1]{fontenc}\n
+      \\usepackage{color}"
+
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+  (add-to-list 'org-export-latex-classes
+               '("chinese-export"
                  "% Compile with xelatex
 % UTF-8 encoding
 \\documentclass{article}
