@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-28 13:43:10 Saturday by richard>
+;; Last modified: <2012-08-03 11:50:29 Friday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -64,21 +64,23 @@
 
 ;; fullscreen settings
 ;; ------------------------------------------------------------------
-(defun fullscreen ()
-  "Fullscreen."
-  (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
-                         ;; if first parameter is '1', can't toggle fullscreen status
-                         '(1 "_NET_WM_STATE_FULLSCREEN" 0)))
+(when window-system
+  (defun fullscreen ()
+    "Fullscreen."
+    (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
+                           ;; if first parameter is '1', can't toggle fullscreen status
+                           '(1 "_NET_WM_STATE_FULLSCREEN" 0)))
 
 ;;; autoload
-(defun fullscreen-toggle ()
-  "Toggle fullscreen status."
-  (interactive)
-  (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
-                         ;; if first parameter is '2', can toggle fullscreen status
-                         '(2 "_NET_WM_STATE_FULLSCREEN" 0)))
+  (defun fullscreen-toggle ()
+    "Toggle fullscreen status."
+    (interactive)
+    (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
+                           ;; if first parameter is '2', can toggle fullscreen status
+                           '(2 "_NET_WM_STATE_FULLSCREEN" 0)))
 
-(fullscreen)
+  (fullscreen))
+
 
 ;; Window settings
 ;; ------------------------------------------------------------------
