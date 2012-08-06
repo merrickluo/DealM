@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-06 19:10:59 Monday by richard>
+;; Last modified: <2012-08-06 19:18:52 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -143,6 +143,8 @@
 
 (eval-after-load "grep"
   '(require 'grep+))
+
+(require 'simple+)
 (provide 'default-behavior-settings)
 ;; default-behavior-settings ends here.
 ;;;
