@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-06 19:02:42 Monday by richard>
+;; Last modified: <2012-08-06 19:05:08 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -137,6 +137,10 @@
 
 (eval-after-load "ring"
   '(progn (require 'ring+)))
+
+(eval-after-load "thingatpt"
+  '(require 'thingatpt+))
+
 
 (provide 'default-behavior-settings)
 ;; default-behavior-settings ends here.
