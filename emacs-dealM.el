@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-30 15:43:02 Monday by richard>
+;; Last modified: <2012-08-06 18:50:28 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -37,7 +37,6 @@
 (require 'compile-settings)
 (require 'auto-insert-settings)
 (require 'autopair-settings)
-(require 'desktop-settings)
 
 
 
@@ -64,6 +63,9 @@
 (require 'dev-settings)
 (require 'python-settings)
 (require 'molo-settings)
+
+;; desktop settings
+(require 'desktop-settings)
 
 
 ;; registers.
