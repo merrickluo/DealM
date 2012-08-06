@@ -110,6 +110,9 @@ class BuiltinUnknown(_BuiltinElement, pyobjects.PyObject):
         self.builtin = builtin
         self.type = pyobjects.get_unknown()
 
+    def get_name(self):
+        return getattr(type(self.builtin), '__name__', None)
+
     @utils.saveit
     def get_attributes(self):
         return _object_attributes(self.builtin, self)
@@ -120,9 +123,12 @@ def _object_attributes(obj, parent):
     for name in dir(obj):
         if name == 'None':
             continue
-        child = getattr(obj, name, None)
-        if child is None:
-        	continue
+        try:
+            child = getattr(obj, name)
+        except AttributeError:
+            # descriptors are allowed to raise AttributeError
+            # even if they are in dir()
+            continue
         pyobject = None
         if inspect.isclass(child):
             pyobject = BuiltinClass(child, {}, parent=parent)

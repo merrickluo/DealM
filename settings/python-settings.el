@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-27 21:12:11 Friday by richard>
+;; Last modified: <2012-08-06 17:32:08 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -21,13 +21,24 @@
 
 ;; pymacs settings.
 
-(add-to-list 'load-path (concat emacs-root-path "python-libs/Pymacs/"))
+(defconst pythonlib-path-r
+  (concat emacs-root-path "python-libs/") "path of python libs used by emacs.")
+(defconst pymacs-path-r
+  (concat pythonlib-path-r "Pymacs/") "path of pymacs.")
+(add-to-list 'load-path pymacs-path-r)
+
+(setq pymacs-python-command "python2"
+      pymacs-auto-restart t)
 
 (autoload 'pymacs-apply "pymacs")
 (autoload 'pymacs-call "pymacs")
 (autoload 'pymacs-eval "pymacs" nil t)
 (autoload 'pymacs-exec "pymacs" nil t)
 (autoload 'pymacs-load "pymacs" nil t)
+(autoload 'pymacs-autoload "pymacs")
+
+(eval-after-load "pymacs"
+  '(add-to-list 'pymacs-load-path pymacs-path-r))
 
 (defun setup-ropemacs ()
   "Setup the ropemacs harness"
@@ -40,27 +51,26 @@
       (setenv "PYTHONPATH"
               (concat
                (getenv "PYTHONPATH") path-separator
-               (concat emacs-root-path "python-libs/" path-separator
-                       emacs-root-path "python-libs/Pymacs/")))
+               (concat pythonlib-path-r path-separator
+                       pymacs-path-r)))
+
     (setenv "PYTHONPATH"
-            (concat emacs-root-path "python-libs/Pymacs/" path-separator
-                    emacs-root-path "python-libs/")))
+            (concat pymacs-path-r path-separator
+                    pythonlib-path-r)))
   (message (concat "Current PYTHONPATH is " (getenv "PYTHONPATH")))
   (message "****************************")
 
-  (setq pymacs-python-command "python2")
-
   (pymacs-load "ropemacs" "rope-")
+
+  ;; Configurations
+  (setq ropemacs-guess-project t
+        ropemacs-enable-autoimport t)
 
   ;; Stops from erroring if there's a syntax err
   (setq ropemacs-codeassist-maxfixes 3)
 
-  ;; Configurations
-  (setq ropemacs-guess-project t)
-  (setq ropemacs-enable-autoimport t)
-
   (setq ropemacs-autoimport-modules '("os" "shutil" "sys" "logging"
-				      "django.*"))
+                                      "django.*"))
 
 
 
@@ -75,28 +85,11 @@
                     )))
   )
 
-;; Ipython integration with fgallina/python.el
-(defun epy-setup-ipython ()
-  "Setup ipython integration with python-mode"
-  (interactive)
-  (setq
-   python-shell-interpreter "ipython2"
-   python-shell-interpreter-args ""
-   python-shell-prompt-regexp "In \[[0-9]+\]: "
-   python-shell-prompt-output-regexp "Out\[[0-9]+\]: "
-   python-shell-completion-setup-code ""
-   python-shell-completion-string-code "';'.join(__IP.complete('''%s'''))\n")
-  )
-
 
 ;; python mode list
 ;; ------------------------------------------------------------------
 (eval-after-load 'python
   '(progn
-     ;;==================================================
-     ;; Ropemacs Configuration
-     ;;==================================================
-     (setup-ropemacs)
 
      ;;==================================================
      ;; Virtualenv Commands
@@ -105,6 +98,16 @@
        "Activate a Virtual Environment specified by PATH" t)
      (autoload 'virtualenv-workon "virtualenv"
        "Activate a Virtual Environment present using virtualenvwrapper" t)
+     (setq python-indent-offset 4
+           python-indent-guess-indent-offset nil
+           python-shell-interpreter "python2"
+           ;; python-shell-interpreter "ipython2" ;; make ipython2 default.
+           python-shell-interpreter-args ""
+           python-shell-prompt-regexp "In \[[0-9]+\]: "
+           python-shell-prompt-output-regexp "Out\[[0-9]+\]: "
+           python-shell-completion-setup-code ""
+           python-shell-completion-string-code "';'.join(__IP.complete('''%s'''))\n")
+
 
      ;; when we swich on the command line, switch in Emacs
      (desktop-save-mode 1)
@@ -112,8 +115,13 @@
        (require 'virtualenv)
        (virtualenv-activate virtualenv)
        (desktop-change-dir virtualenv))
-     )
-  )
+     ;;==================================================
+     ;; Ropemacs Configuration
+     ;;==================================================
+     (setup-ropemacs)
+
+     ;; (desktop-save-mode 1)
+     ))
 
 (add-to-list 'auto-mode-alist '("\\.pyx\\'" . cython-mode))
 (add-to-list 'auto-mode-alist '("\\.pxd\\'" . cython-mode))
