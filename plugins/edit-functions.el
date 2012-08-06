@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-29 22:12:59 Sunday by richard>
+;; Last modified: <2012-08-06 19:54:00 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -686,6 +686,20 @@ otherwise, change current buffer to that window.
             ((string-match "[\]})>]" prev-char)
              (indent-region (progn (backward-sexp 1) (point)) pos nil))))))
 
+
+;; autoloads from Drew Adams
+;; ------------------------------------------------------------------
+(autoload 'end-of-line+                "misc-cmds" "" t)
+(autoload 'region-length               "misc-cmds" "" t)
+(autoload 'goto-longest-line           "misc-cmds" "" t)
+(autoload 'goto-long-line              "misc-cmds" "" t)
+(autoload 'region-to-buffer            "misc-cmds" "" t)
+(autoload 'region-to-file              "misc-cmds" "" t)
+(autoload 'resolve-file-name           "misc-cmds" "" t)
+(autoload 'kill-buffer-and-its-windows "misc-cmds" "" t)
+(autoload 'indirect-buffer             "misc-cmds" "" t)
+(autoload 'clear-search-ring           "misc-cmds" "" t)
+(autoload 'clear-regexp-search-ring    "misc-cmds" "" t)
 
 (provide 'edit-functions)
 ;; edit-functions ends here.

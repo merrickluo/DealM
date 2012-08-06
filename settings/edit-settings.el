@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-06 16:31:02 Monday by richard>
+;; Last modified: <2012-08-06 19:59:19 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -41,6 +41,11 @@
     (let ((case-fold-search isearch-case-fold-search))
       (occur (if isearch-regexp isearch-string (regexp-quote isearch-string))))))
 
+
+
+(substitute-key-definition   'move-end-of-line 'end-of-line+ global-map)
+
+;; other global keys.
 (global-set-key (kbd "M-C-k")        'kill-whole-paragraph)
 (global-set-key (kbd "M-C-y")        'browse-kill-ring)
 (global-set-key (kbd "M-w")          'smart-copy)
