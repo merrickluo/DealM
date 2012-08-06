@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-29 23:55:20 Sunday by richard>
+;; Last modified: <2012-08-06 19:02:42 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -134,6 +134,9 @@
 (setq time-stamp-format "%04y-%02m-%02d %02H:%02M:%02S %:a by %u")
 (setq time-stamp-end "\\\\?[\">]")
 
+
+(eval-after-load "ring"
+  '(progn (require 'ring+)))
 
 (provide 'default-behavior-settings)
 ;; default-behavior-settings ends here.
