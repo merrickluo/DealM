@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-30 12:13:35 Monday by richard>
+;; Last modified: <2012-08-06 17:42:02 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -33,14 +33,6 @@
   (font-lock-add-keywords
    nil '(("\\<\\(FIX\\(ME\\)?\\|TODO\\|HACK\\|REFACTOR\\|NOCOMMIT\\)"
           1 font-lock-warning-face t))))
-
-(defun esk-pretty-lambdas ()
-  (font-lock-add-keywords
-   nil `(("(?\\(lambda\\>\\)"
-          (0 (progn (compose-region (match-beginning 1) (match-end 1)
-                                    ,(make-char 'greek-iso8859-7 107))
-                    nil))))))
-
 
 
 ;; Find-things-fast settings.
@@ -94,7 +86,7 @@
   (highlight-parentheses-mode t)
   (highlight-indentation-mode t)
   (esk-add-watchwords)
-  (esk-pretty-lambdas))
+  )
 
 ;; lisp short cut Settings.
 ;; ==================================================================

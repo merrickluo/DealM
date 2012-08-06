@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-31 17:18:14 Tuesday by richard>
+;; Last modified: <2012-08-04 08:29:13 Saturday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -31,7 +31,8 @@
   (setq org-startup-folded nil
         org-cycle-include-plain-lists t
         org-export-kill-product-buffer-when-displayed t)
-
+  ;;FIXME: org-babel-execution.
+  ;; for c++, python, ruby, and elisp
   ;; #+LaTeX_CLASS: beamer in org files
   (unless (boundp 'org-export-latex-classes)
     (setq org-export-latex-classes nil))
