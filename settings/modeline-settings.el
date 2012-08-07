@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-26 08:53:07 Thursday by richard>
+;; Last modified: <2012-08-07 09:02:57 Tuesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -16,8 +16,8 @@ If argument is a non-positive integer, revert any changes made.
 Otherwise, setup the mode-line.
 
 \(fn &optional ARG)" t nil)
+(setq sml/hidden-modes "*")
 (sml/setup)
-
 
 (provide 'modeline-settings)
 ;; modeline-settings ends here.
