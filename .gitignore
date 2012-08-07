@@ -6,3 +6,6 @@
 *.pyc
 *.emacs.desktop
 *.emacs.desktop.lock
+notes.org
+.todo.org
+.journey.org

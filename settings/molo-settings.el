@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-07 09:25:24 Tuesday by richard>
+;; Last modified: <2012-08-07 09:36:39 Tuesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -26,6 +26,13 @@
 
 ;; org-mode settings
 ;; ------------------------------------------------------------------
+(setq org-default-notes-file (concat emacs-root-path "notes.org"))
+(setq org-capture-templates
+      '(("t" "Todo" entry (file+headline (concat emacs-root-path ".todo.org") "Tasks")
+         "* TODO %?\n %i\n %a")
+        ("j" "Journal" entry (file+datetree (concat emacs-root-path ".journey.org"))
+         "* %?\nEntered on %U\n %i\n %a")))
+
 (defun org-settings()
   "org-mode-settings"
   (setq org-startup-folded nil
