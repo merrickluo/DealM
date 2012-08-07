@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-04 08:29:13 Saturday by richard>
+;; Last modified: <2012-08-07 09:25:24 Tuesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -110,6 +110,62 @@
         '("xelatex -interaction nonstopmode %f"
           "xelatex -interaction nonstopmode %f")) ;; for multiple passes
 
+  (defun org-kill-whole-line  (&optional arg)
+    "Kill line, to tags or end of line.
+If `mark-active', call `kill-region';
+If At the first or end of line call `kill-whole-line';
+If At the string (which inside \") of the line and string is not empty, kill the string inside.."
+    (interactive "P")
+    (cond
+     (mark-active
+      (call-interactively 'kill-region))
+     ((or (bolp)
+          ;; (not org-special-ctrl-k)
+          ;; (not (org-on-heading-p))
+          (eolp))
+      (call-interactively 'kill-whole-line))
+     ((looking-at (org-re ".*?\\S-\\([ \t]+\\(:[[:alnum:]_@:]+:\\)\\)[ \t]*$"))
+      (kill-region (point) (match-beginning 1))
+      (org-set-tags nil t))
+     (t (kill-region (point) (point-at-eol)))))
+
+  (defun org-literal-links ()
+    "Show literal links."
+    (interactive)
+    (org-remove-from-invisibility-spec '(org-link)) (org-restart-font-lock))
+
+  (defun org-descriptive-links ()
+    "Show descriptive links."
+    (interactive)
+    (org-add-to-invisibility-spec '(org-link)) (org-restart-font-lock))
+
+  (defun org-display-content ()
+    "Display content in `org-mode'."
+    (interactive)
+    (org-overview)
+    (org-content))
+
+  (defvar org-display-content nil "Display content or not now.")
+
+  (defvar org-fold-subtree nil "Fold subtree or not now.")
+
+  (defun org-toggle-display-content ()
+    "Toggle display content."
+    (interactive)
+    (setq org-display-content (not org-display-content))
+    (if org-display-content
+        (org-display-content)
+      (show-all)))
+
+  (define-key org-mode-map (kbd "C-c e") 'org-table-edit-field)
+  (define-key org-mode-map (kbd "C-k")   'org-kill-whole-line)
+  (define-key org-mode-map (kbd "<tab>") nil)
+  (define-key org-mode-map (kbd "C-j")   nil)
+  (define-key org-mode-map (kbd "C-c e") 'org-table-edit-field)
+  (define-key org-mode-map (kbd "C-c n") 'org-forward-same-level)
+  (define-key org-mode-map (kbd "C-c p") 'org-backward-same-level)
+  (define-key org-mode-map (kbd "C-M-f") 'org-do-demote)
+  (define-key org-mode-map (kbd "C-M-b") 'org-do-promote)
   )
 (defun org-agenda-settings()
   "org-agenda settings"
