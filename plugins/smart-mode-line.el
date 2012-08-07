@@ -1,21 +1,22 @@
 ;;; smart-mode-line.el --- A color coded smart mode-line.
 
 ;; Copyright (C) 2012 Artur Malabarba <bruce.connor.am@gmail.com>
+;; Copyright (C) 2012 Richard Wong    <chao787@gmail.com>
 
 ;; Author: Artur Malabarba <bruce.connor.am@gmail.com>
 ;; URL: http://github.com/Bruce-Connor/smart-mode-line
-;; Version: 1.6
+;; Version: 1.6r(a Richard hacked version)
 ;; Keywords: faces frames
 
 ;;; Commentary:
 
 ;; Smart Mode Line is a mode-line format that aims to be easy to
 ;; read from small to large monitors by using a prefix feature and
-;; smart truncation.  
+;; smart truncation.
 
 ;; Your mode-line will be color coded, smartly truncated (if you
 ;; want), easily customizable, and will have a few extra fancy
-;; features like file path prefixes and minor mode filtering.  
+;; features like file path prefixes and minor mode filtering.
 
 ;;; Instructions:
 
@@ -131,7 +132,7 @@
 ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; GNU General Public License for more details.
-;; 
+;;
 
 ;;; Change Log:
 
@@ -222,6 +223,7 @@ for the syntax."
   (set-default sym val)
   (if val (setq sml/shortener-func 'sml/do-shorten-directory)
     (setq sml/shortener-func 'sml/not-shorten-directory)))
+
 
 (defvar sml/shortener-func 'sml/do-shorten-directory
   "Function used to shorten the directory name.
@@ -340,6 +342,7 @@ name."
   :type 'string
   :group 'smart-mode-line)
 
+
 ;;;###autoload
 (defun sml/setup (&optional arg)
   "Setup the mode-line, or revert it.
@@ -361,7 +364,7 @@ Otherwise, setup the mode-line."
                                                   'face 'sml/client
                                                   'help-echo "emacsclient frame")
                                     " ")))
-       
+
        ;; Position
        (:eval (propertize sml/col-number-format
                           'face 'sml/col-number
@@ -372,6 +375,20 @@ Otherwise, setup the mode-line."
        (:eval (propertize sml/line-number-format
                           'face 'sml/line-number
                           'help-echo (format-mode-line "Buffer size:\n\t%IB")))
+
+       ;; Get size indication
+       (:eval
+        (if (and transient-mark-mode mark-active)
+
+            (propertize (format "%dLs %dCs"
+                                (count-lines (region-beginning) (region-end))
+                                (abs (- (mark t) (point))))
+                        'face 'sml/size-count
+                        'help-echo "Count marked lines and chars")
+          (propertize "%I"
+                      'face 'sml/char-count
+                      'help-echo "total chars in current buffer"
+                      )))
 
        ;; Modified status
        (:eval
@@ -384,7 +401,7 @@ Otherwise, setup the mode-line."
                (propertize "R"
                            'face 'sml/read-only
                            'help-echo "Read-Only Buffer"))
-              
+
               ((buffer-modified-p)
                (propertize "×"
                            'face 'sml/modified
@@ -393,7 +410,7 @@ Otherwise, setup the mode-line."
                                            sml/modified-time-string
                                            (nth 5 (file-attributes (buffer-file-name))))
                                         "Buffer Modified")))
-              
+
               (t
                (propertize " "
                            'face 'sml/not-modified
@@ -413,8 +430,8 @@ Otherwise, setup the mode-line."
                               (propertize bufname 'face 'sml/filename)
                               (make-string (max 0 (- dirsize (length dirstring))) ?\ ))
                       'help-echo (buffer-file-name))))
-       
-       ;; The modes list 
+
+       ;; The modes list
        (:eval
         (let ((major (propertize mode-name
                                  'face		'sml/modes
@@ -428,7 +445,7 @@ Otherwise, setup the mode-line."
 
        (:propertize battery-mode-line-string
                     face sml/battery)
-       
+
        ;; add the time, with the date and the emacs uptime in the tooltip
        (:eval (if sml/show-time
                   (propertize (format-time-string sml/time-format)
@@ -442,7 +459,7 @@ Otherwise, setup the mode-line."
   (let ((out prefix))
     (dolist (pair sml/prefix-face-list)
       (if (search (car pair) prefix)
-	(return (propertize prefix 'face (car (cdr pair))))))))
+          (return (propertize prefix 'face (car (cdr pair))))))))
 
 (defun sml/trim-modes (major minor)
   "Maybe trim the modes list."
@@ -504,10 +521,10 @@ Used by `sml/strip-prefix' and `sml/get-prefix'."
   "Prepares the actual regexp using `sml/prefix-regexp'."
   (let ((left "^\\(")
         (right (if getter "\\|\\).*" "\\)")))
-    (if (stringp sml/prefix-regexp) 
-        (if (search "\\(" sml/prefix-regexp) 
+    (if (stringp sml/prefix-regexp)
+        (if (search "\\(" sml/prefix-regexp)
             sml/prefix-regexp
-          (concat left sml/prefix-regexp right)) 
+          (concat left sml/prefix-regexp right))
       (concat left (mapconcat 'identity sml/prefix-regexp "\\|") right))))
 
 (defun sml/strip-prefix (path)
@@ -610,6 +627,24 @@ regexp in `sml/prefix-regexp'."
 (defface sml/col-number
   '((t
      :inherit sml/global
+     ))
+  ""
+  :group 'smart-mode-line-faces)
+
+(defface sml/size-count
+  '((t
+     :inherit sml/global
+     :foreground "red4"
+     :weight bold
+     ))
+  ""
+  :group 'smart-mode-line-faces)
+
+(defface sml/char-count
+  '((t
+     :inherit sml/global
+     :foreground "green4"
+     :weight bold
      ))
   ""
   :group 'smart-mode-line-faces)
@@ -729,7 +764,7 @@ regexp in `sml/prefix-regexp'."
 
 (defface sml/charging
   '((t
-     :inherit sml/global 
+     :inherit sml/global
      :foreground "green"
      ))
   ""
@@ -737,7 +772,7 @@ regexp in `sml/prefix-regexp'."
 
 (defface sml/discharging
   '((t
-     :inherit sml/global 
+     :inherit sml/global
      :foreground "red"
      ))
   ""
