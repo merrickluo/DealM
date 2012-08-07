@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-06 23:28:47 Monday by richard>
+;; Last modified: <2012-08-07 08:21:20 Tuesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -134,7 +134,7 @@
 (setq time-stamp-format "%04y-%02m-%02d %02H:%02M:%02S %:a by %u")
 (setq time-stamp-end "\\\\?[\">]")
 
-
+;; learning from dadams
 (eval-after-load "ring"
   '(progn (require 'ring+)))
 
@@ -147,6 +147,11 @@
 (eval-after-load "window"
   '(require 'window+))
 
+(eval-after-load "help"
+  '(require 'help+))
+
+(eval-after-load "info"
+  '(require 'info+))
 (require 'simple+)
 (provide 'default-behavior-settings)
 ;; default-behavior-settings ends here.
