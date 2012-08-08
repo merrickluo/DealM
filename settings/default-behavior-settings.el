@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-07 08:21:20 Tuesday by richard>
+;; Last modified: <2012-08-08 11:32:36 Wednesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -133,6 +133,45 @@
 (setq time-stamp-start "Last modified:[ \t]+\\\\?[\"<]+")
 (setq time-stamp-format "%04y-%02m-%02d %02H:%02M:%02S %:a by %u")
 (setq time-stamp-end "\\\\?[\">]")
+
+;; modes definition.
+(setq auto-mode-alist
+      (append '(("\\.[Cc][Xx][Xx]$" . c++-mode)
+                ("\\.[Cc][Pp][Pp]$" . c++-mode)
+                ("\\.[Hh][Xx][Xx]$" . c++-mode)
+                ("\\.[Tt][Cc][Cc]$" . c++-mode)
+                ("\\.h$" . c++-mode)
+                ("\\.i$" . c++-mode)    ; SWIG
+                ("\\.mm?$" . objc-mode)
+                ("_emacs" . lisp-mode)
+                ("\\.el\\.gz$" . emacs-lisp-mode)
+                ("\\.mak$" . makefile-mode)
+                ("\\.conf$" . conf-mode)
+                ("\\.go$" .  go-mode)
+                ("Doxyfile.tmpl$" . makefile-mode)
+                ("Doxyfile$" . makefile-mode)
+                ("CMakeLists\\.txt\\'" . cmake-mode)
+                ("\\.cmake\\'" . cmake-mode)
+                ("\\.uncompressed$" . hexl-mode)
+                ("\\.y[s]?$" . snippet-mode)
+                ("headx$" . snippet-mode)
+                ("\\.ke$" . kepago-mode)
+                ("\\.markdown$" . markdown-mode)
+                ("\\.md$" . markdown-mode)
+                ("\\.textile$" . textile-mode)
+                ("\\.kfn$" . kfn-mode)
+                ("\\.rb$" . ruby-mode)
+                ("\\.cml$" . xml-mode)
+                ("\\.cg$" . cg-mode)
+                ("\\.yy$" . bison-mode)
+                ("\\.l[l]?$" . flex-mode)
+                ("\\.lua$" . lua-mode)
+                ("\\.org$" . org-mode)
+                ("\\.\\(todo\\|do\\|plan\\)$". org-mode)
+                ("\\.scons$" . python-mode)
+                ("SCons\\(cript\\|truct\\)" . python-mode)
+                ("\\.gclient$" . python-mode)
+                ) auto-mode-alist))
 
 ;; learning from dadams
 (eval-after-load "ring"
