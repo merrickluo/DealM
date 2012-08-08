@@ -31,3 +31,6 @@
 [submodule "plugins/CEDET"]
 	path = plugins/CEDET
 	url = git@github.com:chao787/CEDET.git
+[submodule "plugins/ecb"]
+	path = plugins/ecb
+	url = git://github.com/alexott/ecb.git
