@@ -28,3 +28,6 @@
 [submodule "plugins/auctex"]
 	path = plugins/auctex
 	url = git@github.com:chao787/auctex.git
+[submodule "plugins/CEDET"]
+	path = plugins/CEDET
+	url = git@github.com:chao787/CEDET.git
