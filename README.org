@@ -1,5 +1,5 @@
 # -*- mode: org -*-
-# Last modified: <2012-07-30 16:42:33 Monday by richard>
+# Last modified: <2012-08-13 21:28:57 Monday by richard>
 #+STARTUP: showall
 #+TITLE:   README
 
@@ -62,6 +62,9 @@
     - latest python.el (fgallina/python.el)
     - nosetests integration (nose.el)
     - It use nose tests to test buffer.
+
+** HTML
+   - If you want Flymake run, you need install tidy in your system's path.(HTML tool)
 
 ** Compile-settings
    - mainly reference the Drew Adams' package.

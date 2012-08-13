@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-27 22:07:42 Friday by richard>
+;; Last modified: <2012-08-13 21:30:16 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -170,10 +170,21 @@ Use CREATE-TEMP-F for creating temp copy."
                         (file-name-directory buffer-file-name))))
       (list (concat plugins-path-r "pycheckers.sh") (list local-file))))
 
+  (defun flymake-html-init ()
+    (let* ((temp-file (flymake-init-create-temp-buffer-copy
+                       'flymake-create-temp-inplace))
+           (local-file (file-relative-name
+                        temp-file
+                        (file-name-directory buffer-file-name))))
+      (list "tidy" (list local-file))))
+  (add-to-list 'flymake-err-line-patterns
+	             '("line \\([0-9]+\\) column \\([0-9]+\\) - \\(Warning\\|Error\\): \\(.*\\)"
+	               nil 1 2 4))
+
   (setq flymake-allowed-file-name-masks
         '(("\\.\\(?:c\\(?:pp\\|xx\\|\\+\\+\\)?\\|CC\\)\\'" flymake-simple-make-gcc-init)
           ;; ("\\.xml\\'" flymake-xml-init)
-          ;; ("\\.html?\\'" flymake-xml-init)
+          ("\\.html?\\'" flymake-html-init)
           ("\\.cs\\'" flymake-simple-make-init)
           ("\\.\\(?:h\\(?:pp\\)?\\)\\'" flymake-master-make-header-init flymake-master-cleanup)
           ("\\.java\\'" flymake-simple-make-java-init flymake-simple-java-cleanup)
