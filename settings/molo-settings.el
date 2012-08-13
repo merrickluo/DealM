@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-07 09:36:39 Tuesday by richard>
+;; Last modified: <2012-08-11 10:03:23 Saturday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -41,6 +41,15 @@
   ;;FIXME: org-babel-execution.
   ;; for c++, python, ruby, and elisp
   ;; #+LaTeX_CLASS: beamer in org files
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '( (perl . t)
+      (ruby . t)
+      (sh . t)
+      (python . t)
+      (emacs-lisp . t)
+      ))
+
   (unless (boundp 'org-export-latex-classes)
     (setq org-export-latex-classes nil))
   (add-to-list 'org-export-latex-classes

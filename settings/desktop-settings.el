@@ -1,20 +1,26 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-28 11:50:34 Saturday by richard>
+;; Last modified: <2012-08-13 08:50:55 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
 ;; Author: Richard Wong
 ;; Email: chao787@gmail.com
 
-;; Version: 0.1
+;; Version: 0.2
 ;; PUBLIC LICENSE: GPLv3
 
-;; (require 'desktop)
-(desktop-save-mode 1)
+(desktop-save-mode t)
 ;; desktop autosave
 (setq desktop-save t
-      ;; alway load desktop even when loacked
+
+      desktop-globals-to-save '(search-ring
+                                regexp-search-ring
+                                tags-table-list
+                                tags-file-name)
+
+      ;; alway load desktop even when locked
       desktop-load-locked-desktop t)
+
 
 (desktop-read (concat emacs-root-path ""))
 (provide 'desktop-settings)

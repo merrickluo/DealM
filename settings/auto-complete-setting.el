@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-30 00:41:43 Monday by richard>
+;; Last modified: <2012-08-13 08:50:38 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -18,7 +18,7 @@
 
 ;; Do What I Mean mode
 (setq ac-dwim t
-      ac-auto-start t
+      ac-auto-start 3
       ;; ac-auto-show-menu t
       ;; ac-disable-faces nil
       ;; ac-candidate-limit ac-menu-height

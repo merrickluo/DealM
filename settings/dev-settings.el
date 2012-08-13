@@ -117,8 +117,6 @@
   (smart-operator-mode-on)
 
   (paren-toggle-open-paren-context 1)
-  ;; Cedet settings.
-  ;; (require 'cedet-settings)
   (local-set-key (kbd "C-c C-k") 'kill-function)
   (local-set-key (kbd "C-c M-w") 'copy-function-whole)
   (local-set-key (kbd "C-M-h") 'mark-function)
