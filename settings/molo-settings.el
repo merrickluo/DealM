@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-11 10:03:23 Saturday by richard>
+;; Last modified: <2012-08-15 18:48:06 Wednesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -182,6 +182,41 @@ If At the string (which inside \") of the line and string is not empty, kill the
   (define-key org-mode-map (kbd "C-c p") 'org-backward-same-level)
   (define-key org-mode-map (kbd "C-M-f") 'org-do-demote)
   (define-key org-mode-map (kbd "C-M-b") 'org-do-promote)
+
+  ;; minibuffer in org mode
+  ;; ---------------------------------[minibuffer in org mode]
+  (org-defkey minibuffer-local-map (kbd "M-b")
+              (lambda () (interactive)
+                (org-eval-in-calendar '(calendar-backward-month 1))))
+  (org-defkey minibuffer-local-map (kbd "M-f")
+              (lambda () (interactive)
+                (org-eval-in-calendar '(calendar-forward-month 1))))
+  (org-defkey minibuffer-local-map (kbd "C-M-b")
+              (lambda () (interactive)
+                (org-eval-in-calendar '(calendar-backward-year 1))))
+  (org-defkey minibuffer-local-map (kbd "C-e")
+              (lambda () (interactive)
+                (org-eval-in-calendar '(calendar-end-of-week 1))))
+  (org-defkey minibuffer-local-map (kbd "C-a")
+              (lambda () (interactive)
+                (org-eval-in-calendar '(calendar-beginning-of-week 1))))
+  (org-defkey minibuffer-local-map (kbd "C-M-f")
+              (lambda () (interactive)
+                (org-eval-in-calendar '(calendar-forward-year 1))))
+  (org-defkey minibuffer-local-map (kbd "C-p")
+              (lambda () (interactive)
+                (org-eval-in-calendar '(calendar-backward-week 1))))
+  (org-defkey minibuffer-local-map (kbd "C-n")
+              (lambda () (interactive)
+                (org-eval-in-calendar '(calendar-forward-week 1))))
+  (org-defkey minibuffer-local-map (kbd "C-b")
+              (lambda () (interactive)
+                (org-eval-in-calendar '(calendar-backward-day 1))))
+  (org-defkey minibuffer-local-map (kbd "C-f")
+              (lambda () (interactive)
+                (org-eval-in-calendar '(calendar-forward-day 1))))
+
+
   )
 (defun org-agenda-settings()
   "org-agenda settings"
