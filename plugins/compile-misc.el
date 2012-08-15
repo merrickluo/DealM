@@ -56,7 +56,7 @@
          ((equal extension "sh")
           (compile (format "sh -n %s" file)))
          ((equal extension "py")
-          (compile (format "nosetests %s" file))))))))
+          (compile (format "nosetests -v %s --with-coverage" file))))))))
 
 ;;;###autoload
 (defun run-program (command)
