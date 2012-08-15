@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-06 17:32:08 Monday by richard>
+;; Last modified: <2012-08-15 16:58:01 Wednesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -72,7 +72,26 @@
   (setq ropemacs-autoimport-modules '("os" "shutil" "sys" "logging"
                                       "django.*"))
 
+  ;; Some unittest settings
+  ;; ---------------------------------[Some unittest settings]
 
+  (autoload 'nosetests-all        "nose" "" t)
+  (autoload 'nosetests-module     "nose" "" t)
+  (autoload 'nosetests-one        "nose" "" t)
+  (autoload 'nosetests-pdb-all    "nose" "" t)
+  (autoload 'nosetests-pdb-module "nose" "" t)
+  (autoload 'nosetests-pdb-one    "nose" "" t)
+
+
+  (add-hook 'python-mode-hook
+            (lambda ()
+              (local-set-key "\C-ca"  'nosetests-all)
+              (local-set-key "\C-cM"  'nosetests-module) ;; C-c m conflicts w/ pylint
+              (local-set-key "\C-c."  'nosetests-one)
+              (local-set-key "\C-cpa" 'nosetests-pdb-all)
+              (local-set-key "\C-cpm" 'nosetests-pdb-module)
+              (local-set-key "\C-cp." 'nosetests-pdb-one))
+            )
 
   ;; Adding hook to automatically open a rope project if there is one
   ;; in the current or in the upper level directory
@@ -129,6 +148,7 @@
 
 ;; Py3 files
 (add-to-list 'auto-mode-alist '("\\.py3\\'" . python-mode))
+
 
 
 
