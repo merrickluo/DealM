@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-08 13:28:33 Wednesday by richard>
+;; Last modified: <2012-08-17 21:14:34 Friday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -83,10 +83,10 @@
   (linum-mode t)
   ;; highlight settings by mode.
   (hl-line-mode t)
-  (toggle-highlight-trailing-whitespace)
-  (toggle-highlight-tabs)
-  (toggle-highlight-hard-spaces)
-  (toggle-highlight-other-chars)
+  ;; (toggle-highlight-trailing-whitespace)
+  ;; (toggle-highlight-tabs)
+  ;; (toggle-highlight-hard-spaces)
+  ;; (toggle-highlight-other-chars)
   (highlight-parentheses-mode t)
   (highlight-indentation-mode t)
   (esk-add-watchwords)
@@ -171,7 +171,13 @@
 
 ;; js2-mode settings
 ;; ==================================================================
+(autoload 'js2-mode "js2-mode" "\
+Major mode for editing JavaScript code.
+
+\(fn)" t nil)
+
 (defun js2-short-cut()
+
   "js2 mode short-cut key settings."
   (start-program-short-cut)
   ;; compatible with flyspell.
