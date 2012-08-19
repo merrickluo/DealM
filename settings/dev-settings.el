@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-17 21:14:34 Friday by richard>
+;; Last modified: <2012-08-19 12:25:05 Sunday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -175,11 +175,14 @@
 Major mode for editing JavaScript code.
 
 \(fn)" t nil)
+(setq js2-mirror-mode nil)
 
 (defun js2-short-cut()
 
   "js2 mode short-cut key settings."
   (start-program-short-cut)
+  (ftf-add-filetypes '("*.js" "*.javascript"))
+
   ;; compatible with flyspell.
   (smart-operator-mode-on))
 
