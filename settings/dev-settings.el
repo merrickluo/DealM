@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-19 12:25:05 Sunday by richard>
+;; Last modified: <2012-08-20 08:29:20 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -169,6 +169,21 @@
   (paren-toggle-matching-paired-delimiter 1)
   (ac-flyspell-workaround))
 
+;; Jade-Mode settings
+;; ==================================================================
+(add-to-list 'load-path (concat plugins-path-r "jade-mode/"))
+
+(autoload 'sws-mode "sws-mode" "" t)
+(autoload 'jade-mode "jade-mode" "" t)
+
+(add-to-list 'auto-mode-alist '("\\.styl$" . sws-mode))
+(add-to-list 'auto-mode-alist '("\\.jade$" . jade-mode))
+
+(defun jade-short-cut()
+  (start-program-short-cut)
+  )
+
+
 ;; js2-mode settings
 ;; ==================================================================
 (autoload 'js2-mode "js2-mode" "\
@@ -196,6 +211,7 @@ Major mode for editing JavaScript code.
 (add-hook 'shell-mode-hook      'shell-short-cut)
 (add-hook 'LaTex-mode-hook      'tex-short-cut)
 (add-hook 'js2-mode-hook        'js2-short-cut)
+(add-hook 'jade-mode-hook       'jade-short-cut)
 
 (provide 'dev-settings)
 ;; dev-settings ends here.
