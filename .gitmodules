@@ -34,3 +34,6 @@
 [submodule "plugins/ecb"]
 	path = plugins/ecb
 	url = git://github.com/alexott/ecb.git
+[submodule "plugins/jade-mode"]
+	path = plugins/jade-mode
+	url = git://github.com/brianc/jade-mode.git
