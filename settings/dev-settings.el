@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-20 08:29:20 Monday by richard>
+;; Last modified: <2012-08-20 16:37:41 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -31,7 +31,7 @@
 ;; ------------------------------------------------------------------
 (defun esk-add-watchwords ()
   (font-lock-add-keywords
-   nil '(("\\<\\(FIX\\(ME\\)?\\|TODO\\|HACK\\|REFACTOR\\|NOCOMMIT\\)"
+   nil '(("\\<\\(FIX\\(ME\\)?\\|TODO\\|HACK\\|REFACTOR\\|NOCOMMIT\\|WARN\\(ING\\)?\\)"
           1 font-lock-warning-face t))))
 
 

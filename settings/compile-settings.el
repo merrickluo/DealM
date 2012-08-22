@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-31 11:24:47 Tuesday by richard>
+;; Last modified: <2012-08-21 07:30:14 Tuesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -26,7 +26,10 @@
 
 
 (eval-after-load "smart-compile"
-                '(add-to-list 'smart-compile-alist '(python-mode    .  "python2 %f")))
+  '(progn
+     (add-to-list 'smart-compile-alist '(python-mode    .  "python2 %f"))
+     (add-to-list 'smart-compile-alist '(jade-mode      .  "pyjade -c jinja %f"))
+     ))
 
 (defun compile-settings ()
   "Settings for `compile'."
@@ -58,6 +61,7 @@
                   sh-mode-hook
                   compilation-mode-hook
                   ruby-mode-hook
+                  jade-mode-hook
                   python-mode-hook))
     (add-hook hook 'compile-keys))
 
