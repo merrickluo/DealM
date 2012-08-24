@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-29 22:53:02 Sunday by richard>
+;; Last modified: <2012-08-22 19:30:31 Wednesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -24,6 +24,8 @@
 (define-key dired-mode-map "2" 'split-window-vertically)
 (define-key dired-mode-map "3" 'split-window-horizontally)
 (define-key dired-mode-map "o" 'other-window)
+;; From color-moccur
+(define-key dired-mode-map "O" 'dired-do-moccur)
 
 
 (provide 'dired-settings)

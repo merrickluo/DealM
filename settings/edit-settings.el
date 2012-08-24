@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-07 09:35:24 Tuesday by richard>
+;; Last modified: <2012-08-23 08:48:20 Thursday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -11,6 +11,7 @@
 
 (require 'edit-functions)
 (require 'browse-kill-ring+)
+(require 'color-moccur)
 
 
 ;; global keys
@@ -176,6 +177,23 @@ Insert the entered operator plus surrounding spaces.
 \(fn ARG)" t nil)
 
 ;; (smart-operator-mode-on)
+
+;; moccur settings
+;; ----------------------------------------[moccur settings]
+(setq *moccur-buffer-name-exclusion-list*
+      '(".+TAGS.+" "*Completions*" "*magit-process*" "*Messages*"
+        ))
+(setq moccur-split-word t)
+(setq dmoccur-use-list t)
+(setq dmoccur-use-project t)
+(setq dmoccur-list
+      '(
+        ("dir" default-directory (".*") dir)
+        ("config" emacs-root-path  ("\\.py$" "\\.el$") nil)
+        ))
+
+(global-set-key "\C-c\C-o" 'search-buffers)
+
 
 (provide 'edit-settings)
 ;; edit-settings ends here.
