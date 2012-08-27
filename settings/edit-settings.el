@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-23 08:48:20 Thursday by richard>
+;; Last modified: <2012-08-27 17:27:56 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -96,7 +96,6 @@
 
 ;; replace global keys
 (global-set-key (kbd "M-r")     'query-replace-regexp)
-(global-set-key (kbd "C-j")     'goto-line)
 (global-set-key (kbd "C-x ?")   'help-command)
 (global-set-key (kbd "C-x /")   'help-command)
 
