@@ -1,5 +1,5 @@
 # -*- mode: org -*-
-# Last modified: <2012-08-13 21:28:57 Monday by richard>
+# Last modified: <2012-08-14 08:23:05 Tuesday by richard>
 #+STARTUP: showall
 #+TITLE:   README
 
@@ -65,6 +65,7 @@
 
 ** HTML
    - If you want Flymake run, you need install tidy in your system's path.(HTML tool)
+   - If you use HTML5 to write pages, you can download html tidy from [[https://github.com/w3c/tidy-html5/][github]].
 
 ** Compile-settings
    - mainly reference the Drew Adams' package.
