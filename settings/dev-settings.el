@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-20 16:37:41 Monday by richard>
+;; Last modified: <2012-08-24 18:25:57 Friday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -70,9 +70,6 @@
 ;;----------------------------------------------------------
 (defun start-program-short-cut()
   "common program short-cut keys."
-  ;; Cedet settings.
-  ;; ------------------------------------------------------------------
-  (require 'cedet-settings)
 
   ;; RET is reindent thisline and indent the new line.
   (local-set-key (kbd "RET")     'reindent-then-newline-and-indent)
