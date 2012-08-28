@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-24 18:25:57 Friday by richard>
+;; Last modified: <2012-08-28 18:56:04 Tuesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -150,6 +150,7 @@
 ;; ==================================================================
 (defun shell-short-cut()
   "shell mode short-cut key settings."
+  (start-program-short-cut)
   (smart-operator-mode-on)
   (local-set-key (kbd "<")       'self-insert-command)
   (local-set-key (kbd "C-c M-c") 'sh-case)
@@ -205,7 +206,7 @@ Major mode for editing JavaScript code.
 (add-hook 'c-mode-common-hook   'c-common-short-cut)
 (add-hook 'python-mode-hook     'python-short-cut)
 (add-hook 'awk-mode-hook        'awk-short-cut);; After emacs 21 work here.
-(add-hook 'shell-mode-hook      'shell-short-cut)
+(add-hook 'sh-mode-hook         'shell-short-cut)
 (add-hook 'LaTex-mode-hook      'tex-short-cut)
 (add-hook 'js2-mode-hook        'js2-short-cut)
 (add-hook 'jade-mode-hook       'jade-short-cut)
