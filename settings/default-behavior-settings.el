@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-29 16:38:06 Wednesday by richard>
+;; Last modified: <2012-08-29 17:40:15 Wednesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -196,8 +196,11 @@
 
 (eval-after-load "info"
   '(require 'info+))
-(require 'simple+)
 
+(eval-after-load "mouse"
+  '(require 'mouse+))
+
+(require 'simple+)
 
 (provide 'default-behavior-settings)
 ;; default-behavior-settings ends here.

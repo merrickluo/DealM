@@ -7,10 +7,11 @@
 ;; Copyright (C) 1999-2012, Drew Adams, all rights reserved.
 ;; Created: Fri Mar 19 15:58:58 1999
 ;; Version: 21.2
-;; Last-Updated: Tue Jul 17 10:23:08 2012 (-0700)
+;; Last-Updated: Sun Aug 26 19:43:32 2012 (-0700)
 ;;           By: dradams
-;;     Update #: 6055
+;;     Update #: 6086
 ;; URL: http://www.emacswiki.org/cgi-bin/wiki/dired+.el
+;; Doc URL: http://www.emacswiki.org/emacs/DiredPlus
 ;; Keywords: unix, mouse, directories, diredp, dired
 ;; Compatibility: GNU Emacs: 20.x, 21.x, 22.x, 23.x, 24.x
 ;;
@@ -375,6 +376,10 @@
 ;;                              only for MS Windows)
 ;;  `dired-insert-set-properties' - `mouse-face' on whole line.
 ;;  `dired-mark-files-regexp' - Add regexp to `regexp-search-ring'.
+;;  `dired-mark-pop-up'       - Delete the window or frame popped up,
+;;                              afterward, and bury its buffer. Do not
+;;                              show a menu bar for pop-up frame.
+;;  `dired-pop-to-buffer'     - Put window point at bob (bug #12281).
 ;;
 ;;; NOT YET:
 ;;; ;;  `dired-readin-insert'     - Use t as WILDCARD arg to
@@ -423,6 +428,11 @@
 ;;
 ;;; Change Log:
 ;;
+;; 2012/08/26 dadams
+;;     Set font-lock-defaults to a 3-element list, so it works with font-menus(-da).el.
+;; 2012/08/25 dadams
+;;     Added: redefinition of dired-pop-to-buffer (fix for bug #12281).
+;;     dired-mark-pop-up: If buffer is shown in a separate frame, do not show menu bar.
 ;; 2012/07/10 dadams
 ;;     Removed unneeded substitute-key-definition for (next|previous)-line.
 ;; 2012/07/09 dadams
@@ -2644,8 +2654,10 @@ In particular, inode number, number of hard links, and file size."
 (add-hook 'dired-mode-hook
           '(lambda ()
             (set (make-local-variable 'font-lock-defaults)
-             (cons '(dired-font-lock-keywords diredp-font-lock-keywords-1) ; Two levels.
-              (cdr font-lock-defaults)))
+             ;; Two levels.  Use 3-element list, since it is standard to have one more than the
+             ;; number of levels.  This is necessary for it to work with font-menus(-da).el.
+             '((dired-font-lock-keywords dired-font-lock-keywords diredp-font-lock-keywords-1)
+               t nil nil beginning-of-line))
             ;; Refresh `font-lock-keywords' from `font-lock-defaults'
             (when (fboundp 'font-lock-refresh-defaults) (font-lock-refresh-defaults))))
  
@@ -5998,8 +6010,38 @@ non-empty directories is allowed."
 
 ;; REPLACE ORIGINAL in `dired.el':
 ;;
-;; Delete the window or frame popped up, afterward, and bury its buffer.
-;; Fixes Emacs bug #7533.
+;; Put window point at bob.  Fixes bug #12281.
+;;
+(when (> emacs-major-version 22)
+  (defun dired-pop-to-buffer (buf)
+  "Pop up buffer BUF in a way suitable for Dired."
+  (let ((split-window-preferred-function
+         (lambda (window)
+           (or (and (let ((split-height-threshold 0))
+                      (window-splittable-p (selected-window)))
+                    ;; Try to split the selected window vertically if
+                    ;; that's possible.  (Bug#1806)
+                    (if (fboundp 'split-window-below)
+                        (split-window-below)
+                      (split-window-vertically)))
+               ;; Otherwise, try to split WINDOW sensibly.
+               (split-window-sensibly window))))
+        pop-up-frames)
+    (pop-to-buffer (get-buffer-create buf)))
+  (set-window-start (selected-window) (point-min))
+  ;; If dired-shrink-to-fit is t, make its window fit its contents.
+  (when dired-shrink-to-fit
+    ;; Try to not delete window when we want to display less than
+    ;; `window-min-height' lines.
+    (fit-window-to-buffer (get-buffer-window buf) nil 1))))
+
+
+;; REPLACE ORIGINAL in `dired.el':
+;;
+;; 1. Delete the window or frame popped up, afterward, and bury its buffer.
+;;    Fixes Emacs bug #7533.
+;;
+;; 2, If buffer is shown in a separate frame, do not show a menu bar for that frame.
 ;;
 (defun dired-mark-pop-up (bufname op-symbol files function &rest args)
   "Return FUNCTION's result on ARGS after showing which files are marked.
@@ -6031,7 +6073,12 @@ just the current file."
                                 '(mouse-face nil help-echo nil)))
       (unwind-protect
            (save-window-excursion
-             (dired-pop-to-buffer bufname)
+             ;; Do not show menu bar, if buffer is popped up in a separate frame.
+             (let ((special-display-frame-alist  (cons '(menu-bar-lines . 0)
+                                                       special-display-frame-alist))
+                   (default-frame-alist          (cons '(menu-bar-lines . 0)
+                                                       default-frame-alist)))
+               (dired-pop-to-buffer bufname))
              (setq result  (apply function args)))
         (save-excursion
           (condition-case nil           ; Ignore error if user already deleted window.
