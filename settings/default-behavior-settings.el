@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-17 21:15:44 Friday by richard>
+;; Last modified: <2012-08-29 16:38:06 Wednesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -191,9 +191,14 @@
 (eval-after-load "help"
   '(require 'help+))
 
+(eval-after-load "help-fns"
+  '(require 'help-fns+))
+
 (eval-after-load "info"
   '(require 'info+))
 (require 'simple+)
+
+
 (provide 'default-behavior-settings)
 ;; default-behavior-settings ends here.
 ;;;
