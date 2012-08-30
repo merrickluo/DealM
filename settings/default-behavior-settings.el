@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-29 17:40:15 Wednesday by richard>
+;; Last modified: <2012-08-30 17:11:44 Thursday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -199,6 +199,9 @@
 
 (eval-after-load "mouse"
   '(require 'mouse+))
+
+(eval-after-load "bookmark"
+  '(require 'bookmark+))
 
 (require 'simple+)
 
