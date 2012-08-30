@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-27 17:27:56 Monday by richard>
+;; Last modified: <2012-08-30 17:48:49 Thursday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -31,6 +31,25 @@
 (global-set-key (kbd "C-x O") (lambda () (interactive) (other-window -1))) ;; back one
 (global-set-key (kbd "C-x C-o") (lambda () (interactive) (other-window 2))) ;; forward two
 (global-set-key (kbd "C-c q") 'join-line)
+
+
+
+;; ioccur
+;; -------------------------------------------------[ioccur]
+;; (autoload 'ioccur-find-buffer-matching "ioccur"  "" t)
+(autoload 'ioccur-dired                "ioccur"  "" t)
+;; (autoload 'ioccur-restart              "ioccur"  "" t)
+;; (autoload 'ioccur-quit                 "ioccur"  "" t)
+;; (autoload 'ioccur-next-line            "ioccur"  "" t)
+;; (autoload 'ioccur-precedent-line       "ioccur"  "" t)
+;; (autoload 'ioccur-beginning-of-buffer  "ioccur"  "" t)
+;; (autoload 'ioccur-end-of-buffer        "ioccur"  "" t)
+;; (autoload 'ioccur-jump-and-quit        "ioccur"  "" t)
+;; (autoload 'ioccur-scroll-down          "ioccur"  "" t)
+;; (autoload 'ioccur-scroll-up            "ioccur"  "" t)
+(autoload 'ioccur                      "ioccur"  "" t)
+
+
 ;; using regular expression as default search
 (global-set-key (kbd "C-s") 'isearch-forward-regexp)
 (global-set-key (kbd "\C-r") 'isearch-backward-regexp)
@@ -40,7 +59,7 @@
 (define-key isearch-mode-map (kbd "C-o")
   (lambda () (interactive)
     (let ((case-fold-search isearch-case-fold-search))
-      (occur (if isearch-regexp isearch-string (regexp-quote isearch-string))))))
+      (ioccur (if isearch-regexp isearch-string (regexp-quote isearch-string))))))
 
 
 
