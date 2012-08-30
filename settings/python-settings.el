@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-15 16:58:01 Wednesday by richard>
+;; Last modified: <2012-08-30 09:00:56 Thursday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -45,7 +45,6 @@
   ;; python environment
   ;; ------------------------------------------------------------------
   (setenv "PYMACS_PYTHON" "python2")
-
   (message "****************************")
   (if (and (getenv "PYTHONPATH") (not (string= (getenv "PYTHONPATH") "")))
       (setenv "PYTHONPATH"
@@ -60,10 +59,9 @@
   (message (concat "Current PYTHONPATH is " (getenv "PYTHONPATH")))
   (message "****************************")
 
-  (pymacs-load "ropemacs" "rope-")
-
   ;; Configurations
   (setq ropemacs-guess-project t
+        ropemacs-global-prefix nil
         ropemacs-enable-autoimport t)
 
   ;; Stops from erroring if there's a syntax err
@@ -71,6 +69,8 @@
 
   (setq ropemacs-autoimport-modules '("os" "shutil" "sys" "logging"
                                       "django.*"))
+
+  (pymacs-load "ropemacs" "rope-")
 
   ;; Some unittest settings
   ;; ---------------------------------[Some unittest settings]
