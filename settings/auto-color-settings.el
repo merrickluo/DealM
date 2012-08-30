@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-26 09:03:08 Thursday by richard>
+;; Last modified: <2012-08-30 16:23:26 Thursday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -22,6 +22,7 @@ This will fontify with colors the string like \"#aabbcc\" or \"blue\".
 \(fn &optional ARG)" t nil)
 
 (dolist (hook '(html-mode-hook
+                css-mode-hook
                 emacs-lisp-mode-hook))
   (add-hook hook 'rainbow-mode))
 
