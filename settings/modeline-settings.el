@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-31 16:57:19 Friday by richard>
+;; Last modified: <2012-08-31 17:17:07 Friday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -32,8 +32,10 @@ Otherwise, setup the mode-line.
                   (cons (concat "^" settings-path-brief) '(":ESET:")))
      (add-to-list 'sml/replacer-regexp-list
                   (cons (concat "^"  plugins-path-brief) '(":EADDON:")))
+     (add-to-list 'sml/replacer-regexp-list '(" Flymake " " FM "))
+
      (setq sml/shorten-directory nil
-           sml/hidden-modes '("hl-p" "pair" "AC" "yas" "||" "Abbrev" "Rbow")
+           sml/hidden-modes '("hl-p" "pair" "yas" "||" "Abbrev" "Rbow" "_\\\+_" "Rope")
            sml/shorten-modes nil)
 
      ))
