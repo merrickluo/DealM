@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-28 18:56:04 Tuesday by richard>
+;; Last modified: <2012-08-31 12:59:42 Friday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -46,7 +46,8 @@
 
 (global-set-key '[f1] 'ftf-find-file)
 (global-set-key '[f2] 'ftf-grepsource)
-(define-key dired-mode-map '[f1] 'ftf-find-file)
+(eval-after-load "dired-mode"
+  '(define-key dired-mode-map '[f1] 'ftf-find-file))
 
 
 ;; parenthses settings
