@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-31 12:59:42 Friday by richard>
+;; Last modified: <2012-09-04 17:29:34 Tuesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -152,7 +152,6 @@
 (defun shell-short-cut()
   "shell mode short-cut key settings."
   (start-program-short-cut)
-  (smart-operator-mode-on)
   (local-set-key (kbd "<")       'self-insert-command)
   (local-set-key (kbd "C-c M-c") 'sh-case)
   (local-set-key (kbd "C-c g")   'bashdb))
