@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-30 17:48:49 Thursday by richard>
+;; Last modified: <2012-09-05 13:23:56 Wednesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -33,6 +33,16 @@
 (global-set-key (kbd "C-c q") 'join-line)
 
 
+;; back-button settings
+;; -----------------------------------[back-button settings]
+(autoload 'back-button-global-backward "back-button" "" t)
+(autoload 'back-button-global-forward "back-button" "" t)
+(autoload 'back-button-local-forward "back-button" "" t)
+(autoload 'back-button-local-backward "back-button" "" t)
+(autoload 'back-button-push-mark-local-and-global "back-button" "" t)
+(autoload 'back-button-mode "back-button" )
+(back-button-mode t)
+
 
 ;; ioccur
 ;; -------------------------------------------------[ioccur]
@@ -47,6 +57,12 @@
 ;; (autoload 'ioccur-jump-and-quit        "ioccur"  "" t)
 ;; (autoload 'ioccur-scroll-down          "ioccur"  "" t)
 ;; (autoload 'ioccur-scroll-up            "ioccur"  "" t)
+(eval-after-load "ioccur"
+  '(progn
+     (define-key ioccur-mode-map (kbd "C-v")      'ioccur-scroll-other-window-up)
+     (define-key ioccur-mode-map (kbd "C-M-n")      'ioccur-scroll-up)
+     (define-key ioccur-mode-map (kbd "C-M-p")      'ioccur-scroll-down)
+     ))
 (autoload 'ioccur                      "ioccur"  "" t)
 
 
@@ -211,7 +227,6 @@ Insert the entered operator plus surrounding spaces.
         ))
 
 (global-set-key "\C-c\C-o" 'search-buffers)
-
 
 (provide 'edit-settings)
 ;; edit-settings ends here.
