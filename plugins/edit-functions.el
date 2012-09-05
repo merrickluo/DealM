@@ -1,12 +1,12 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-06 19:54:00 Monday by richard>
+;; Last modified: <2012-08-23 17:46:45 Thursday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
 ;; Author: Richard Wong
 ;; Email: chao787@gmail.com
 
-;; Version: 1.4
+;; Version: 1.5
 ;; PUBLIC LICENSE: GPLv3
 
 (require 'ahei-misc)
@@ -52,17 +52,14 @@
   (set-buffer-file-coding-system 'dos 't))
 
 ;;;###autoload
-(defun sudo()
-  "Using the tramp to pseudo a sudo command in system(linux only)
-to access the high privilige files...."
-  (interactive)
-  (let ((temp-buffer-name (buffer-file-name)))
-    (if temp-buffer-name
-        (progn
-          (kill-buffer (current-buffer))
-          (find-file (concat "/sudo::" temp-buffer-name ))
-          (message "sudo succeed! Warn: The privilege is root!"))
-      (message "This buffer %s's corresponding file cannot be sudo(ed)." (buffer-name)))))
+(defun sudo(&optional arg)
+  "Using the tramp to pseudo a sudo command in system
+ to access the high privilige files. Learn something from esk-sudo-edit.
+"
+  (interactive "p")
+  (if (or arg (not buffer-file-name))
+      (find-file (concat "/sudo:root@localhost:" (ido-read-file-name "File: ")))
+    (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
 
 ;;;###autoload
 (defun backward-kill-word-or-kill-region ()
