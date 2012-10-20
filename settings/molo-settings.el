@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-29 16:57:41 Wednesday by richard>
+;; Last modified: <2012-09-07 17:17:15 Friday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -67,8 +67,8 @@
                   :body-tags-export	t
                   :body-tags-prefix	" <tags>"
                   :body-tags-suffix	"</tags>\n"
-                  ;;:body-section-prefix	"<secprefix>\n"
-                  ;;:body-section-suffix	"</secsuffix>\n"
+                  :body-section-prefix	"<secprefix>\n"
+                  :body-section-suffix	"</secsuffix>\n"
                   :body-line-export-preformated	t
                   :body-line-fixed-prefix	"<pre>\n"
                   :body-line-fixed-suffix	"\n</pre>\n"
@@ -76,10 +76,10 @@
                   :body-list-prefix	"\n"
                   :body-list-suffix	"\n"
                   :body-list-format	"  * %s\n"
-                  ;;:body-number-list-prefix	"<ol>\n"
-                  ;;:body-number-list-suffix	"</ol>\n"
-                  ;;:body-number-list-format	"<li>%s</li>\n"
-                  ;;:body-number-list-leave-number	t
+                  :body-number-list-prefix	"<ol>\n"
+                  :body-number-list-suffix	"</ol>\n"
+                  :body-number-list-format	"<li>%s</li>\n"
+                  ;; :body-number-list-leave-number	t
                   :body-list-checkbox-todo	"[_] "
                   :body-list-checkbox-todo-end	""
                   :body-list-checkbox-done	"[X] "
