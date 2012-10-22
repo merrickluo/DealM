@@ -1,11 +1,12 @@
 ;;; log4j-mode.el --- major mode for viewing log files
 
 ;; Copyright (C) 2006-2008 Johan Dykstrom
+;; Copyright (C) 2012 Richard Wong
 
 ;; Author: Johan Dykstrom <jody4711-sourceforge@yahoo.se>
 ;; Created: Jan 2006
-;; Version: 1.3
-;; Keywords: log, log4j, java
+;; Version: 1.4r
+;; Keywords: log, log4j, logging viewer, convinience
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -103,6 +104,8 @@
 
 ;;; Change Log:
 
+;;  1.4    2012-10-22  Make log searching string generalized.
+;;                     Suitable for more languages.
 ;;  1.3    2008-02-28  Changed load method to autoload. Fixed several XEmacs
 ;;                     bugs. Added customization of Auto Revert mode.
 ;;  1.2.1  2008-02-01  Updated to work with jtags version 0.95.
@@ -210,6 +213,41 @@ When auto reverting a buffer, XEmacs sometimes moves the point to
 `point-min'. Setting this variable to 't makes `auto-revert-buffers'
 restore the position of the point after auto reverting the buffer."
   :type 'boolean
+  :group 'log4j-mode)
+
+(defcustom log4j-keyword-fatal "\\<\\(FATAL\\|CRITICAL\\)\\>"
+  "*string that to mark the fatal level in the log file.
+
+See also function `log4j-match-record-fatal'."
+  :type 'regexp
+  :group 'log4j-mode)
+
+(defcustom log4j-keyword-error "\\<\\(ERROR\\|SEVERE\\)\\>"
+  "*string that to mark the error level in the log file.
+
+See also function `log4j-match-record-error'."
+  :type 'regexp
+  :group 'log4j-mode)
+
+(defcustom log4j-keyword-warn "\\<\\(WARN\\(?:ING\\)?\\)\\>"
+  "*string that to mark the warning level in the log file.
+
+See also function `log4j-match-record-warn'."
+  :type 'regexp
+  :group 'log4j-mode)
+
+(defcustom log4j-keyword-info "\\<\\(CONFIG\\|INFO\\)\\>"
+  "*string that to mark the info level in the log file.
+
+See also function `log4j-match-record-info'."
+  :type 'regexp
+  :group 'log4j-mode)
+
+(defcustom log4j-keyword-debug "\\<\\(DEBUG\\|FINE\\(?:R\\|ST\\)?\\|STATUS\\)\\>"
+  "*string that to mark the debug level in the log file.
+
+See also function `log4j-match-record-debug'."
+  :type 'regexp
   :group 'log4j-mode)
 
 ;; ----------------------------------------------------------------------------
@@ -576,23 +614,23 @@ first line of the declaration."
 
 (defun log4j-match-record-fatal (bound)
   "Search forward from point to BOUND for FATAL log record."
-  (log4j-record-search-forward "\\<\\(FATAL\\)\\>" bound))
+  (log4j-record-search-forward log4j-keyword-fatal bound))
 
 (defun log4j-match-record-error (bound)
   "Search forward from point to BOUND for ERROR log record."
-  (log4j-record-search-forward "\\<\\(ERROR\\|SEVERE\\)\\>" bound))
+  (log4j-record-search-forward log4j-keyword-error bound))
 
 (defun log4j-match-record-warn (bound)
   "Search forward from point to BOUND for WARN log record."
-  (log4j-record-search-forward "\\<\\(WARN\\(?:ING\\)?\\)\\>" bound))
+  (log4j-record-search-forward log4j-keyword-warn bound))
 
 (defun log4j-match-record-info (bound)
   "Search forward from point to BOUND for INFO log record."
-  (log4j-record-search-forward "\\<\\(CONFIG\\|INFO\\)\\>" bound))
+  (log4j-record-search-forward log4j-keyword-info bound))
 
 (defun log4j-match-record-debug (bound)
   "Search forward from point to BOUND for DEBUG level log record."
-  (log4j-record-search-forward "\\<\\(DEBUG\\|FINE\\(?:R\\|ST\\)?\\|STATUS\\)\\>" bound))
+  (log4j-record-search-forward log4j-keyword-debug bound))
 
 (defvar log4j-font-lock-keywords
   (list '(log4j-match-record-fatal 0 'log4j-font-lock-fatal-face)
