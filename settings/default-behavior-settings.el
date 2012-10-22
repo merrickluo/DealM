@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-10-22 15:16:18 Monday by richard>
+;; Last modified: <2012-10-22 18:26:59 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -136,6 +136,13 @@
 
 ;; log mode to replace fundamentals
 (autoload 'log4j-mode "log4j-mode" "" t )
+;; settings for log4j-mode
+(setq log4j-keyword-fatal "^\\[C.*\\]\\|\\<\\(FATAL\\|CRITICAL\\)\\>"
+      log4j-keyword-error "^\\[E.*\\]\\|\\<\\(ERROR\\|SEVERE\\|\\[E.*\\]\\)\\>"
+      log4j-keyword-warn  "^\\[W.*\\]\\|\\<\\(WARN\\(?:ING\\)?\\|\\[W.*\\]\\)\\>"
+      log4j-keyword-debug "^\\[D.*\\]\\|\\<\\(DEBUG\\|FINE\\(?:R\\|ST\\)?\\|STATUS\\)\\>"
+      log4j-keyword-info  "^\\[I.*\\]\\|\\<\\(CONFIG\\|INFO\\)\\>")
+
 
 ;; modes definition.
 (setq auto-mode-alist
