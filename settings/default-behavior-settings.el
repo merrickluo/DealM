@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-30 17:11:44 Thursday by richard>
+;; Last modified: <2012-10-22 15:16:18 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -134,12 +134,16 @@
 (setq time-stamp-format "%04y-%02m-%02d %02H:%02M:%02S %:a by %u")
 (setq time-stamp-end "\\\\?[\">]")
 
+;; log mode to replace fundamentals
+(autoload 'log4j-mode "log4j-mode" "" t )
+
 ;; modes definition.
 (setq auto-mode-alist
       (append '(("\\.[Cc][Xx][Xx]$" . c++-mode)
                 ("\\.[Cc][Pp][Pp]$" . c++-mode)
                 ("\\.[Hh][Xx][Xx]$" . c++-mode)
                 ("\\.[Tt][Cc][Cc]$" . c++-mode)
+                ("\\.[Ll][Oo][Gg]$" . log4j-mode)
                 ("\\.h$" . c++-mode)
                 ("\\.i$" . c++-mode)    ; SWIG
                 ("\\.mm?$" . objc-mode)
