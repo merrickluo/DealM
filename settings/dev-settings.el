@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-10-29 14:23:03 Monday by richard>
+;; Last modified: <2012-10-29 15:16:21 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -70,8 +70,8 @@ With a prefix argument, highlight for that many seconds.
 ;; ------------------------------------------------------------------
 (autoload 'global-auto-highlight-symbol-mode "auto-highlight-symbol" "" t)
 (autoload 'auto-highlight-symbol-mode "auto-highlight-symbol" "" t)
-
-
+(autoload 'highlight-symbol-at-point "highlight-symbol-at-point" "" t)
+(defalias 'highlight-symbol 'highlight-symbol-at-point)
 
 
 ;; show-wspace settings.
