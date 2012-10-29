@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-10-29 11:59:16 Monday by richard>
+;; Last modified: <2012-10-29 14:23:03 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -64,6 +64,13 @@ Highlight the current line for `hl-line-flash-show-period' seconds.
 With a prefix argument, highlight for that many seconds.
 
 \(fn &optional ARG)" t nil)
+
+
+;; highlight-symbol settings.
+;; ------------------------------------------------------------------
+(autoload 'global-auto-highlight-symbol-mode "auto-highlight-symbol" "" t)
+(autoload 'auto-highlight-symbol-mode "auto-highlight-symbol" "" t)
+
 
 
 
@@ -154,6 +161,7 @@ Add this to .emacs to run gofmt on the current buffer when saving:
   (linum-mode t)
   ;; highlight settings by mode.
   (hl-line-mode t)
+  (auto-highlight-symbol-mode)
   ;; (toggle-highlight-trailing-whitespace)
   ;; (toggle-highlight-tabs)
   ;; (toggle-highlight-hard-spaces)
