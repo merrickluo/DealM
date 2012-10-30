@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-22 19:30:31 Wednesday by richard>
+;; Last modified: <2012-10-30 11:01:44 Tuesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -11,7 +11,6 @@
 
 (require 'dired+)
 (require 'dired-details+)
-(require 'dired-details)
 
 (autoload 'openwith-mode "openwith" t)
 (openwith-mode t)
@@ -26,6 +25,19 @@
 (define-key dired-mode-map "o" 'other-window)
 ;; From color-moccur
 (define-key dired-mode-map "O" 'dired-do-moccur)
+
+(defvar dired-sort-map (make-sparse-keymap))
+
+(define-key dired-mode-map "s" dired-sort-map)
+
+(define-key dired-sort-map "s" (lambda () "sort by Size" (interactive) (dired-sort-other (concat dired-listing-switches " -S"))))
+(define-key dired-sort-map "x" (lambda () "sort by eXtension" (interactive) (dired-sort-other (concat dired-listing-switches " -X"))))
+(define-key dired-sort-map "t" (lambda () "sort by Time" (interactive) (dired-sort-other (concat dired-listing-switches " -t"))))
+(define-key dired-sort-map "n" (lambda () "sort by Name" (interactive) (dired-sort-other dired-listing-switches)))
+(define-key dired-sort-map "?" (lambda () "sort help" (interactive) (message "s Size; x eXtension; t Time; n Name")))
+(define-key dired-sort-map "h" (lambda () "sort help" (interactive) (message "s Size; x eXtension; t Time; n Name")))
+(define-key dired-sort-map "/" (lambda () "sort help" (interactive) (message "s Size; x eXtension; t Time; n Name")))
+
 
 
 (provide 'dired-settings)

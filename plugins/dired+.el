@@ -6,7 +6,7 @@
 ;; Maintainer: Drew Adams
 ;; Copyright (C) 1999-2012, Drew Adams, all rights reserved.
 ;; Created: Fri Mar 19 15:58:58 1999
-;; Version: 21.2
+;; Version: 21.2r
 ;; Last-Updated: Sat Oct  6 09:00:42 2012 (-0700)
 ;;           By: dradams
 ;;     Update #: 6157
@@ -2359,10 +2359,10 @@ If HDR is non-nil, insert a header line with the directory name."
 (define-key dired-mode-map "\M-i"    'diredp-insert-subdirs)                ; `M-i'
 (define-key dired-mode-map "\M-l"    'diredp-downcase-this-file)            ; `M-l'
 (define-key dired-mode-map [(meta shift ?m)] 'diredp-chmod-this-file)       ; `M-M'
-(define-key dired-mode-map "\C-o"    'diredp-find-file-other-frame)         ; `C-o'
+;; (define-key dired-mode-map "\C-o"    'diredp-find-file-other-frame)         ; `C-o'
 (when (fboundp 'diredp-chown-this-file)
   (define-key dired-mode-map [(meta shift ?o)] 'diredp-chown-this-file))    ; `M-O'
-(define-key dired-mode-map "\C-\M-o" 'dired-display-file)                   ; `C-M-o' (not `C-o')
+;; (define-key dired-mode-map "\C-\M-o" 'dired-display-file)                   ; `C-M-o' (not `C-o')
 (define-key dired-mode-map "\M-p"    'diredp-print-this-file)               ; `M-p'
 (define-key dired-mode-map "r"       'diredp-rename-this-file)              ; `r'
 (define-key dired-mode-map [(meta shift ?t)] 'diredp-touch-this-file)       ; `M-T'
