@@ -1,28 +1,29 @@
 ;;; dired-details+.el --- Enhancements to library `dired-details+.el'.
-;; 
+;;
 ;; Filename: dired-details+.el
 ;; Description: Enhancements to library `dired-details+.el'.
 ;; Author: Drew Adams
 ;; Maintainer: Drew Adams
 ;; Copyright (C) 2005-2012, Drew Adams, all rights reserved.
 ;; Created: Tue Dec 20 13:33:01 2005
-;; Version: 
-;; Last-Updated: Tue Jul 17 10:34:35 2012 (-0700)
+;; Version:
+;; Last-Updated: Thu Aug 23 10:15:47 2012 (-0700)
 ;;           By: dradams
-;;     Update #: 194
+;;     Update #: 195
 ;; URL: http://www.emacswiki.org/cgi-bin/wiki/dired-details+.el
+;; Doc URL: http://www.emacswiki.org/emacs/DiredDetails
 ;; Keywords: dired, frames
 ;; Compatibility: GNU Emacs: 20.x, 21.x, 22.x, 23.x, 24.x
-;; 
+;;
 ;; Features that might be required by this library:
 ;;
 ;;   `autofit-frame', `dired', `dired-details', `fit-frame',
 ;;   `misc-fns', `strings', `thingatpt', `thingatpt+'.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 
-;;; Commentary: 
-;; 
+;;
+;;; Commentary:
+;;
 ;;  This enhances the functionality of library `dired-details.el'.
 ;;
 ;;  1. It shrink-wraps Dired's frame whenever you show or hide
@@ -65,9 +66,9 @@
 ;;
 ;;  Note: This library also calls `dired-details-install', activating
 ;;  show/hide and binding keys `(' and `)'.
-;;    
+;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 
+;;
 ;;; Change Log:
 ;;
 ;; 2011/01/04 dadams
@@ -96,26 +97,26 @@
 ;;     dired-details-(show|hide): Only fit frame if it's showing Dired.
 ;; 2005/12/26 dadams
 ;;     Updated groups.
-;; 
+;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 
+;;
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation; either version 2, or (at your option)
 ;; any later version.
-;; 
+;;
 ;; This program is distributed in the hope that it will be useful,
 ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; GNU General Public License for more details.
-;; 
+;;
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; see the file COPYING.  If not, write to the
 ;; Free Software Foundation, Inc., 51 Franklin Street, Fifth
 ;; ;; Floor, Boston, MA 02110-1301, USA.
-;; 
+;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 
+;;
 ;;; Code:
 
 ;;; Do this `defcustom' first, before we load `dired-details', so we
@@ -152,7 +153,7 @@ This is changed each time any Dired buffer's state changes.")
 ;;; Temporarily widen.
 ;;; Delete overlays to trim new lines from, e.g. `C'.
 ;;; Use last hide/show state, if `dired-details-propagate-flag'.
-;;; 
+;;;
 (defun dired-details-activate ()
   "Set up dired-details in the current dired buffer.
 Called by `dired-after-readin-hook' on initial display and when a
