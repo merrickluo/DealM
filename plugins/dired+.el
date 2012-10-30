@@ -7,9 +7,9 @@
 ;; Copyright (C) 1999-2012, Drew Adams, all rights reserved.
 ;; Created: Fri Mar 19 15:58:58 1999
 ;; Version: 21.2
-;; Last-Updated: Sun Aug 26 19:43:32 2012 (-0700)
+;; Last-Updated: Sat Oct  6 09:00:42 2012 (-0700)
 ;;           By: dradams
-;;     Update #: 6086
+;;     Update #: 6157
 ;; URL: http://www.emacswiki.org/cgi-bin/wiki/dired+.el
 ;; Doc URL: http://www.emacswiki.org/emacs/DiredPlus
 ;; Keywords: unix, mouse, directories, diredp, dired
@@ -197,11 +197,6 @@
 ;;  ancestor Dired buffer.
 ;;
 ;;
-;;  Options defined here:
-;;
-;;    `diff-switches', `diredp-prompt-for-bookmark-prefix-flag',
-;;    `diredp-w32-local-drives'.
-;;
 ;;  Faces defined here:
 ;;
 ;;    `diredp-compressed-file-suffix', `diredp-date-time',
@@ -313,6 +308,11 @@
 ;;    `diredp-untag-this-file', `diredp-upcase-recursive',
 ;;    `diredp-upcase-this-file', `diredp-w32-drives',
 ;;    `diredp-w32-drives-mode', `toggle-diredp-find-file-reuse-dir'.
+;;
+;;  User options defined here:
+;;
+;;    `diff-switches', `diredp-prompt-for-bookmark-prefix-flag',
+;;    `diredp-w32-local-drives'.
 ;;
 ;;  Non-interactive functions defined here:
 ;;
@@ -428,6 +428,12 @@
 ;;
 ;;; Change Log:
 ;;
+;; 2012/10/06 dadams
+;;     Added: minibuffer-with-setup-hook for code byte-compiled using Emacs < 22.
+;; 2012/09/28 dadams
+;;     Moved dired-*w32* bindings after normal mouse bindings, so they override them.
+;; 2012/09/05 dadams
+;;     diredp-(rename|copy|(rel)symlink|hardlink)-this-file: Bind use-file-dialog to nil.
 ;; 2012/08/26 dadams
 ;;     Set font-lock-defaults to a 3-element list, so it works with font-menus(-da).el.
 ;; 2012/08/25 dadams
@@ -923,6 +929,29 @@
 ;; Don't require Icicles, else get recursive requires.
 ;; (require 'icicles nil t) ;; (no error if not found): icicle-read-string-completing
 
+;; Provide macro for code byte-compiled using Emacs < 22.
+(eval-when-compile
+ (when (< emacs-major-version 22)
+   (defmacro minibuffer-with-setup-hook (fun &rest body)
+     "Temporarily add FUN to `minibuffer-setup-hook' while executing BODY.
+BODY should use the minibuffer at most once.
+Recursive uses of the minibuffer are unaffected (FUN is not
+called additional times).
+
+This macro actually adds an auxiliary function that calls FUN,
+rather than FUN itself, to `minibuffer-setup-hook'."
+     ;; (declare (indent 1) (debug t))
+     (let ((hook (make-symbol "setup-hook")))
+       `(let (,hook)
+         (setq ,hook  (lambda ()
+                        ;; Clear out this hook so it does not interfere
+                        ;; with any recursive minibuffer usage.
+                        (remove-hook 'minibuffer-setup-hook ,hook)
+                        (funcall ,fun)))
+         (unwind-protect
+              (progn (add-hook 'minibuffer-setup-hook ,hook) ,@body)
+           (remove-hook 'minibuffer-setup-hook ,hook)))))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;
 
 (provide 'dired+)
@@ -943,7 +972,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;
 
- 
+
 ;;; Variables
 
 ;; `dired-do-toggle' was renamed to `dired-toggle-marks' after Emacs 20.
@@ -990,7 +1019,7 @@ name and DESCRIPTION describes DRIVE."
 ;;; The default value is designed to recognize dates and times
 ;;; regardless of the language."))
 
- 
+
 ;;; Macros
 
 
@@ -1023,6 +1052,25 @@ Return value is the number of files marked, or nil if none were marked."
                           (if (eq dired-marker-char ?\040) "un" "")
                           (if (eq dired-marker-char dired-del-marker) "flagged" "marked"))))
     (and (> count 0)  count)))
+
+
+;; Just a helper function for `dired-map-over-marks'.
+(defun diredp-get-file-or-dir-name (arg)
+  "Return name of next file or directory or nil if none.
+Argument ARG:
+ `all-files-no-dirs' or nil means skip directories.
+ `all-files-no-dots' means skip `.' and `..'."
+  (let ((fname  nil))
+    (while (and (not fname)  (not (eobp)))
+      (setq fname  (dired-get-filename t t))
+      (when (and fname  (or (not arg) (eq arg 'all-files-no-dirs))  (file-directory-p fname))
+        (setq fname  nil))
+      (when (and fname  (eq arg 'all-files-no-dots)
+                 (or (member fname '("." "..")) (string-match "/\.\.?$" fname)))
+        (setq fname  nil))
+      (forward-line 1))
+    (forward-line -1)
+    fname))
 
 
 ;; REPLACE ORIGINAL in `dired.el'.
@@ -1107,25 +1155,7 @@ If DISTINGUISH-ONE-MARKED is non-nil, then return (t FILENAME) instead
     ;; `save-excursion' loses, again
     (dired-move-to-filename)))
 
-;; Just a helper function for `dired-map-over-marks'.
-(defun diredp-get-file-or-dir-name (arg)
-  "Return name of next file or directory or nil if none.
-Argument ARG:
- `all-files-no-dirs' or nil means skip directories.
- `all-files-no-dots' means skip `.' and `..'."
-  (let ((fname  nil))
-    (while (and (not fname)  (not (eobp)))
-      (setq fname  (dired-get-filename t t))
-      (when (and fname  (or (not arg) (eq arg 'all-files-no-dirs))  (file-directory-p fname))
-        (setq fname  nil))
-      (when (and fname  (eq arg 'all-files-no-dots)
-                 (or (member fname '("." "..")) (string-match "/\.\.?$" fname)))
-        (setq fname  nil))
-      (forward-line 1))
-    (forward-line -1)
-    fname))
 
- 
 ;;; UNALTERED vanilla Emacs code to be reloaded, to use the new definition
 ;;; of `dired-map-over-marks'.  Unless otherwise noted, these are from the Emacs 23+ libraries.
 ;;; These definitions should be IDENTICAL to what's in vanilla Emacs.
@@ -1256,6 +1286,7 @@ a prefix arg lets you edit the `ls' switches used for the new listing."
                             arg)
       (dired-move-to-filename)
       (message "Redisplaying...done"))))
+
 
 ;; REPLACE ORIGINAL in `dired.el'.
 ;;
@@ -1405,7 +1436,7 @@ If HDR is non-nil, insert a header line with the directory name."
      nil)
     (add-hook 'dired-after-readin-hook 'image-dired-dired-after-readin-hook nil t)))
 
- 
+
 ;;; Key Bindings.
 
 
@@ -2230,13 +2261,6 @@ If HDR is non-nil, insert a header line with the directory name."
 (define-key diredp-menu-bar-subdir-menu [revert]
   '(menu-item "Refresh (Sync \& Show All)" revert-buffer :help "Update directory contents"))
 
-;; On Windows, bind more.
-(eval-after-load "w32-browser"
-  '(progn
-    (define-key dired-mode-map [(control return)] 'dired-w32explore) ; `C-RET'
-    (define-key dired-mode-map [(meta return)] 'dired-w32-browser) ; `M-RET'
-    (define-key dired-mode-map [mouse-2] 'dired-mouse-w32-browser))) ; `mouse-2'
-
 
 ;;; Mouse-3 menu binding.
 (define-key dired-mode-map [down-mouse-3] 'diredp-mouse-3-menu)
@@ -2253,11 +2277,18 @@ If HDR is non-nil, insert a header line with the directory name."
 (define-key dired-mode-map [S-down-mouse-1] 'ignore) ; (normally `mouse-set-font')
 ;; `diredp-mouse-mark-region-files' provides Windows-Explorer behavior
 ;; for selecting (marking) files.
-(define-key dired-mode-map [S-mouse-1] 'diredp-mouse-mark-region-files)
-(define-key dired-mode-map [mouse-2] 'dired-mouse-find-file-other-window)
-(define-key dired-mode-map [S-down-mouse-2] 'diredp-mouse-find-file)
+(define-key dired-mode-map [S-mouse-1] 'diredp-mouse-mark-region-files)     ; `S-mouse-1'
+(define-key dired-mode-map [mouse-2] 'dired-mouse-find-file-other-window)   ; `mouse-2'
+(define-key dired-mode-map [S-down-mouse-2] 'diredp-mouse-find-file)        ; `S-mouse-2'
 (define-key dired-mode-map [S-mouse-2] 'ignore)
-(define-key dired-mode-map [M-mouse-2] 'diredp-mouse-find-file-other-frame)
+(define-key dired-mode-map [M-mouse-2] 'diredp-mouse-find-file-other-frame) ; `M-mouse-2'
+
+;; On Windows, bind more.
+(eval-after-load "w32-browser"
+  '(progn
+    (define-key dired-mode-map [(control return)] 'dired-w32explore)        ; `C-RET'
+    (define-key dired-mode-map [(meta return)] 'dired-w32-browser)          ; `M-RET'
+    (define-key dired-mode-map [mouse-2] 'dired-mouse-w32-browser)))        ; `mouse-2'
 
 (define-key dired-mode-map "="       'diredp-ediff)
 ;; This replaces the `dired-x.el' binding of `dired-mark-extension'.
@@ -2417,7 +2448,7 @@ Don't forget to mention your Emacs and library versions."))
           "http://www.emacswiki.org/cgi-bin/wiki/DiredPlus")
   :link '(emacs-commentary-link :tag "Commentary" "dired+"))
 
- 
+
 ;;; Face Definitions
 
 ;;; Miscellaneous faces.
@@ -2652,15 +2683,18 @@ In particular, inode number, number of hard links, and file size."
 
 ;;; Provide for the second level of fontifying.
 (add-hook 'dired-mode-hook
-          '(lambda ()
+          (lambda ()
             (set (make-local-variable 'font-lock-defaults)
-             ;; Two levels.  Use 3-element list, since it is standard to have one more than the
-             ;; number of levels.  This is necessary for it to work with font-menus(-da).el.
-             '((dired-font-lock-keywords dired-font-lock-keywords diredp-font-lock-keywords-1)
-               t nil nil beginning-of-line))
+                 ;; Two levels.  Use 3-element list, since it is standard to have one more
+                 ;; than the number of levels.  This is necessary for it to work with
+                 ;; font-menus(-da).el.
+                 '((dired-font-lock-keywords
+                    dired-font-lock-keywords
+                    diredp-font-lock-keywords-1)
+                   t nil nil beginning-of-line))
             ;; Refresh `font-lock-keywords' from `font-lock-defaults'
             (when (fboundp 'font-lock-refresh-defaults) (font-lock-refresh-defaults))))
- 
+
 ;;; Function Definitions
 
 ;;;###autoload
@@ -3261,7 +3295,7 @@ satisfy PREDICATE are included in the result."
   (defun diredp-insert-as-subdir (child ancestor &optional in-dired-now-p)
     "Insert the current Dired dir into a Dired listing of an ancestor dir.
 Ancestor means parent, grandparent, etc. at any level.
-You are prompted for the ancestor directory.  
+You are prompted for the ancestor directory.
 The ancestor Dired buffer is selected.
 
 Markings and switches in the current Dired buffer are preserved for
@@ -5765,7 +5799,8 @@ Optional arg LOCALP with value `no-dir' means don't include directory
 name in result.  A value of `verbatim' means to return the name exactly as
 it occurs in the buffer, and a value of t means construct name relative to
 `default-directory', which still may contain slashes if in a subdirectory.
-Optional arg NO-ERROR-IF-NOT-FILEP means treat `.' and `..' as
+
+Non-nil optional arg NO-ERROR-IF-NOT-FILEP means treat `.' and `..' as
 regular filenames and return nil if no filename on this line.
 Otherwise, an error occurs in these cases."
   (let (case-fold-search file p1 p2 already-absolute)
@@ -5830,7 +5865,8 @@ Otherwise, an error occurs in these cases."
     (cond ((null file) nil)
           ((eq localp 'verbatim) file)
           ;; This is the essential Dired+ change: Added ./ and ../, not just . and ..
-          ((and (not no-error-if-not-filep)  (member file '("." ".." "./" "../")))
+          ((and (not no-error-if-not-filep)
+                (member file '("." ".." "./" "../")))
            (error "Cannot operate on `.' or `..'"))
           ((and (eq localp 'no-dir)  already-absolute)
            (file-name-nondirectory file))
@@ -6150,27 +6186,37 @@ Makes the first char of the name uppercase and the others lowercase."
 ;;;###autoload
 (defun diredp-rename-this-file ()       ; Bound to `r'
   "In Dired, rename the file on the cursor line."
-  (interactive) (dired-do-rename 1))
+  (interactive)
+  (let ((use-file-dialog  nil))
+    (dired-do-rename 1)))
 
 ;;;###autoload
 (defun diredp-copy-this-file ()         ; Not bound
   "In Dired, copy the file on the cursor line."
-  (interactive) (dired-do-copy 1))
+  (interactive)
+  (let ((use-file-dialog  nil))
+    (dired-do-copy 1)))
 
 ;;;###autoload
 (defun diredp-relsymlink-this-file ()   ; Bound to `y'
   "In Dired, make a relative symbolic link to file on cursor line."
-  (interactive) (and (fboundp 'dired-do-relsymlink) (dired-do-relsymlink 1)))
+  (interactive)
+  (let ((use-file-dialog  nil))
+    (and (fboundp 'dired-do-relsymlink) (dired-do-relsymlink 1))))
 
 ;;;###autoload
 (defun diredp-symlink-this-file ()      ; Not bound
   "In Dired, make a symbolic link to the file on the cursor line."
-  (interactive) (dired-do-symlink 1))
+  (interactive)
+  (let ((use-file-dialog  nil))
+    (dired-do-symlink 1)))
 
 ;;;###autoload
 (defun diredp-hardlink-this-file ()     ; Not bound
   "In Dired, add a name (hard link) to the file on the cursor line."
-  (interactive) (dired-do-hardlink 1))
+  (interactive)
+  (let ((use-file-dialog  nil))
+    (dired-do-hardlink 1)))
 
 ;;;###autoload
 (defun diredp-print-this-file ()        ; Bound to `M-p'
