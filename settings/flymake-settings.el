@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-13 21:30:16 Monday by richard>
+;; Last modified: <2012-11-06 14:03:02 Tuesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -162,13 +162,17 @@ Use CREATE-TEMP-F for creating temp copy."
      '("\\.cpp\\'" "\\.c\\'")
      "[ \t]*#[ \t]*include[ \t]*\"\\([[:word:]0-9/\\_.]*%s\\)\""))
 
-  (defun flymake-pyflakes-init ()
+  ;; Learn code from https://github.com/akaihola/flymake-python
+  (defun flymake-pylint-init ()
     (let* ((temp-file (flymake-init-create-temp-buffer-copy
                        'flymake-create-temp-inplace))
+
            (local-file (file-relative-name
                         temp-file
                         (file-name-directory buffer-file-name))))
-      (list (concat plugins-path-r "pycheckers.sh") (list local-file))))
+      (list (concat emacs-root-path "python-libs/pyflymake.py")
+            (list local-file))))
+      ;;     check path
 
   (defun flymake-html-init ()
     (let* ((temp-file (flymake-init-create-temp-buffer-copy
@@ -191,7 +195,7 @@ Use CREATE-TEMP-F for creating temp copy."
           ("[0-9]+\\.tex\\'" flymake-master-tex-init flymake-master-cleanup)
           ("\\.tex\\'" flymake-simple-tex-init flymake-simple-cleanup)
           ("\\.idl\\'" flymake-simple-make-init)
-          ("\\.py\\'" flymake-pyflakes-init)))
+          ("\\.py\\'" flymake-pylint-init)))
 
   (defalias 'goto-next-error 'flymake-goto-next-error "Go to next error position")
   (defalias 'goto-prev-error 'flymake-goto-prev-error "Go to previous error position")
