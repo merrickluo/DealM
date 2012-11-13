@@ -1,19 +1,24 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-26 08:57:29 Thursday by richard>
+;; Last modified: <2012-11-11 10:18:15 Sunday by June>
 
 ;; Copyright (C) 2012 Richard Wong
 
 ;; Author: Richard Wong
 ;; Email: chao787@gmail.com
 
-;; Version: 0.3
+;; Version: 0.4
 ;; PUBLIC LICENSE: GPLv3
 
-(set-frame-font "Inconsolata-14")
+(if (string= system-type "windows-nt")
+    (set-face-attribute 'default nil :font "Consolas-13")
+  (set-face-attribute 'default nil :font "Inconsolata-14"))
 
-;; 设置中文字体
-(set-fontset-font "fontset-default"
-                  'gb18030 '("ZhunYuan" . "unicode-bmp"))
+;; Set chinese font
+(if (string= system-type "windows-nt")
+    (set-fontset-font "fontset-default"
+                      'gb18030 '("Microsoft Yahei" . "unicode-bmp"))
+  (set-fontset-font "fontset-default"
+                    'gb18030 '("Zhunyuan" . "unicode-bmp")))
 
 (defun special-font()
   "Change special buffer to special font.

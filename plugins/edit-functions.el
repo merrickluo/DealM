@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-23 17:46:45 Thursday by richard>
+;; Last modified: <2012-11-11 11:23:19 Sunday by June>
 
 ;; Copyright (C) 2012 Richard Wong
 
