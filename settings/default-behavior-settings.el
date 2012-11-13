@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-10-22 18:26:59 Monday by richard>
+;; Last modified: <2012-11-13 08:50:45 Tuesday by June>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -143,7 +143,7 @@
       log4j-keyword-debug "^\\[D.*\\]\\|\\<\\(DEBUG\\|FINE\\(?:R\\|ST\\)?\\|STATUS\\)\\>"
       log4j-keyword-info  "^\\[I.*\\]\\|\\<\\(CONFIG\\|INFO\\)\\>")
 
-
+(autoload 'xahk-mode "xahk-mode" "" t)
 ;; modes definition.
 (setq auto-mode-alist
       (append '(("\\.[Cc][Xx][Xx]$" . c++-mode)
@@ -171,6 +171,7 @@
                 ("\\.ke$" . kepago-mode)
                 ("\\.markdown$" . markdown-mode)
                 ("\\.md$" . markdown-mode)
+                ("\\.[Aa][Hh][Kk]$" . xahk-mode)
                 ("\\.textile$" . textile-mode)
                 ("\\.kfn$" . kfn-mode)
                 ("\\.rb$" . ruby-mode)
