@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-10-22 18:26:59 Monday by richard>
+;; Last modified: <2012-11-15 14:30:15 Thursday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -165,7 +165,7 @@
                 ("\\.cmake\\'" . cmake-mode)
                 ("\\.uncompressed$" . hexl-mode)
                 ("\\.js$" . js2-mode)
-                ("\\.json$" . js2-mode)
+                ("\\.json$" . js-mode)
                 ("\\.y[s]?$" . snippet-mode)
                 ("headx$" . snippet-mode)
                 ("\\.ke$" . kepago-mode)
