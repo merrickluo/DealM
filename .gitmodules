@@ -18,7 +18,7 @@
 	url = git://github.com/pinard/Pymacs.git
 [submodule "plugins/auto-complete"]
 	path = plugins/auto-complete
-	url = git://github.com/m2ym/auto-complete.git
+	url = git://github.com/auto-complete/auto-complete.git
 [submodule "plugins/popup"]
 	path = plugins/popup
 	url = https://github.com/emacsmirror/popup.git

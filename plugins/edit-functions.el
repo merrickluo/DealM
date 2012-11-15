@@ -1,12 +1,12 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-23 17:46:45 Thursday by richard>
+;; Last modified: <2012-11-13 20:40:31 Tuesday by June>
 
 ;; Copyright (C) 2012 Richard Wong
 
 ;; Author: Richard Wong
 ;; Email: chao787@gmail.com
 
-;; Version: 1.5
+;; Version: 1.6
 ;; PUBLIC LICENSE: GPLv3
 
 (require 'ahei-misc)
@@ -684,6 +684,24 @@ otherwise, change current buffer to that window.
              (indent-region (progn (backward-sexp 1) (point)) pos nil))))))
 
 
+;;;###autoload
+(defun dired-open-desktop ()
+  "dired open desktop in windows or TODO: linux."
+  (interactive)
+  (if (string= system-type "windows-nt")
+      (find-file (concat (substitute-in-file-name "$USERPROFILE") "\\Desktop")))
+  )
+(defalias 'open-desktop 'dired-open-desktop)
+
+;;;###autoload
+(defun dired-open-startup ()
+  "dired open desktop in windows or TODO: linux."
+  (interactive)
+  (if (string= system-type "windows-nt")
+      (find-file (concat (substitute-in-file-name "$USERPROFILE")
+                         "\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup"))))
+
+(defalias 'open-startup-folder 'dired-open-startup)
 ;; autoloads from Drew Adams
 ;; ------------------------------------------------------------------
 (autoload 'end-of-line+                "misc-cmds" "" t)

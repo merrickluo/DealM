@@ -1,12 +1,12 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-11-13 10:29:30 Tuesday by richard>
+;; Last modified: <2012-11-15 14:39:15 Thursday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
 ;; Author: Richard Wong
 ;; Email: chao787@gmail.com
 
-;; Version: 0.1
+;; Version: 0.2
 ;; PUBLIC LICENSE: GPLv3
 
 ;; molo is short for Markdown Org latex and orz..
@@ -313,7 +313,9 @@ If At the string (which inside \") of the line and string is not empty, kill the
       (TeX-run-TeX "latexmk" "latexmk" master-file)
       (if (plist-get TeX-error-report-switches (intern master-file))
           (TeX-next-error t)
-        (minibuffer-message "latexmk done")))))
+        (minibuffer-message "latexmk done"))))
+  )
+
 
 ;; hooks
 ;; ------------------------------------------------------------------

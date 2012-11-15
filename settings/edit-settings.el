@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-09-05 13:23:56 Wednesday by richard>
+;; Last modified: <2012-11-11 11:25:33 Sunday by June>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -85,6 +85,8 @@
 (global-set-key  "\C-xc"             'org-capture)
 (global-set-key (kbd "M-C-k")        'kill-whole-paragraph)
 (global-set-key (kbd "M-C-y")        'browse-kill-ring)
+(when (string= system-type "windows-nt")
+  (w32-register-hot-key (kbd "M-w")))
 (global-set-key (kbd "M-w")          'smart-copy)
 (global-set-key (kbd "M-k")          'kill-paragraph)
 (global-set-key (kbd "M-C")          'copy-whole-paragraph)

@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-27 17:26:23 Monday by richard>
+;; Last modified: <2012-11-12 22:56:06 Monday by June>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -9,7 +9,7 @@
 ;; Version: 0.2
 ;; PUBLIC LICENSE: GPLv3
 
-(desktop-save-mode t)
+(desktop-save-mode nil)
 ;; desktop autosave
 (setq desktop-save t
 

@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-24 18:28:25 Friday by richard>
+;; Last modified: <2012-11-11 10:30:51 Sunday by June>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -67,9 +67,12 @@
 (when window-system
   (defun fullscreen ()
     "Fullscreen."
-    (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
+    (if (string= system-type "windows-nt")
+        (message "I don't hot to fullscreen in windows-nt.")
+      (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
                            ;; if first parameter is '1', can't toggle fullscreen status
-                           '(1 "_NET_WM_STATE_FULLSCREEN" 0)))
+                           '(1 "_NET_WM_STATE_FULLSCREEN" 0))
+      ))
 
   (defun fullscreen-toggle ()
     "Toggle fullscreen status."

@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-10-29 16:37:33 Monday by richard>
+;; Last modified: <2012-11-12 23:23:26 Monday by June>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -291,6 +291,10 @@ Major mode for editing JavaScript code.
 (add-hook 'LaTex-mode-hook      'tex-short-cut)
 (add-hook 'js2-mode-hook        'js2-short-cut)
 (add-hook 'jade-mode-hook       'jade-short-cut)
+(when (string= system-type "windows-nt")
+  (autoload 'powershell "powershell" "DOCSTRING" t)
+)
+
 
 (provide 'dev-settings)
 ;; dev-settings ends here.
