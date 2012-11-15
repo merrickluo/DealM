@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-09-07 17:17:15 Friday by richard>
+;; Last modified: <2012-11-13 10:29:30 Tuesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -289,26 +289,31 @@ If At the string (which inside \") of the line and string is not empty, kill the
 
 ;; latex-mode settings.
 ;; ------------------------------------------------------------------
-(add-to-list 'load-path (concat plugins-path-r "auctex/"))
-(load "auctex" nil)
-(load "preview-latex" nil)
+(when (string= system-type "gnu/linux")
 
-(setq TeX-auto-save  t)
-(setq TeX-parse-self t)
-(setq TeX-save-query nil)
+  (defun load-latex()
+    "load latex settings for org-mode or for itself."
+    (interactive)
+    (add-to-list 'load-path (concat plugins-path-r "auctex/"))
+    (load "auctex" nil)
+    (load "preview-latex" nil)
 
-;; (load "tex-buf" nil)
+    (setq TeX-auto-save  t)
+    (setq TeX-parse-self t)
+    (setq TeX-save-query nil)
+    ;; (load "tex-buf" nil)
+    )
 
-(defun run-latexmk ()
-  (interactive)
-  (let ((TeX-save-query nil)
-        (TeX-process-asynchronous nil)
-        (master-file (TeX-master-file)))
-    (TeX-save-document "")
-    (TeX-run-TeX "latexmk" "latexmk" master-file)
-    (if (plist-get TeX-error-report-switches (intern master-file))
-        (TeX-next-error t)
-      (minibuffer-message "latexmk done"))))
+  (defun run-latexmk ()
+    (interactive)
+    (let ((TeX-save-query nil)
+          (TeX-process-asynchronous nil)
+          (master-file (TeX-master-file)))
+      (TeX-save-document "")
+      (TeX-run-TeX "latexmk" "latexmk" master-file)
+      (if (plist-get TeX-error-report-switches (intern master-file))
+          (TeX-next-error t)
+        (minibuffer-message "latexmk done")))))
 
 ;; hooks
 ;; ------------------------------------------------------------------
