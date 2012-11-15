@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-06 18:50:28 Monday by richard>
+;; Last modified: <2012-11-14 11:03:07 Wednesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -24,6 +24,7 @@
 (add-to-list 'load-path settings-path-r)
 (add-to-list 'load-path plugins-path-r)
 
+;; (require 'cedet-settings) ; cedet require first.
 
 
 ;; tools
@@ -65,7 +66,7 @@
 (require 'molo-settings)
 
 ;; desktop settings
-(require 'desktop-settings)
+;; (require 'desktop-settings)
 
 
 ;; registers.
