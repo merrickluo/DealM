@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-11-11 11:25:33 Sunday by June>
+;; Last modified: <2012-11-20 15:43:16 Tuesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -213,6 +213,13 @@ Insert the entered operator plus surrounding spaces.
 \(fn ARG)" t nil)
 
 ;; (smart-operator-mode-on)
+
+;; mc-edit-lines settings
+;; ----------------------------------------[mc-edit-lines settings]
+(add-to-list 'load-path (concat plugins-path-r "multiple-cursors"))
+(autoload 'mc/edit-lines "mc-edit-lines" "" t)
+(global-set-key (kbd "C-x \\") 'mc/edit-lines)
+(global-set-key (kbd "C-x |")  'mc/edit-lines)
 
 ;; moccur settings
 ;; ----------------------------------------[moccur settings]

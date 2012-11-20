@@ -37,3 +37,6 @@
 [submodule "plugins/jade-mode"]
 	path = plugins/jade-mode
 	url = git://github.com/brianc/jade-mode.git
+[submodule "plugins/multiple-cursors"]
+	path = plugins/multiple-cursors
+	url = git@github.com:magnars/multiple-cursors.el.git
