@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-11-20 15:43:16 Tuesday by richard>
+;; Last modified: <2012-11-23 11:39:36 Friday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -73,6 +73,11 @@
 (global-set-key (kbd "C-M-r") 'isearch-backward)
 
 (define-key isearch-mode-map (kbd "C-o")
+  (lambda () (interactive)
+    (let ((case-fold-search isearch-case-fold-search))
+      (occur (if isearch-regexp isearch-string (regexp-quote isearch-string))))))
+
+(define-key isearch-mode-map (kbd "C-S-O")
   (lambda () (interactive)
     (let ((case-fold-search isearch-case-fold-search))
       (ioccur (if isearch-regexp isearch-string (regexp-quote isearch-string))))))

@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-10-30 11:01:44 Tuesday by richard>
+;; Last modified: <2012-11-20 15:09:02 Tuesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -11,6 +11,8 @@
 
 (require 'dired+)
 (require 'dired-details+)
+
+(setq dired-dwim-target t)
 
 (autoload 'openwith-mode "openwith" t)
 (openwith-mode t)
