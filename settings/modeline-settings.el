@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-31 17:17:07 Friday by richard>
+;; Last modified: <2012-11-29 11:12:26 Thursday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -35,8 +35,11 @@ Otherwise, setup the mode-line.
      (add-to-list 'sml/replacer-regexp-list '(" Flymake " " FM "))
 
      (setq sml/shorten-directory nil
-           sml/hidden-modes '("hl-p" "pair" "yas" "||" "Abbrev" "Rbow" "_\\\+_" "Rope")
-           sml/shorten-modes nil)
+           sml/hidden-modes '(" hl-p" " pair" " yas" " back" " ||"
+                              " Abbrev" " Rbow" " _\\\+_" " Rope")
+           sml/shorten-modes nil
+           sml/mode-width 16
+           sml/name-width 30)
 
      ))
 
