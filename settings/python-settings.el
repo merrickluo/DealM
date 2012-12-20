@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-30 09:00:56 Thursday by richard>
+;; Last modified: <2012-12-03 11:45:47 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -150,12 +150,17 @@
 (add-to-list 'auto-mode-alist '("\\.py3\\'" . python-mode))
 
 
+;; unittest (abl-mode)
+;; -----------------------------------------------[unittest]
+(autoload 'abl-mode "abl" "" t)
+
 
 
 ;; key
 ;; ------------------------------------------------------------------
 (add-hook 'python-mode-hook
           '(lambda ()
+             (abl-mode)
              (define-key python-mode-map "\C-m" 'newline-and-indent)))
 
 (provide 'python-settings)
