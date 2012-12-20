@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-11-23 11:39:36 Friday by richard>
+;; Last modified: <2012-12-20 15:35:56 Thursday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -81,10 +81,6 @@
   (lambda () (interactive)
     (let ((case-fold-search isearch-case-fold-search))
       (ioccur (if isearch-regexp isearch-string (regexp-quote isearch-string))))))
-
-
-
-(substitute-key-definition   'move-end-of-line 'end-of-line+ global-map)
 
 ;; other global keys.
 (global-set-key  "\C-xc"             'org-capture)

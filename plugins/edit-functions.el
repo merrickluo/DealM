@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-11-13 20:40:31 Tuesday by June>
+;; Last modified: <2012-12-20 15:35:20 Thursday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -702,19 +702,6 @@ otherwise, change current buffer to that window.
                          "\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup"))))
 
 (defalias 'open-startup-folder 'dired-open-startup)
-;; autoloads from Drew Adams
-;; ------------------------------------------------------------------
-(autoload 'end-of-line+                "misc-cmds" "" t)
-(autoload 'region-length               "misc-cmds" "" t)
-(autoload 'goto-longest-line           "misc-cmds" "" t)
-(autoload 'goto-long-line              "misc-cmds" "" t)
-(autoload 'region-to-buffer            "misc-cmds" "" t)
-(autoload 'region-to-file              "misc-cmds" "" t)
-(autoload 'resolve-file-name           "misc-cmds" "" t)
-(autoload 'kill-buffer-and-its-windows "misc-cmds" "" t)
-(autoload 'indirect-buffer             "misc-cmds" "" t)
-(autoload 'clear-search-ring           "misc-cmds" "" t)
-(autoload 'clear-regexp-search-ring    "misc-cmds" "" t)
 
 (provide 'edit-functions)
 ;; edit-functions ends here.
