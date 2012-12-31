@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-11-15 14:37:14 Thursday by richard>
+;; Last modified: <2012-12-31 09:35:33 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -205,6 +205,9 @@
 
 (eval-after-load "help-fns"
   '(require 'help-fns+))
+
+(eval-after-load "help-mode"
+  '(require 'help-mode+))
 
 (eval-after-load "info"
   '(require 'info+))
