@@ -88,6 +88,34 @@
     (end-of-buffer-other-window buffer)))
 
 ;;;###autoload
+(defun unittest()
+  "UNITTEST, Add C-U prefix to make a v..."
+  (interactive)
+  (let ((file (buffer-file-name)) base-name)
+    (if (not file)
+        (message "此buffer不与任何文件关联")
+      (setq base-name (file-name-nondirectory file))
+      (let ((extension (file-name-extension file))
+            (mode (symbol-name major-mode)))
+        (cond
+         ((equal extension "cpp")
+          (compile (format "g++ -g %s -o %s" file (file-name-sans-extension base-name))))
+         ((equal (downcase extension) "c")
+          (compile (format "gcc -g %s -o %s" file (file-name-sans-extension base-name))))
+         ((equal extension "java")
+          (compile (format "javac -g %s" file)))
+         ((equal extension "jj")
+          (compile (format "javacc %s" file)))
+         ((equal extension "sh")
+          (compile (format "sh -n %s" file)))
+         ((equal extension "jade")
+          (compile (format "pyjade -c jinja %s" file)))
+         ((string-match "ruby-mode$" mode)
+          (compile (format "ruby %s" file)))
+         ((string-match "python-mode$" mode)
+          (compile (format "nosetests -v %s" file))))))))
+
+;;;###autoload
 (defun make ()
   "在当前目录下执行\"make\"命令"
   (interactive)

@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-21 07:30:14 Tuesday by richard>
+;; Last modified: <2012-12-03 12:04:59 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -15,6 +15,7 @@
 
 ;; compile-misc need smart compile inside.
 (autoload 'compile-buffer "compile-misc" "" t)
+(autoload 'unittest       "compile-misc" "" t)
 (autoload 'run-program    "compile-misc" "" t)
 (autoload 'make           "compile-misc" "" t)
 (autoload 'make-check     "compile-misc" "" t)
@@ -54,6 +55,7 @@
   (defun compile-keys ()
     (local-set-key (kbd "C-c C-m")  'make)
     (local-set-key (kbd "C-c m")    'make-check)
+    (local-set-key (kbd "C-c t")    'unittest)
     (local-set-key (kbd "C-c M")    'make-clean)
     (local-set-key (kbd "C-c c")    'compile-buffer)
     (local-set-key (kbd "C-c r")    'run-program))
