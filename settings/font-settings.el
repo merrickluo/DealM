@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-11-11 10:18:15 Sunday by June>
+;; Last modified: <2012-12-31 09:55:16 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -11,7 +11,7 @@
 
 (if (string= system-type "windows-nt")
     (set-face-attribute 'default nil :font "Consolas-13")
-  (set-face-attribute 'default nil :font "Inconsolata-14"))
+  (set-face-attribute 'default nil :font "Inconsolata-20"))
 
 ;; Set chinese font
 (if (string= system-type "windows-nt")
