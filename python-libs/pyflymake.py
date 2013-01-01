@@ -218,7 +218,7 @@ class Pep8Runner(LintRunner):
       spiders/structs.py:51:9: E301 expected 1 blank line, found 0 """
 
     command = 'pep8'
-    # sane_default_ignore_codes = set([
+    sane_default_ignore_codes = set(['E125'])
     #     'RW29', 'W391',
     #     'W291', 'WO232'])
 
