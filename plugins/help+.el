@@ -4,15 +4,16 @@
 ;; Description: Extensions to `help.el'.
 ;; Author: Drew Adams
 ;; Maintainer: Drew Adams
-;; Copyright (C) 1999-2012, Drew Adams, all rights reserved.
+;; Copyright (C) 1999-2013, Drew Adams, all rights reserved.
 ;; Created: Tue Mar 16 14:18:11 1999
 ;; Version: 20.0
-;; Last-Updated: Sun Apr  1 10:52:37 2012 (-0700)
+;; Last-Updated: Fri Dec 28 09:50:49 2012 (-0800)
 ;;           By: dradams
-;;     Update #: 2133
-;; URL: http://www.emacswiki.org/cgi-bin/wiki/help+.el
+;;     Update #: 2144
+;; URL: http://www.emacswiki.org/help+.el
+;; Doc URL: http://emacswiki.org/HelpPlus
 ;; Keywords: help
-;; Compatibility: GNU Emacs: 22.x, 23.x
+;; Compatibility: GNU Emacs: 22.x, 23.x, 24.x
 ;;
 ;; Features that might be required by this library:
 ;;
@@ -69,6 +70,11 @@
 ;;
 ;;; Change Log:
 ;;
+;; 2012/08/21 dadams
+;;     Call tap-put-thing-at-point-props after load thingatpt+.el.
+;; 2012/08/18 dadams
+;;     Invoke tap-define-aliases-wo-prefix if thingatpt+.el is loaded.
+;;     help-on-click/key: Use tap-symbol-at-point, not symbol-at-point, if defined.
 ;; 2012/04/01 dadams
 ;;     where-is: Wrap individual key sequences in `', not just all of them together.
 ;; 2011/10/07 dadams
@@ -109,7 +115,13 @@
 (require 'info+ nil t) ;; (no error if not found):
                        ;; Info-goto-emacs-key-command-node (returns found-p)
 (require 'thingatpt nil t)  ;; (no error if not found): symbol-at-point
-(require 'thingatpt+ nil t) ;; (no error if not found): symbol-nearest-point
+
+(when (and (require 'thingatpt+ nil t) ;; (no error if not found)
+           (fboundp 'tap-put-thing-at-point-props)) ; >= 2012-08-21
+  (tap-define-aliases-wo-prefix)
+  (tap-put-thing-at-point-props))
+ ;; symbol-nearest-point, tap-symbol-at-point
+
 (require 'frame-fns nil t)  ;; (no error if not found): 1-window-frames-on
 (require 'naked nil t) ;; (no error if not found): naked-key-description
 
@@ -500,8 +512,11 @@ If you click elsewhere in a buffer other than the minibuffer, then
                            (Info-goto-node "(emacs)Minibuffer")
                            (message "Minibuffer: decribed in buffer `*info*'."))
                           (t
-                           (let ((symb            (save-excursion (mouse-set-point key)
-                                                       (symbol-at-point)))
+                           (let ((symb            (save-excursion
+                                                    (mouse-set-point key)
+                                                    (if (fboundp 'tap-symbol-at-point)
+                                                        (tap-symbol-at-point)
+                                                      (symbol-at-point))))
                                  (apropos-do-all  t)
                                  (found-doc       nil)
                                  (found           nil)
