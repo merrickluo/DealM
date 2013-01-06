@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-26 09:27:39 Thursday by richard>
+;; Last modified: <2013-01-06 10:33:37 Sunday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -90,8 +90,10 @@ type of version control found in that directory"
 ;; change magit diff colors
 (eval-after-load 'magit
   '(progn
-     (set-face-attribute 'magit-diff-add nil         :foreground "green1")
-     (set-face-attribute 'magit-diff-del nil         :foreground "red1")
+     (set-face-attribute 'magit-item-highlight   nil :background "grey20"
+                         :inherit    nil)
+     (set-face-attribute 'magit-diff-add         nil :foreground "green1")
+     (set-face-attribute 'magit-diff-del         nil :foreground "red1")
      (set-face-attribute 'magit-diff-file-header nil :foreground "RoyalBlue1")
      (set-face-attribute 'magit-diff-hunk-header nil :foreground "#fbde2d")))
 
