@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-12-31 09:55:16 Monday by richard>
+;; Last modified: <2013-01-06 10:21:32 Sunday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -8,10 +8,10 @@
 
 ;; Version: 0.4
 ;; PUBLIC LICENSE: GPLv3
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;line have 80 length;;
 (if (string= system-type "windows-nt")
     (set-face-attribute 'default nil :font "Consolas-13")
-  (set-face-attribute 'default nil :font "Inconsolata-20"))
+  (set-face-attribute 'default nil :font "Monofur-16"))
 
 ;; Set chinese font
 (if (string= system-type "windows-nt")
