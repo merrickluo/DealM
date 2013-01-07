@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-11-12 23:23:26 Monday by June>
+;; Last modified: <2013-01-07 18:44:01 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -115,19 +115,20 @@ Add this to .emacs to run gofmt on the current buffer when saving:
 
 
 
-;; Find-things-fast settings.
+;; Projectile settings. more smarter than ftf
 ;; ------------------------------------------------------------------
-(add-to-list 'load-path (concat plugins-path-r "find-things-fast"))
-(autoload 'ftf-grepsource    "find-things-fast" "" t)
-(autoload 'ftf-find-file     "find-things-fast" "" t)
-(autoload 'ftf-compile       "find-things-fast" "" t)
-(autoload 'ftf-gdb           "find-things-fast" "" t)
-(autoload 'ftf-add-filetypes "find-things-fast")
+(require 'projectile)
+(defun smart-find-file ()
+  (interactive)
+  (if (projectile-project-p)
+           (call-interactively 'projectile-find-file)
+    (call-interactively 'ido-find-file)))
 
-(global-set-key '[f1] 'ftf-find-file)
+(autoload 'ftf-grepsource    "find-things-fast" "" t)
+(global-set-key '[f1] 'smart-find-file)
 (global-set-key '[f2] 'ftf-grepsource)
-(eval-after-load "dired-mode"
-  '(define-key dired-mode-map '[f1] 'ftf-find-file))
+(eval-after-load "dired"
+  '(define-key dired-mode-map '[f1] 'smart-find-file))
 
 
 ;; parenthses settings

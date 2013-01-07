@@ -1,12 +1,12 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-12-20 15:35:20 Thursday by richard>
+;; Last modified: <2013-01-07 19:58:57 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
 ;; Author: Richard Wong
 ;; Email: chao787@gmail.com
 
-;; Version: 1.6
+;; Version: 1.7
 ;; PUBLIC LICENSE: GPLv3
 
 (require 'ahei-misc)
@@ -700,6 +700,25 @@ otherwise, change current buffer to that window.
   (if (string= system-type "windows-nt")
       (find-file (concat (substitute-in-file-name "$USERPROFILE")
                          "\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup"))))
+
+;;;###autoload
+(defun get-buffers-matching-mode (mode)
+  "Returns a list of buffers where their major-mode is equal to MODE"
+  (let ((buffer-mode-matches '()))
+   (dolist (buf (buffer-list))
+     (with-current-buffer buf
+       (if (eq mode major-mode)
+           (add-to-list 'buffer-mode-matches buf))))
+   buffer-mode-matches))
+
+;;;###autoload
+(defun multi-occur-in-this-mode (&optional regexp)
+  "Show all lines matching REGEXP in buffers with this major mode."
+  (interactive)
+  (let ((regexp (or regexp (car (occur-read-primary-args)))))
+    (multi-occur (get-buffers-matching-mode major-mode)
+                 regexp)))
+
 
 (defalias 'open-startup-folder 'dired-open-startup)
 

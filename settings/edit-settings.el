@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-12-20 15:35:56 Thursday by richard>
+;; Last modified: <2013-01-07 19:58:13 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -11,7 +11,6 @@
 
 (require 'edit-functions)
 (require 'browse-kill-ring+)
-(require 'color-moccur)
 
 
 ;; global keys
@@ -35,36 +34,17 @@
 
 ;; back-button settings
 ;; -----------------------------------[back-button settings]
-(autoload 'back-button-global-backward "back-button" "" t)
-(autoload 'back-button-global-forward "back-button" "" t)
-(autoload 'back-button-local-forward "back-button" "" t)
-(autoload 'back-button-local-backward "back-button" "" t)
+(autoload 'back-button-global-backward            "back-button" "" t)
+(autoload 'back-button-global-forward             "back-button" "" t)
+(autoload 'back-button-local-forward              "back-button" "" t)
+(autoload 'back-button-local-backward             "back-button" "" t)
 (autoload 'back-button-push-mark-local-and-global "back-button" "" t)
-(autoload 'back-button-mode "back-button" )
+(autoload 'back-button-mode                       "back-button" )
 (back-button-mode t)
 
 
-;; ioccur
+;; occur
 ;; -------------------------------------------------[ioccur]
-;; (autoload 'ioccur-find-buffer-matching "ioccur"  "" t)
-(autoload 'ioccur-dired                "ioccur"  "" t)
-;; (autoload 'ioccur-restart              "ioccur"  "" t)
-;; (autoload 'ioccur-quit                 "ioccur"  "" t)
-;; (autoload 'ioccur-next-line            "ioccur"  "" t)
-;; (autoload 'ioccur-precedent-line       "ioccur"  "" t)
-;; (autoload 'ioccur-beginning-of-buffer  "ioccur"  "" t)
-;; (autoload 'ioccur-end-of-buffer        "ioccur"  "" t)
-;; (autoload 'ioccur-jump-and-quit        "ioccur"  "" t)
-;; (autoload 'ioccur-scroll-down          "ioccur"  "" t)
-;; (autoload 'ioccur-scroll-up            "ioccur"  "" t)
-(eval-after-load "ioccur"
-  '(progn
-     (define-key ioccur-mode-map (kbd "C-v")      'ioccur-scroll-other-window-up)
-     (define-key ioccur-mode-map (kbd "C-M-n")      'ioccur-scroll-up)
-     (define-key ioccur-mode-map (kbd "C-M-p")      'ioccur-scroll-down)
-     ))
-(autoload 'ioccur                      "ioccur"  "" t)
-
 
 ;; using regular expression as default search
 (global-set-key (kbd "C-s") 'isearch-forward-regexp)
@@ -80,7 +60,17 @@
 (define-key isearch-mode-map (kbd "C-S-O")
   (lambda () (interactive)
     (let ((case-fold-search isearch-case-fold-search))
-      (ioccur (if isearch-regexp isearch-string (regexp-quote isearch-string))))))
+      (multi-occur-in-this-mode
+       (if isearch-regexp isearch-string (regexp-quote isearch-string))))))
+
+(eval-after-load "projectile"
+  (define-key isearch-mode-map (kbd "C-S-O")
+    (lambda () (interactive)
+      (let ((case-fold-search isearch-case-fold-search)
+            (search-string (if isearch-regexp isearch-string (regexp-quote isearch-string))))
+        (if (projectile-project-p)
+            (projectile-multi-occur search-string)
+          (multi-occur-in-this-mode search-string))))))
 
 ;; other global keys.
 (global-set-key  "\C-xc"             'org-capture)
