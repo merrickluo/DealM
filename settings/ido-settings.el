@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-28 12:25:34 Saturday by richard>
+;; Last modified: <2013-01-07 20:28:59 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -34,6 +34,15 @@
   )
 
 (add-hook 'ido-setup-hook 'ido-my-keys)
+(eval-after-load "projectile"
+  '(progn
+     (defun smart-switch-buffer()
+       (interactive)
+       (if (projectile-project-p)
+           (call-interactively 'projectile-switch-to-buffer)
+       (call-interactively 'switch-to-buffer)))
+     (global-set-key (kbd "C-x b") 'smart-switch-buffer)))
+
 
 (provide 'ido-settings)
 ;; ido-settings ends here.
