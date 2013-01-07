@@ -243,11 +243,12 @@ have been indexed."
     "Switch to buffer: "
     (projectile-project-buffer-names))))
 
-(defun projectile-multi-occur ()
+(defun projectile-multi-occur (&optional regexp)
   "Do a `multi-occur' in the project's buffers."
   (interactive)
-  (multi-occur (projectile-project-buffers)
-               (car (occur-read-primary-args))))
+  (let ((regexp (or regexp (car (occur-read-primary-args)))))
+        (multi-occur (projectile-project-buffers)
+                     regexp)))
 
 (defun projectile-hashify-files (files-list)
   "Make the list of project files FILES-LIST ido friendly."
