@@ -1,10 +1,11 @@
 ;;; projectile.el --- Manage and navigate projects in Emacs easily
 
 ;; Copyright © 2011-2013 Bozhidar Batsov
+;; Copyright © 2013 Richard Wong
 
-;; Author: Bozhidar Batsov
+;; Author: Bozhidar Batsov, Richard Wong
 ;; URL: https://github.com/bbatsov/projectile
-;; Version: 0.8
+;; Version: 0.8R
 ;; Keywords: project, convenience
 ;; Package-Requires: ((s "1.0.0") (dash "1.0.0"))
 
@@ -86,6 +87,24 @@ Otherwise consider the current directory the project root."
 
 (defcustom projectile-tags-command "ctags -Re %s"
   "The command Projectile's going to use to generate a TAGS file."
+  :group 'projectile
+  :type 'string)
+
+(defcustom projectile-git-grep-command "git --no-pager grep --no-color -n -e "
+  "The command Projectile's going to use to grep git project."
+  :group 'projectile
+  :type 'string)
+
+(defcustom projectile-basic-grep-command "find . -path '*/.svn' -prune -o -name "
+  "The command Projectile's going to use to grep normal folder."
+  :group 'projectile
+  :type 'string)
+
+(defcustom projectile-grep-file-types
+  '("*.h" "*.hpp" "*.cpp" "*.c" "*.cc" "*.cpp" "*.inl" "*.grd" "*.idl" "*.m"
+    "*.mm" "*.py" "*.sh" "*.cfg" "*SConscript" "SConscript*" "*.scons"
+    "*.vcproj" "*.vsprops" "*.make" "*.gyp" "*.gypi")
+  "The file for the projectile going to grep."
   :group 'projectile
   :type 'string)
 
@@ -200,8 +219,8 @@ have been indexed."
          ((and (s-ends-with-p "/" current-file)
                ;; avoid loops & ignore some well known directories
                (not (-any? (lambda (file)
-                            (string= (s-chop-suffix "/" current-file) file))
-                          '("." ".." ".svn" ".cvs")))
+                             (string= (s-chop-suffix "/" current-file) file))
+                           '("." ".." ".svn" ".cvs")))
                (not (projectile-ignored-directory-p absolute-file))
                (not (and patterns
                          (projectile-ignored-rel-p directory
@@ -225,7 +244,7 @@ have been indexed."
   (let ((project-files (projectile-project-files (projectile-project-root)))
         (buffer-files (-map 'buffer-file-name (buffer-list))))
     (-map 'get-file-buffer
-            (intersection project-files buffer-files :test 'string=))))
+          (intersection project-files buffer-files :test 'string=))))
 
 (defun projectile-project-buffer-names ()
   "Get a list of project buffer names."
@@ -247,8 +266,18 @@ have been indexed."
   "Do a `multi-occur' in the project's buffers."
   (interactive)
   (let ((regexp (or regexp (car (occur-read-primary-args)))))
-        (multi-occur (projectile-project-buffers)
-                     regexp)))
+    (multi-occur (projectile-project-buffers)
+                 regexp)))
+
+(defun projectile-project-type (&optional file-pos)
+  "Return projectile type, accelerate using specific tools"
+  (let ((file-pos (or file-pos default-directory)))
+    (or
+     (and (locate-dominating-file file-pos ".git") "git")
+     (and (locate-dominating-file file-pos ".projectile") "projectile")
+     (and (locate-dominating-file file-pos ".hg") "hg")
+     (and (locate-dominating-file file-pos ".bzr") "bzr")
+     (and (locate-dominating-file file-pos "Gemfile") "ruby"))))
 
 (defun projectile-hashify-files (files-list)
   "Make the list of project files FILES-LIST ido friendly."
@@ -409,6 +438,55 @@ have been indexed."
           (grep-find-ignored-files (append (-map (lambda (file) (s-replace root-dir "" file)) (projectile-ignored-files)) grep-find-ignored-files)))
       (grep-compute-defaults)
       (rgrep search-regexp "* .*" root-dir))))
+
+(defun projectile-interactive-read (string)
+  "Gets interactive arguments for a function. This reuses your
+current major mode's find-tag-default-function if possible,
+otherwise defaulting to `find-tag-default'."
+  (list
+   (let* ((default (funcall (or (get major-mode 'find-tag-default-function)
+                                'find-tag-default)))
+          (spec (read-from-minibuffer
+                 (if default
+                     (format "%s (default %s): "
+                             (substring string 0
+                                        (string-match "[ :]+\\'" string))
+                             default)
+                   string)
+                 nil nil nil default nil)))
+     (if (equal spec "")
+         (or default (error "There is no default symbol to grep for."))
+       spec))))
+
+;;;###autoload
+(defun projectile-smart-grep (args)
+  "smart grep in projectile."
+  (interactive (projectile-interactive-read "Grep project for string: "))
+  (let* ((quoted (replace-regexp-in-string "\"" "\\\\\"" args))
+         (grep-use-null-device nil)
+         (default-directory (projectile-project-root))
+         (current-type (and buffer-file-name
+                            (concat "*."
+                                    (file-name-extension
+                                     (file-name-nondirectory buffer-file-name)))))
+         (grep-file-types (if current-type
+                              (cons current-type projectile-grep-file-types)
+                            projectile-grep-file-types)))
+    (cond ((string= (projectile-project-type) "git")
+           ;; We can accelerate our grep using the git data.
+           (grep (concat projectile-git-grep-command
+                         "\""
+                         quoted
+                         "\" -- \""
+                         (mapconcat 'identity grep-file-types "\" \"")
+                         "\"")))
+          (t            ;; Fallback to find|xargs
+           (grep (concat projectile-basic-grep-command
+                         " \""
+                         (mapconcat 'identity grep-file-types "\" -or -name \"")
+                         "\""
+                         " | xargs grep -nH -e \""
+                          quoted "\""))))))
 
 (defun projectile-ack ()
   "Run an `ack-and-a-half' search in the project."
