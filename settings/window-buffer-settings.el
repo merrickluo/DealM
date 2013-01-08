@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-01-07 18:36:29 Monday by richard>
+;; Last modified: <2013-01-08 19:48:20 Tuesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -13,8 +13,10 @@
 ;; Buffer settings
 ;; ------------------------------------------------------------------
 ;;recentf
-(require 'recentf)
+(autoload 'recentf-mode "recentf" "" t)
 (recentf-mode 1)
+(setq recentf-exclude '("\\.windows\\'"
+                        "\\/ssh\\'"))
 (setq recentf-max-saved-items 500)
 (setq recentf-max-menu-items 60)
 
