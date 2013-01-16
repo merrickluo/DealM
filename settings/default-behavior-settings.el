@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-12-31 09:35:33 Monday by richard>
+;; Last modified: <2013-01-14 17:26:38 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -133,6 +133,10 @@
 (setq time-stamp-start "Last modified:[ \t]+\\\\?[\"<]+")
 (setq time-stamp-format "%04y-%02m-%02d %02H:%02M:%02S %:a by %u")
 (setq time-stamp-end "\\\\?[\">]")
+
+;; set basic cua-mode.
+(setq cua-remap-control-z nil
+      cua-remap-control-v nil)
 
 ;; log mode to replace fundamentals
 (autoload 'log4j-mode "log4j-mode" "" t )
