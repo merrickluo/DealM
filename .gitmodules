@@ -40,3 +40,6 @@
 [submodule "plugins/multiple-cursors"]
 	path = plugins/multiple-cursors
 	url = git@github.com:magnars/multiple-cursors.el.git
+[submodule "plugins/emacs-jedi"]
+	path = plugins/emacs-jedi
+	url = git@github.com:tkf/emacs-jedi.git
