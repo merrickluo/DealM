@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-01-08 21:24:08 Tuesday by richard>
+;; Last modified: <2013-01-21 09:32:30 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -211,16 +211,9 @@ Add this to .emacs to run gofmt on the current buffer when saving:
   (smart-operator-mode-on)
   (start-program-short-cut)
   ;; new speacial complete. hijhij
-  (local-set-key (kbd "M-?") 'rope-code-assist)
-  (local-set-key (kbd "M-/") 'rope-lucky-assist)
-  (local-set-key (kbd "<f12>") 'rope-goto-definition)
-  (local-set-key (kbd "C-c d") 'rope-show-doc)
-  (local-set-key (kbd "C-c f") 'rope-find-occurrences)
-
-  ;; Rope bindings
-  (add-hook 'python-mode-hook
-            (local-set-key "\C-ci" 'rope-auto-import)
-            (local-set-key "\C-c\C-d" 'rope-show-calltip)))
+  (local-set-key (kbd "C-c g") 'jedi:goto-definition)
+  (local-set-key (kbd "M-/") 'jedi:complete)
+  (local-set-key (kbd "C-c d") 'jedi:show-doc))
 
 ;; awk mode short cut settings.
 ;; ==================================================================

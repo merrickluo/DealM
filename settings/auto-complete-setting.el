@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-08-13 08:50:38 Monday by richard>
+;; Last modified: <2013-01-21 09:13:24 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -55,35 +55,6 @@
   )
 
 ;;(setq ac-ignores (concatenate 'list ac-ignores (epy-get-all-snips)))
-
-
-
-;; python part
-;; ------------------------------------------------------------------
-;; ropemacs Integration with auto-completion
-(defun ac-ropemacs-candidates ()
-  (mapcar (lambda (completion)
-            (concat ac-prefix completion))
-          (rope-completions)))
-
-(ac-define-source nropemacs
-  '((candidates . ac-ropemacs-candidates)
-    (symbol     . "p")))
-
-(ac-define-source nropemacs-dot
-  '((candidates . ac-ropemacs-candidates)
-    (symbol     . "p")
-    (prefix     . c-dot)
-    (requires   . 0)))
-
-(defun ac-nropemacs-setup ()
-  (setq ac-sources (append '(ac-source-nropemacs
-                             ac-source-nropemacs-dot) ac-sources)))
-(defun ac-python-mode-setup ()
-  (add-to-list 'ac-sources 'ac-source-yasnippet))
-
-(add-hook 'python-mode-hook 'ac-python-mode-setup)
-(add-hook 'rope-open-project-hook 'ac-nropemacs-setup)
 
 
 (provide 'auto-complete-setting)
