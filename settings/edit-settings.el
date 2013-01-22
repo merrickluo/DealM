@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-01-07 19:58:13 Monday by richard>
+;; Last modified: <2013-01-22 14:13:22 Tuesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -27,6 +27,12 @@
 (global-set-key (kbd "C-x M-m") 'switch-to-message)
 (global-set-key (kbd "M-SPC")   'just-one-space)
 (global-set-key (kbd "C-x j")   'jump-to-register)   ;; global jump
+
+(global-set-key (kbd "<M-mouse-4>") 'previous-buffer)
+(global-set-key (kbd "<M-mouse-5>") 'next-buffer)
+(global-set-key (kbd "<M-wheel-up>") 'previous-buffer)
+(global-set-key (kbd "<M-wheel-down>") 'next-buffer)
+
 (global-set-key (kbd "C-x O") (lambda () (interactive) (other-window -1))) ;; back one
 (global-set-key (kbd "C-x C-o") (lambda () (interactive) (other-window 2))) ;; forward two
 (global-set-key (kbd "C-c q") 'join-line)
@@ -42,6 +48,9 @@
 (autoload 'back-button-mode                       "back-button" )
 (back-button-mode t)
 
+;; Set iedit-mode directly
+(setq iedit-mode t)
+(global-set-key (kbd "C-;") 'iedit-dwim)
 
 ;; occur
 ;; -------------------------------------------------[ioccur]

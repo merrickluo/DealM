@@ -1,12 +1,12 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-01-07 19:58:57 Monday by richard>
+;; Last modified: <2013-01-22 14:14:53 Tuesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
 ;; Author: Richard Wong
 ;; Email: chao787@gmail.com
 
-;; Version: 1.7
+;; Version: 1.8
 ;; PUBLIC LICENSE: GPLv3
 
 (require 'ahei-misc)
@@ -721,6 +721,27 @@ otherwise, change current buffer to that window.
 
 
 (defalias 'open-startup-folder 'dired-open-startup)
+
+(autoload 'iedit-mode "iedit" "" t)
+(autoload 'iedit-done "iedit")
+(autoload 'iedit-start "iedit")
+
+;;;###autoload
+(defun iedit-dwim (arg)
+  "Starts iedit but uses \\[narrow-to-defun] to limit its scope."
+  (interactive "P")
+  (if arg
+      (iedit-mode)
+    (save-excursion
+      (save-restriction
+        (widen)
+        ;; this function determines the scope of `iedit-start'.
+        (if iedit-mode
+            (iedit-done)
+          ;; `current-word' can of course be replaced by other
+          ;; functions.
+          (narrow-to-defun)
+          (iedit-start (current-word) (point-min) (point-max)))))))
 
 (provide 'edit-functions)
 ;; edit-functions ends here.
