@@ -43,3 +43,6 @@
 [submodule "plugins/emacs-jedi"]
 	path = plugins/emacs-jedi
 	url = git@github.com:tkf/emacs-jedi.git
+[submodule "plugins/clojure-mode"]
+	path = plugins/clojure-mode
+	url = git@github.com:technomancy/clojure-mode.git
