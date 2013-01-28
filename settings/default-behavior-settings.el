@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-01-14 17:26:38 Monday by richard>
+;; Last modified: <2013-01-28 14:48:50 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -148,6 +148,12 @@
       log4j-keyword-info  "^\\[I.*\\]\\|\\<\\(CONFIG\\|INFO\\)\\>")
 
 (autoload 'xahk-mode "xahk-mode" "" t)
+
+;; clojure modes
+(add-to-list 'load-path (concat plugins-path-r "clojure-mode"))
+(autoload 'clojure-mode "clojure-mode" "" t)
+(autoload 'clojurescript-mode "clojurescript-mode" "" t)
+
 ;; modes definition.
 (setq auto-mode-alist
       (append '(("\\.[Cc][Xx][Xx]$" . c++-mode)
@@ -169,6 +175,7 @@
                 ("\\.cmake\\'" . cmake-mode)
                 ("\\.uncompressed$" . hexl-mode)
                 ("\\.js$" . js2-mode)
+                ("\\.clj$" . clojure-mode)
                 ("\\.json$" . js-mode)
                 ("\\.y[s]?$" . snippet-mode)
                 ("headx$" . snippet-mode)
