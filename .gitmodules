@@ -46,3 +46,6 @@
 [submodule "plugins/clojure-mode"]
 	path = plugins/clojure-mode
 	url = git@github.com:technomancy/clojure-mode.git
+[submodule "plugins/nrepl"]
+	path = plugins/nrepl
+	url = git://github.com/kingtim/nrepl.el.git
