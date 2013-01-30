@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-11-06 14:03:02 Tuesday by richard>
+;; Last modified: <2013-01-30 14:58:30 Wednesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -155,12 +155,6 @@ Use CREATE-TEMP-F for creating temp copy."
         (flymake-report-fatal-status
          "TMPERR" (format "Can't create temp file for %s" source-file-name)))
       args))
-
-  (defun flymake-master-make-gcc-header-init ()
-    (flymake-master-make-gcc-init
-     'flymake-get-include-dirs
-     '("\\.cpp\\'" "\\.c\\'")
-     "[ \t]*#[ \t]*include[ \t]*\"\\([[:word:]0-9/\\_.]*%s\\)\""))
 
   ;; Learn code from https://github.com/akaihola/flymake-python
   (defun flymake-pylint-init ()
