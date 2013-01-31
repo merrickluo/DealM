@@ -101,8 +101,11 @@ Otherwise consider the current directory the project root."
   :type 'string)
 
 (defcustom projectile-grep-file-types
-  '("*.h" "*.hpp" "*.cpp" "*.c" "*.cc" "*.cpp" "*.inl" "*.grd" "*.idl" "*.m"
-    "*.mm" "*.py" "*.sh" "*.cfg" "*SConscript" "SConscript*" "*.scons"
+  '("*.h" "*.hh" "*.hpp" "*.cpp" "*.c" "*.cc" "*.cpp"
+    "*.inl" "*.grd" "*.idl"
+    "*.m" "*.mm" "*.rb"
+    "*.el" "*.elisp" "*.clj" "*.html" "*.css" "*.js"
+    "*.py" "*.sh" "*.cfg" "*SConscript" "SConscript*" "*.scons"
     "*.vcproj" "*.vsprops" "*.make" "*.gyp" "*.gypi")
   "The file for the projectile going to grep."
   :group 'projectile
