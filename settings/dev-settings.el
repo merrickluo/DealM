@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-02-01 15:22:23 Friday by richard>
+;; Last modified: <2013-02-01 15:55:19 Friday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -178,8 +178,6 @@ Add this to .emacs to run gofmt on the current buffer when saving:
   "Lisp Specific mode short-cut key settings."
   (start-program-short-cut)
 
-  (ftf-add-filetypes '("*.el" "*.elisp"))
-
   (local-set-key (kbd "C-c C-k") 'kill-function)
   (local-set-key (kbd "C-M-h")   'mark-function)
   (local-set-key (kbd "C-c D")   'edebug-defun)
@@ -269,7 +267,6 @@ Major mode for editing JavaScript code.
 
   "js2 mode short-cut key settings."
   (start-program-short-cut)
-  (ftf-add-filetypes '("*.js" "*.javascript"))
 
   ;; compatible with flyspell.
   (smart-operator-mode-on))
