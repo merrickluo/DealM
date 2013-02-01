@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-11-29 14:17:53 Thursday by richard>
+;; Last modified: <2013-01-31 15:32:56 Thursday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -18,6 +18,12 @@
 
 (add-to-list 'auto-mode-alist '("\\.styl$" . sws-mode))
 (add-to-list 'auto-mode-alist '("\\.jade$" . jade-mode))
+
+
+;; For css
+;; ------------------------------------------------[For css]
+(require 'less-css-mode)
+
 
 
 ;; For html
