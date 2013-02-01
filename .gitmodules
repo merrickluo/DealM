@@ -49,3 +49,6 @@
 [submodule "plugins/nrepl"]
 	path = plugins/nrepl
 	url = git://github.com/kingtim/nrepl.el.git
+[submodule "plugins/ac-nrepl"]
+	path = plugins/ac-nrepl
+	url = git@github.com:purcell/ac-nrepl.git

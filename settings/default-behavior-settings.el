@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-01-28 14:48:50 Monday by richard>
+;; Last modified: <2013-02-01 13:48:12 Friday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -148,11 +148,6 @@
       log4j-keyword-info  "^\\[I.*\\]\\|\\<\\(CONFIG\\|INFO\\)\\>")
 
 (autoload 'xahk-mode "xahk-mode" "" t)
-
-;; clojure modes
-(add-to-list 'load-path (concat plugins-path-r "clojure-mode"))
-(autoload 'clojure-mode "clojure-mode" "" t)
-(autoload 'clojurescript-mode "clojurescript-mode" "" t)
 
 ;; modes definition.
 (setq auto-mode-alist
