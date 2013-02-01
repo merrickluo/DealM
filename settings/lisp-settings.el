@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-02-01 14:43:24 Friday by richard>
+;; Last modified: <2013-02-01 15:50:05 Friday by richard>
 
 ;; Copyright (C) 2013 Richard Wong
 
@@ -18,14 +18,27 @@
 
 ;; nrepl path plugin for clojure
 (add-to-list 'load-path (concat plugins-path-r "nrepl"))
+(add-to-list 'load-path (concat plugins-path-r "ac-nrepl"))
 
 (eval-after-load "clojure-mode"
   '(progn
-     (require 'nrepl)
-     (autoload 'nrepl "nrepl" "" t)
-     (autoload 'ac-nrepl-setup "ac-nrepl" "DOCSTRING" t)
-     (add-hook 'nrepl-mode-hook 'ac-nrepl-setup)
-     (add-hook 'clojure-nrepl-mode-hook 'ac-nrepl-setup)))
+     (defun clojure-settings ()
+       (require 'nrepl)
+       (autoload 'ac-nrepl-setup "ac-nrepl" "DOCSTRING" t)
+       (setq nrepl-popup-stacktraces nil)
+       (add-to-list 'same-window-buffer-names "*nrepl*"))
+     (add-hook 'clojure-mode-hook 'clojure-settings)))
+
+(eval-after-load "nrepl"
+  '(progn
+     (defun nrepl-settings()
+       (subword-mode t)
+       (ac-nrepl-setup t)
+       (paredit-mode t))
+     (add-hook 'nrepl-mode-hook 'nrepl-settings)
+
+     (add-hook 'clojure-nrepl-mode-hook 'ac-nrepl-setup)
+     (add-hook 'nrepl-interaction-mode-hook 'nrepl-turn-on-eldoc-mode)))
 
 (eval-after-load "auto-complete"
   '(progn
@@ -45,7 +58,6 @@
 (add-hook 'emacs-lisp-mode-hook       (lambda () (paredit-mode +1)))
 (add-hook 'lisp-mode-hook             (lambda () (paredit-mode +1)))
 (add-hook 'lisp-interaction-mode-hook (lambda () (paredit-mode +1)))
-(add-hook 'clojure-mode-hook          (lambda () (paredit-mode +1)))
 
 ;; Settings for elisp
 ;; -------------------------------------[Settings for elisp]

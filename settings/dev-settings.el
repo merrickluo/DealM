@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-01-21 09:32:30 Monday by richard>
+;; Last modified: <2013-02-01 15:22:23 Friday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -278,6 +278,7 @@ Major mode for editing JavaScript code.
 ;; Short cut Hooks here.
 ;; ==================================================================
 (add-hook 'emacs-lisp-mode-hook 'lisp-short-cut)
+(add-hook 'clojure-mode-hook    'lisp-short-cut)
 (add-hook 'c-mode-common-hook   'c-common-short-cut)
 (add-hook 'python-mode-hook     'python-short-cut)
 (add-hook 'awk-mode-hook        'awk-short-cut);; After emacs 21 work here.
