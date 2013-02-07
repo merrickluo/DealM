@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-01-04 17:47:30 Friday by richard>
+;; Last modified: <2013-02-04 11:49:46 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -35,9 +35,12 @@
 
 (defun org-settings()
   "org-mode-settings"
-  (setq org-startup-folded nil
-        org-cycle-include-plain-lists t
-        org-export-kill-product-buffer-when-displayed t)
+  (setq org-startup-folded                             nil
+        org-cycle-include-plain-lists                  t
+        org-src-fontify-natively                       t
+        org-export-kill-product-buffer-when-displayed  t
+        org-src-window-setup                           'current-window)
+
   ;;FIXME: org-babel-execution.
   ;; for c++, python, ruby, and elisp
   ;; #+LaTeX_CLASS: beamer in org files
@@ -282,8 +285,6 @@ origin move otherwise "
   ;; (org-defkey minibuffer-local-ns-map (kbd "C-f")
   ;;             (lambda () (interactive)
   ;;               (org-eval-in-calendar '(calendar-forward-day 1))))
-
-
   )
 (defun org-agenda-settings()
   "org-agenda settings"

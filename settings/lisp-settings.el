@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-02-01 15:50:05 Friday by richard>
+;; Last modified: <2013-02-04 11:53:02 Monday by richard>
 
 ;; Copyright (C) 2013 Richard Wong
 
@@ -37,8 +37,24 @@
        (paredit-mode t))
      (add-hook 'nrepl-mode-hook 'nrepl-settings)
 
+
      (add-hook 'clojure-nrepl-mode-hook 'ac-nrepl-setup)
      (add-hook 'nrepl-interaction-mode-hook 'nrepl-turn-on-eldoc-mode)))
+(eval-after-load "ob"
+  ;; clojure integration for emacs
+  '(progn
+     (defun clojure-for-org-mode()
+       (add-to-list 'org-babel-tangle-lang-exts '("clojure" . "clj"))
+
+       (defvar org-babel-default-header-args:clojure
+         '((:results . "silent") (:tangle . "yes")))
+
+       (defun org-babel-execute:clojure (body params)
+         "Evaluate a block of Clojure code with Babel."
+         (lisp-eval-string body)
+         "Done!"))
+     (clojure-for-org-mode)))
+
 
 (eval-after-load "auto-complete"
   '(progn
