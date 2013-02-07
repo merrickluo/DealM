@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-01-22 14:14:53 Tuesday by richard>
+;; Last modified: <2013-02-07 12:03:17 Thursday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -388,26 +388,31 @@ If At the first or end of line call `kill-whole-line';
 If At the comment of the line, call `kill-comment'
 If At the string (which inside \") of the line and string is not empty, kill the string inside.."
   (interactive)
-  (if mark-active
-      (call-interactively 'kill-region)
-    (if (or (bolp) (eolp))
-        (call-interactively 'kill-whole-line)
-      (if (thing-at-point 'string)
-          (kill-region (beginning-of-thing 'string)
-                       (end-of-thing 'string))
-        (call-interactively 'kill-line)))))
+  (if (and cua-mode cua--explicit-region-start)
+      (call-interactively 'cua-cut-rectangle)
+    (if mark-active
+        (call-interactively 'kill-region)
+      (if (or (bolp) (eolp))
+          (call-interactively 'kill-whole-line)
+        (if (thing-at-point 'string)
+            (kill-region (beginning-of-thing 'string)
+                         (end-of-thing 'string))
+          (call-interactively 'kill-line))))))
 
 (defun smart-kill ()
   "If `mark-active', call `kill-region';
+If `cua-active', call 'cua-cut-rectangle'
 If At the first or end of line call `kill-whole-line';
 If At the comment of the line, call `kill-comment'
 If At the string (which inside \") of the line and string is not empty, kill the string inside.."
   (interactive)
-  (if mark-active
-      (call-interactively 'kill-region)
-    (if (or (bolp) (eolp))
-        (call-interactively 'kill-whole-line)
-      (call-interactively 'kill-line))))
+  (if (and cua-mode cua--explicit-region-start)
+      (call-interactively 'cua-cut-rectangle)
+    (if mark-active
+        (call-interactively 'kill-region)
+      (if (or (bolp) (eolp))
+          (call-interactively 'kill-whole-line)
+        (call-interactively 'kill-line)))))
 
 
 ;;;###autoload
@@ -705,11 +710,11 @@ otherwise, change current buffer to that window.
 (defun get-buffers-matching-mode (mode)
   "Returns a list of buffers where their major-mode is equal to MODE"
   (let ((buffer-mode-matches '()))
-   (dolist (buf (buffer-list))
-     (with-current-buffer buf
-       (if (eq mode major-mode)
-           (add-to-list 'buffer-mode-matches buf))))
-   buffer-mode-matches))
+    (dolist (buf (buffer-list))
+      (with-current-buffer buf
+        (if (eq mode major-mode)
+            (add-to-list 'buffer-mode-matches buf))))
+    buffer-mode-matches))
 
 ;;;###autoload
 (defun multi-occur-in-this-mode (&optional regexp)
