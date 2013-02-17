@@ -52,3 +52,6 @@
 [submodule "plugins/ac-nrepl"]
 	path = plugins/ac-nrepl
 	url = git@github.com:purcell/ac-nrepl.git
+[submodule "plugins/git-modes"]
+	path = plugins/git-modes
+	url = git@github.com:lunaryorn/git-modes.git
