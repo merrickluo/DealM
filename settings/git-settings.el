@@ -1,17 +1,22 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-01-06 10:33:37 Sunday by richard>
+;; Last modified: <2013-02-17 15:41:13 Sunday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
 ;; Author: Richard Wong
 ;; Email: chao787@gmail.com
 
-;; Version: 0.2
+;; Version: 0.3
 ;; PUBLIC LICENSE: GPLv3
 
 (add-to-list 'load-path (concat plugins-path-r "magit"))
+(add-to-list 'load-path (concat plugins-path-r "git-modes"))
 
 
+(require 'git-commit-mode)
+(require 'gitconfig-mode)
+(require 'gitignore-mode)
+
 ;; magit settings.
 (autoload 'magit-status "magit" "\
 Open a Magit status buffer for the Git repository containing
