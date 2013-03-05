@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-03-05 11:35:40 Tuesday by richard>
+;; Last modified: <2013-03-05 11:47:59 Tuesday by richard>
 
 ;; Copyright (C) 2013 Richard Wong
 
@@ -14,7 +14,6 @@
 (add-to-list 'load-path (concat plugins-path-r "clojure-mode"))
 
 (autoload 'clojure-mode "clojure-mode" "" t)
-(autoload 'clojurescript-mode "clojurescript-mode" "" t)
 
 ;; nrepl path plugin for clojure
 (add-to-list 'load-path (concat plugins-path-r "nrepl"))
