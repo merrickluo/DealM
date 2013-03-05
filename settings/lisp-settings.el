@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-02-04 11:53:02 Monday by richard>
+;; Last modified: <2013-03-05 11:35:40 Tuesday by richard>
 
 ;; Copyright (C) 2013 Richard Wong
 
@@ -36,8 +36,7 @@
        (ac-nrepl-setup t)
        (paredit-mode t))
      (add-hook 'nrepl-mode-hook 'nrepl-settings)
-
-
+     (setq nrepl-hide-special-buffers t)
      (add-hook 'clojure-nrepl-mode-hook 'ac-nrepl-setup)
      (add-hook 'nrepl-interaction-mode-hook 'nrepl-turn-on-eldoc-mode)))
 (eval-after-load "ob"

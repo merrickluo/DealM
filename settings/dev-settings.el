@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-02-01 15:55:19 Friday by richard>
+;; Last modified: <2013-03-05 11:36:57 Tuesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -174,7 +174,7 @@ Add this to .emacs to run gofmt on the current buffer when saving:
 
 ;; lisp short cut Settings.
 ;; ==================================================================
-(defun lisp-short-cut()
+(defun elisp-short-cut()
   "Lisp Specific mode short-cut key settings."
   (start-program-short-cut)
 
@@ -185,6 +185,14 @@ Add this to .emacs to run gofmt on the current buffer when saving:
   (local-set-key (kbd "C-c B")   'eval-buffer)
   (local-set-key (kbd "C-c M-w") 'copy-function-whole)
   (local-set-key (kbd "C-c C-q") 'indent-function)
+  (local-set-key (kbd "C-c C")   'comment-function))
+
+;; clojure short cut Settings.
+;; ==================================================================
+(defun clojure-short-cut()
+  "Clojure mode short-cut key settings."
+  (start-program-short-cut)
+
   (local-set-key (kbd "C-c C")   'comment-function))
 
 ;; c-common-mode short cut settings.
@@ -274,8 +282,8 @@ Major mode for editing JavaScript code.
 
 ;; Short cut Hooks here.
 ;; ==================================================================
-(add-hook 'emacs-lisp-mode-hook 'lisp-short-cut)
-(add-hook 'clojure-mode-hook    'lisp-short-cut)
+(add-hook 'emacs-lisp-mode-hook 'elisp-short-cut)
+(add-hook 'clojure-mode-hook    'clojure-short-cut)
 (add-hook 'c-mode-common-hook   'c-common-short-cut)
 (add-hook 'python-mode-hook     'python-short-cut)
 (add-hook 'awk-mode-hook        'awk-short-cut);; After emacs 21 work here.
