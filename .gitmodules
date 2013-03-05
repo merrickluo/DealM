@@ -55,3 +55,6 @@
 [submodule "plugins/git-modes"]
 	path = plugins/git-modes
 	url = git@github.com:lunaryorn/git-modes.git
+[submodule "plugins/emacs-quickrun"]
+	path = plugins/emacs-quickrun
+	url = git@github.com:syohex/emacs-quickrun.git
