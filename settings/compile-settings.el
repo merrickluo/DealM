@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-12-03 12:04:59 Monday by richard>
+;; Last modified: <2013-03-04 13:32:45 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -10,8 +10,14 @@
 ;; PUBLIC LICENSE: GPLv3
 (require 'compile+)
 
-(autoload 'smart-compile "smart-compile" "" t)
+(add-to-list 'load-path (concat plugins-path-r "emacs-quickrun/"))
 
+(autoload 'quickrun "quickrun" "" t)
+(autoload 'quickrun-replace-region "quickrun" "" t)
+(autoload 'quickrun-compile-only "quickrun" "" t)
+(autoload 'quickrun-shell "quickrun" "" t)
+(autoload 'helm-quickrun "quickrun" "" t)
+(autoload 'smart-compile "smart-compile" "" t)
 
 ;; compile-misc need smart compile inside.
 (autoload 'compile-buffer "compile-misc" "" t)
@@ -58,7 +64,7 @@
     (local-set-key (kbd "C-c t")    'unittest)
     (local-set-key (kbd "C-c M")    'make-clean)
     (local-set-key (kbd "C-c c")    'compile-buffer)
-    (local-set-key (kbd "C-c r")    'run-program))
+    (local-set-key (kbd "C-c r")    'quickrun))
   (dolist (hook '(c-mode-base-hook
                   sh-mode-hook
                   compilation-mode-hook
