@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-02-17 15:41:13 Sunday by richard>
+;; Last modified: <2013-03-06 19:07:17 Wednesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -13,7 +13,6 @@
 (add-to-list 'load-path (concat plugins-path-r "git-modes"))
 
 
-(require 'git-commit-mode)
 (require 'gitconfig-mode)
 (require 'gitignore-mode)
 
