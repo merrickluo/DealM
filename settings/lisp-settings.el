@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-03-05 11:47:59 Tuesday by richard>
+;; Last modified: <2013-03-19 11:58:11 Tuesday by richard>
 
 ;; Copyright (C) 2013 Richard Wong
 
@@ -21,12 +21,25 @@
 
 (eval-after-load "clojure-mode"
   '(progn
+     (defun lisp-eval-smart()
+       "Evaluate sexp or marked things to the inferior Lisp process
+in a smart way. Prefix argument means switch to the Lisp
+ buffer afterwards.."
+       (interactive)
+       (save-excursion
+         (save-restriction
+           (if mark-active
+               (call-interactively 'lisp-eval-region)
+             (call-interactively 'lisp-eval-last-sexp)))))
      (defun clojure-settings ()
        (require 'nrepl)
        (autoload 'ac-nrepl-setup "ac-nrepl" "DOCSTRING" t)
        (setq nrepl-popup-stacktraces nil)
        (add-to-list 'same-window-buffer-names "*nrepl*"))
-     (add-hook 'clojure-mode-hook 'clojure-settings)))
+     (add-hook 'clojure-mode-hook 'clojure-settings)
+     (define-key clojure-mode-map (kbd "C-x C-e") 'lisp-eval-smart)
+     (define-key clojure-mode-map (kbd "C-c C-e") 'lisp-eval-smart)
+     ))
 
 (eval-after-load "nrepl"
   '(progn
@@ -38,6 +51,7 @@
      (setq nrepl-hide-special-buffers t)
      (add-hook 'clojure-nrepl-mode-hook 'ac-nrepl-setup)
      (add-hook 'nrepl-interaction-mode-hook 'nrepl-turn-on-eldoc-mode)))
+
 (eval-after-load "ob"
   ;; clojure integration for emacs
   '(progn
