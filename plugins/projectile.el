@@ -3,9 +3,9 @@
 ;; Copyright © 2011-2013 Bozhidar Batsov
 ;; Copyright © 2013 Richard Wong
 
-;; Author: Bozhidar Batsov, Richard Wong
+;; Author: Bozhidar Batsov
 ;; URL: https://github.com/bbatsov/projectile
-;; Version: 0.8R
+;; Version: 0.8
 ;; Keywords: project, convenience
 ;; Package-Requires: ((s "1.0.0") (dash "1.0.0"))
 
@@ -45,13 +45,22 @@
 (require 'thingatpt)
 (require 's)
 (require 'dash)
+(require 'grep)
 
 (defgroup projectile nil
   "Manage and navigate projects easily."
   :group 'tools
   :group 'convenience)
 
-(defcustom projectile-enable-caching t
+(defconst projectile-current-version "0.9.0-beta"
+  "The current Projectile version.")
+
+(defcustom projectile-use-native-indexing (eq system-type 'windows-nt)
+  "Use native Emacs Lisp project indexing."
+  :group 'projectile
+  :type 'boolean)
+
+(defcustom projectile-enable-caching (eq system-type 'windows-nt)
   "Enable project files caching."
   :group 'projectile
   :type 'boolean)
@@ -85,7 +94,7 @@ Otherwise consider the current directory the project root."
   :group 'projectile
   :type 'string)
 
-(defcustom projectile-tags-command "ctags -Re %s"
+(defcustom projectile-tags-command "ctags -Re %s %s"
   "The command Projectile's going to use to generate a TAGS file."
   :group 'projectile
   :type 'string)
@@ -113,7 +122,8 @@ Otherwise consider the current directory the project root."
 
 ;; variables
 (defvar projectile-project-root-files
-  '(".projectile" ".git" ".hg" ".bzr" "_darcs" "rebar.config" "pom.xml" "build.sbt" "Gemfile")
+  '(".projectile" "project.clj" ".git" ".hg" ".bzr" "_darcs"
+    "rebar.config" "pom.xml" "build.sbt" "Gemfile")
   "A list of files considered to mark the root of a project.")
 
 (defvar projectile-globally-ignored-files
@@ -152,8 +162,47 @@ Otherwise consider the current directory the project root."
     )
   "A list of pairs of commands and prerequisite lambdas to perform project compilation.")
 
-(defvar projectile-projects-cache (make-hash-table :test 'equal)
+
+(defun projectile-serialize (filename data)
+  "Serialize DATA to FILENAME. The saved data can be restored with
+projectile-unserialize."
+  (with-temp-buffer
+    (insert (prin1-to-string data))
+    (when (file-writable-p filename)
+      (write-region (point-min)
+                    (point-max)
+                    filename))))
+
+(defun projectile-unserialize (filename)
+  "Reads data serialized by projectile-serialize from FILENAME."
+  (when (file-exists-p filename)
+    (with-temp-buffer
+      (insert-file-contents filename)
+      (read (buffer-string)))))
+
+(defvar projectile-projects-cache
+  (or (projectile-unserialize projectile-cache-file)
+      (make-hash-table :test 'equal))
   "A hashmap used to cache project file names to speed up related operations.")
+
+(defvar projectile-known-projects nil
+  "List of locations where we have previously seen projects.
+The list of projects is ordered by the time they have been accessed.")
+
+(defcustom projectile-known-projects-file
+  (expand-file-name "projectile-bookmarks.eld"
+                    user-emacs-directory)
+  "Name and location of the Projectile's known projects file."
+  :group 'projectile
+  :type 'string)
+
+
+
+(defun projectile-version ()
+  "Reports the version of Projectile in use."
+  (interactive)
+  (message "Projectile (version %s) 2011-2013 Bozhidar Batsov <bozhidar@batsov.com>"
+           projectile-current-version))
 
 (defun projectile-invalidate-cache ()
   "Remove the current project's files from `projectile-projects-cache'."
@@ -164,32 +213,42 @@ Otherwise consider the current directory the project root."
     (message "Invalidated Projectile cache for %s."
              (propertize project-root 'face 'font-lock-keyword-face))))
 
-(defun projectile-reindex-current-project ()
-  "Reindex the current project."
-  (interactive)
-  (projectile-invalidate-cache)
-  (let ((project-root (projectile-project-root)))
-    (projectile-cache-project
-     project-root
-     (projectile-index-directory project-root (projectile-rel-patterns)))))
-
 (defun projectile-cache-project (project files)
-  "Cache PROJECT's FILES.
+  "Cache PROJECTs FILES.
 The cache is created both in memory and on the hard drive."
   (when projectile-enable-caching
     (puthash project files projectile-projects-cache)
-    (projectile-serialize-cache)))
+    (projectile-serialize-cache))
+  (projectile-add-known-project project)
+  (projectile-save-known-projects))
 
 (defun projectile-project-root ()
   "Retrieves the root directory of a project if available.
 The current directory is assumed to be the project's root otherwise."
-  (or (->> projectile-project-root-files
-        (--map (locate-dominating-file default-directory it))
-        (-remove #'null)
-        (car))
-      (if projectile-require-project-root
-          (error "You're not into a project")
-        default-directory)))
+  (let ((project-root
+         (or (->> projectile-project-root-files
+               (--map (locate-dominating-file default-directory it))
+               (-remove #'null)
+               (car))
+             (if projectile-require-project-root
+                 (error "You're not into a project")
+               default-directory))))
+    (run-hooks 'projectile-project-root-hook)
+    project-root))
+
+(defvar projectile-project-root-hook
+  nil
+  "Called whenever a project root is found.
+
+The found project root is available as
+PROJECT-ROOT.")
+
+
+(defun projectile-project-p ()
+  "Check if we're in a project."
+  (condition-case nil
+      (projectile-project-root)
+    (error nil)))
 
 (defun projectile-project-name ()
   "Return project name."
@@ -203,12 +262,95 @@ The current directory is assumed to be the project's root otherwise."
         (patterns (projectile-rel-patterns)))
     ;; cache disabled or cache miss
     (unless files-list
-      (message "Projectile is indexing %s. This may take a while."
-               (propertize directory 'face 'font-lock-keyword-face))
-      (setq files-list (projectile-index-directory directory patterns))
+      (if projectile-use-native-indexing
+          (progn
+            (message "Projectile is indexing %s. This may take a while."
+                     (propertize directory 'face 'font-lock-keyword-face))
+            (setq files-list (projectile-index-directory directory patterns)))
+        ;; use external tools to get the project files
+        (let ((current-dir (if (buffer-file-name)
+                               (file-name-directory (buffer-file-name))
+                             default-directory)))
+          ;; the shell commands need to invoked in the project's root dir
+          (cd (projectile-project-root))
+          (setq files-list (projectile-get-repo-files))
+          ;; restore the original current directory
+          (message current-dir)
+          (cd current-dir)))
       ;; cache the resulting list of files
       (projectile-cache-project directory files-list))
     files-list))
+
+(defun projectile-file-cached-p (file project)
+  "Check if FILE is already in PROJECT cache."
+  (member file (gethash project projectile-projects-cache)))
+
+(defun projectile-cache-current-file ()
+  "Add the currently visited file to the cache."
+  (interactive)
+  (let ((current-file (buffer-file-name (current-buffer)))
+        (current-project (projectile-project-root)))
+    (unless (projectile-file-cached-p current-file current-project)
+      (puthash current-project
+               (cons current-file (gethash current-project projectile-projects-cache))
+               projectile-projects-cache)
+      (projectile-serialize-cache)
+      (message "File %s added to project %s cache." current-file current-project))))
+
+;; cache opened files automatically to reduce the need for cache invalidation
+(add-hook 'find-file-hook
+          (lambda ()
+            (when (and (projectile-project-p) projectile-enable-caching)
+              (projectile-cache-current-file))))
+
+(defcustom projectile-git-command "git ls-files -zco --exclude-standard"
+  "Command used by projectile to get the files in a git project."
+  :group 'projectile
+  :type 'string)
+
+(defcustom projectile-hg-command "hg locate -0"
+  "Command used by projectile to get the files in a hg project."
+  :group 'projectile
+  :type 'string)
+
+(defcustom projectile-bzr-command "bzr ls --versioned -0"
+  "Command used by projectile to get the files in a bazaar project."
+  :group 'projectile
+  :type 'string)
+
+(defcustom projectile-darcs-command "darcs show files -0"
+  "Command used by projectile to get the files in a darcs project."
+  :group 'projectile
+  :type 'string)
+
+(defcustom projectile-svn-command "find . -type f -print0"
+  "Command used by projectile to get the files in a svn project."
+  :group 'projectile
+  :type 'string)
+
+(defcustom projectile-generic-command "find . -type f -print0"
+  "Command used by projectile to get the files in a generic project."
+  :group 'projectile
+  :type 'string)
+
+(defun projectile-get-ext-command ()
+  "Determine which external command to invoke based on the project's VCS."
+  (let ((vcs (projectile-project-vcs)))
+    (cond
+     ((eq vcs 'git) projectile-git-command)
+     ((eq vcs 'hg) projectile-hg-command)
+     ((eq vcs 'bzr) projectile-bzr-command)
+     ((eq vcs 'darcs) projectile-darcs-command)
+     ((eq vcs 'svn) projectile-svn-command)
+     (t projectile-generic-command))))
+
+(defun projectile-get-repo-files ()
+  "Get a list of the files in the project."
+  (-map 'expand-file-name (projectile-files-via-ext-command (projectile-get-ext-command))))
+
+(defun projectile-files-via-ext-command (command)
+  "Get a list of relative file names in the project root by executing COMMAND."
+  (split-string (shell-command-to-string command) "\0"))
 
 (defun projectile-index-directory (directory patterns)
   "Index DIRECTORY taking into account PATTERNS.
@@ -222,8 +364,8 @@ have been indexed."
          ((and (s-ends-with-p "/" current-file)
                ;; avoid loops & ignore some well known directories
                (not (-any? (lambda (file)
-                             (string= (s-chop-suffix "/" current-file) file))
-                           '("." ".." ".svn" ".cvs")))
+                            (string= (s-chop-suffix "/" current-file) file))
+                          '("." ".." ".svn" ".cvs")))
                (not (projectile-ignored-directory-p absolute-file))
                (not (and patterns
                          (projectile-ignored-rel-p directory
@@ -247,7 +389,7 @@ have been indexed."
   (let ((project-files (projectile-project-files (projectile-project-root)))
         (buffer-files (-map 'buffer-file-name (buffer-list))))
     (-map 'get-file-buffer
-          (intersection project-files buffer-files :test 'string=))))
+            (intersection project-files buffer-files :test 'string=))))
 
 (defun projectile-project-buffer-names ()
   "Get a list of project buffer names."
@@ -265,24 +407,30 @@ have been indexed."
     "Switch to buffer: "
     (projectile-project-buffer-names))))
 
-(defun projectile-multi-occur (&optional regexp)
+(defun projectile-multi-occur ()
   "Do a `multi-occur' in the project's buffers."
   (interactive)
-  (let ((regexp (or regexp (car (occur-read-primary-args)))))
-    (multi-occur (projectile-project-buffers)
-                 regexp)))
+  (multi-occur (projectile-project-buffers)
+               (car (occur-read-primary-args))))
 
-(defun projectile-project-type (&optional file-pos)
-  "Return projectile type, accelerate using specific tools"
-  (let ((file-pos (or file-pos default-directory)))
-    (or
-     (and (locate-dominating-file file-pos ".git") "git")
-     (and (locate-dominating-file file-pos ".projectile") "projectile")
-     (and (locate-dominating-file file-pos ".hg") "hg")
-     (and (locate-dominating-file file-pos ".bzr") "bzr")
-     (and (locate-dominating-file file-pos "Gemfile") "ruby"))))
+(defcustom projectile-show-paths-function 'projectile-hashify-with-uniquify
+  "Whether to display paths with projectile-find-file."
+  :group 'projectile
+  :type '(radio (const :tag "Only show paths to disambiguate files" projectile-hashify-with-uniquify)
+                (const :tag "Show relative paths" projectile-hashify-with-relative-paths)))
 
 (defun projectile-hashify-files (files-list)
+  (funcall projectile-show-paths-function files-list))
+
+(defun projectile-hashify-with-relative-paths (files-list)
+  "Build a hash where the values match FILES-LIST and the keys are ido friendly.
+Our keys our relative paths in the project."
+  (let ((project-root (projectile-project-root))
+        (files-table (make-hash-table :test 'equal)))
+    (dolist (current-file files-list files-table)
+      (puthash (file-relative-name current-file project-root) current-file files-table))))
+
+(defun projectile-hashify-with-uniquify (files-list)
   "Make the list of project files FILES-LIST ido friendly."
   (let ((files-table (make-hash-table :test 'equal))
         (files-to-uniquify nil))
@@ -399,7 +547,10 @@ have been indexed."
           (-map 's-trim (delete "" (split-string (buffer-string)))))))))
 
 (defun projectile-expand-root (name)
-  "Expand NAME to project root."
+  "Expand NAME to project root.
+
+Never use on many files since it's going to recalculate the
+project-root for every file."
   (expand-file-name name (projectile-project-root)))
 
 (defun projectile-completing-read (prompt choices)
@@ -419,14 +570,105 @@ have been indexed."
     (maphash (lambda (k v) (setq allkeys (cons k allkeys))) hash)
     allkeys))
 
-(defun projectile-find-file ()
+(defun projectile-find-file (arg)
   "Jump to a project's file using completion."
-  (interactive)
+  (interactive "P")
+  (when arg
+    (projectile-invalidate-cache))
   (let* ((project-files (projectile-hashify-files
                          (projectile-current-project-files)))
          (file (projectile-completing-read "File file: "
                                            (projectile-hash-keys project-files))))
     (find-file (gethash file project-files))))
+
+(defun projectile-find-test-file (arg)
+  "Jump to a project's test file using completion."
+  (interactive "P")
+  (when arg
+    (projectile-invalidate-cache))
+  (let* ((test-files (projectile-hashify-files
+                         (projectile-test-files (projectile-current-project-files))))
+         (file (projectile-completing-read "File test file: "
+                                           (projectile-hash-keys test-files))))
+    (find-file (gethash file test-files))))
+
+(defvar projectile-test-files-suffices '("_test" "_spec" "Test" "-test")
+  "Some common suffices of test files.")
+
+(defun projectile-test-files (files)
+  "Return only the test FILES."
+  (-filter 'projectile-test-file-p files))
+
+(defun projectile-test-file-p (file)
+  "Check if FILE is a test file."
+  (-any? (lambda (suffix)
+           (s-ends-with? suffix (file-name-sans-extension file)))
+         projectile-test-files-suffices))
+
+(defvar projectile-rails-rspec '("Gemfile" "app" "lib" "db" "config" "spec"))
+(defvar projectile-rails-test '("Gemfile" "app" "lib" "db" "config" "test"))
+(defvar projectile-maven '("pom.xml"))
+(defvar projectile-lein '("project.clj"))
+
+(defun projectile-project-type ()
+  "Determine the project's type based on its structure."
+  (let ((project-root (projectile-project-root)))
+    (cond
+     ((projectile-verify-files projectile-rails-rspec) 'rails-rspec)
+     ((projectile-verify-files projectile-rails-test) 'rails-test)
+     ((projectile-verify-files projectile-maven) 'maven)
+     ((projectile-verify-files projectile-lein) 'lein)
+     (t 'generic))))
+
+(defun projectile-verify-files (files)
+  "Check whether all FILES exist in the current project."
+  (-all? 'projectile-verify-file files))
+
+(defun projectile-verify-file (file)
+  "Check whether FILE exists in the current project."
+  (file-exists-p (projectile-expand-root file)))
+
+(defun projectile-project-vcs ()
+  "Determine the VCS used by the project if any."
+  (let ((project-root (projectile-project-root)))
+   (cond
+    ((locate-dominating-file project-root ".git") 'git)
+    ((locate-dominating-file project-root ".hg") 'hg)
+    ((locate-dominating-file project-root ".bzr") 'bzr)
+    ((locate-dominating-file project-root "_darcs") 'darcs)
+    ((locate-dominating-file project-root ".svn") 'svn)
+    (t 'none))))
+
+(defun projectile-toggle-between-implemenation-and-test ()
+  "Toggle between an implementation file and its test file."
+  (interactive)
+  (if (projectile-test-file-p (buffer-file-name))
+      ;; find the matching impl file
+      (let ((impl-file (projectile-compute-file-name (buffer-file-name))))
+        (if impl-file
+            (find-file impl-file)
+          (error "No matching source file found")))
+    ;; find the matching test file
+    (let ((test-file (projectile-compute-test-file-name (buffer-file-name))))
+      (if test-file
+          (find-file test-file)
+        (error "No matching test file found")))))
+
+(defun projectile-compute-test-file-name (file)
+  (let ((basename (file-name-sans-extension file))
+        (extension (file-name-extension file)))
+      (-first #'file-exists-p
+              (-map (lambda (suffix)
+                      (s-replace "/app/" "/spec/" (concat (s-append suffix basename) "." extension)))
+                    projectile-test-files-suffices))))
+
+(defun projectile-compute-file-name (test-file)
+  (let ((basename (file-name-sans-extension test-file))
+        (extension (file-name-extension test-file)))
+    (-first #'file-exists-p
+            (-map (lambda (suffix)
+                    (s-replace "/spec/" "/app/" (concat (s-chop-suffix suffix basename) "." extension)))
+                  projectile-test-files-suffices))))
 
 (defun projectile-grep ()
   "Perform rgrep in the project."
@@ -442,55 +684,6 @@ have been indexed."
       (grep-compute-defaults)
       (rgrep search-regexp "* .*" root-dir))))
 
-(defun projectile-interactive-read (string)
-  "Gets interactive arguments for a function. This reuses your
-current major mode's find-tag-default-function if possible,
-otherwise defaulting to `find-tag-default'."
-  (list
-   (let* ((default (funcall (or (get major-mode 'find-tag-default-function)
-                                'find-tag-default)))
-          (spec (read-from-minibuffer
-                 (if default
-                     (format "%s (default %s): "
-                             (substring string 0
-                                        (string-match "[ :]+\\'" string))
-                             default)
-                   string)
-                 nil nil nil default nil)))
-     (if (equal spec "")
-         (or default (error "There is no default symbol to grep for."))
-       spec))))
-
-;;;###autoload
-(defun projectile-smart-grep (args)
-  "smart grep in projectile."
-  (interactive (projectile-interactive-read "Grep project for string: "))
-  (let* ((quoted (replace-regexp-in-string "\"" "\\\\\"" args))
-         (grep-use-null-device nil)
-         (default-directory (projectile-project-root))
-         (current-type (and buffer-file-name
-                            (concat "*."
-                                    (file-name-extension
-                                     (file-name-nondirectory buffer-file-name)))))
-         (grep-file-types (if current-type
-                              (cons current-type projectile-grep-file-types)
-                            projectile-grep-file-types)))
-    (cond ((string= (projectile-project-type) "git")
-           ;; We can accelerate our grep using the git data.
-           (grep (concat projectile-git-grep-command
-                         "\""
-                         quoted
-                         "\" -- \""
-                         (mapconcat 'identity grep-file-types "\" \"")
-                         "\"")))
-          (t            ;; Fallback to find|xargs
-           (grep (concat projectile-basic-grep-command
-                         " \""
-                         (mapconcat 'identity grep-file-types "\" -or -name \"")
-                         "\""
-                         " | xargs grep -nH -e \""
-                          quoted "\""))))))
-
 (defun projectile-ack ()
   "Run an `ack-and-a-half' search in the project."
   (interactive)
@@ -501,14 +694,19 @@ otherwise defaulting to `find-tag-default'."
           (projectile-ignored-directories))))
     (call-interactively projectile-ack-function)))
 
+(defun projectile-tags-exclude-patterns ()
+  "Return a string with exclude patterns for ctags."
+  (mapconcat (lambda (pattern) (format "--exclude=%s" pattern))
+       (projectile-project-ignored-directories) " "))
 
 (defun projectile-regenerate-tags ()
   "Regenerate the project's etags."
   (interactive)
   (let ((current-dir default-directory)
-        (project-root (projectile-project-root)))
+        (project-root (projectile-project-root))
+  (tags-exclude (projectile-tags-exclude-patterns)))
     (cd project-root)
-    (shell-command (format projectile-tags-command project-root))
+    (shell-command (format projectile-tags-command tags-exclude project-root))
     (cd current-dir)
     (visit-tags-table project-root)))
 
@@ -551,27 +749,10 @@ otherwise defaulting to `find-tag-default'."
                     recent-project-files)))
     (message "recentf is not enabled")))
 
-(defun projectile-open ()
-  "Prompt for a project to open."
-  (interactive)
-  (projectile-completing-read "Open project:"
-                              (projectile-hash-keys projectile-projects-cache)))
-
 (defun projectile-serialize-cache ()
   "Serializes the memory cache to the hard drive."
-  (with-temp-buffer
-    (insert (prin1-to-string projectile-projects-cache))
-    (when (file-writable-p projectile-cache-file)
-      (write-region (point-min)
-                    (point-max)
-                    projectile-cache-file))))
+  (projectile-serialize projectile-cache-file projectile-projects-cache))
 
-(defun projectile-load-cache ()
-  "Load the cache from the hard drive in memory."
-  (when (file-exists-p projectile-cache-file)
-    (with-temp-buffer
-      (insert-file-contents projectile-cache-file)
-      (setq projectile-projects-cache (read (buffer-string))))))
 
 (defun projectile-run-project-command (checks)
   "Run command considering CHECKS."
@@ -600,49 +781,118 @@ otherwise defaulting to `find-tag-default'."
         do (return command)
         finally (return nil)))
 
+
+
+
+(defun projectile-switch-project ()
+  "Switch to a project we have seen before."
+  (interactive)
+  (let ((project-to-switch
+         (projectile-completing-read "Switch to which project: "
+                                     projectile-known-projects)))
+    (dired project-to-switch)
+    (let ((project-switched project-to-switch))
+      (run-hooks 'projectile-switch-project-hook))))
+
+(defvar projectile-switch-project-hook nil
+  "Hooks run when project is switched. The path to the opened project
+is available as PROJECT-SWITCHED")
+
+
+
+(defun projectile-add-known-project (project-root)
+  "Add a project to the list of known projects."
+  (setq projectile-known-projects
+        (-distinct
+         (cons project-root projectile-known-projects))))
+
+
+(defun projectile-load-known-projects ()
+  "Load saved projects from PROJECTILE-KNOWN-PROJECTS-FILE
+and sets PROJECTILE-KNOWN-PROJECTS."
+  (setq projectile-known-projects
+        (projectile-unserialize projectile-known-projects-file)))
+
+;; load the known projects
+(projectile-load-known-projects)
+
+(defun projectile-save-known-projects ()
+  "Save PROJECTILE-KNOWN-PROJECTS to PROJECTILE-KNOWN-PROJECTS-FILE."
+  (projectile-serialize projectile-known-projects-file projectile-known-projects))
+
+
 (defvar projectile-mode-map
   (let ((map (make-sparse-keymap)))
     (let ((prefix-map (make-sparse-keymap)))
       (define-key prefix-map (kbd "f") 'projectile-find-file)
+      (define-key prefix-map (kbd "T") 'projectile-find-test-file)
+      (define-key prefix-map (kbd "t") 'projectile-toggle-between-implemenation-and-test)
       (define-key prefix-map (kbd "g") 'projectile-grep)
       (define-key prefix-map (kbd "b") 'projectile-switch-to-buffer)
       (define-key prefix-map (kbd "o") 'projectile-multi-occur)
       (define-key prefix-map (kbd "r") 'projectile-replace)
       (define-key prefix-map (kbd "i") 'projectile-invalidate-cache)
-      (define-key prefix-map (kbd "t") 'projectile-regenerate-tags)
+      (define-key prefix-map (kbd "R") 'projectile-regenerate-tags)
       (define-key prefix-map (kbd "k") 'projectile-kill-buffers)
       (define-key prefix-map (kbd "d") 'projectile-dired)
       (define-key prefix-map (kbd "e") 'projectile-recentf)
       (define-key prefix-map (kbd "a") 'projectile-ack)
       (define-key prefix-map (kbd "l") 'projectile-compile-project)
       (define-key prefix-map (kbd "p") 'projectile-test-project)
+      (define-key prefix-map (kbd "z") 'projectile-cache-current-file)
+      (define-key prefix-map (kbd "s") 'projectile-switch-project)
 
       (define-key map projectile-keymap-prefix prefix-map))
     map)
   "Keymap for Projectile mode.")
 
-(easy-menu-define projectile-mode-menu projectile-mode-map
-  "Menu for Projectile mode"
-  '("Projectile"
-    ["File file" projectile-find-file]
-    ["Switch to buffer" projectile-switch-to-buffer]
-    ["Kill project buffers" projectile-kill-buffers]
-    ["Recent files" projectile-recentf]
-    "--"
-    ["Open project in dired" projectile-dired]
-    ["Find in project (grep)" projectile-grep]
-    ["Find in project (ack)" projectile-ack]
-    ["Replace in project" projectile-replace]
-    ["Multi-occur in project" projectile-multi-occur]
-    "--"
-    ["Invalidate cache" projectile-invalidate-cache]
-    ["Reindex project" projectile-reindex-current-project]
-    ["Regenerate etags" projectile-regenerate-tags]
-    "--"
-    ["Compile project" projectile-compile-project]
-    ["Test project" projectile-test-project]))
+(defun projectile-add-menu ()
+  "Add Projectile's menu under Tools."
+  (easy-menu-add-item nil '("Tools")
+                      '("Projectile"
+                        ["File file" projectile-find-file]
+                        ["Switch to buffer" projectile-switch-to-buffer]
+                        ["Kill project buffers" projectile-kill-buffers]
+                        ["Recent files" projectile-recentf]
+                        "--"
+                        ["Open project in dired" projectile-dired]
+                        ["Find in project (grep)" projectile-grep]
+                        ["Find in project (ack)" projectile-ack]
+                        ["Replace in project" projectile-replace]
+                        ["Multi-occur in project" projectile-multi-occur]
+                        "--"
+                        ["Invalidate cache" projectile-invalidate-cache]
+                        ["Regenerate etags" projectile-regenerate-tags]
+                        "--"
+                        ["Compile project" projectile-compile-project]
+                        ["Test project" projectile-test-project]
+                        "--"
+                        ["About" projectile-version])
+                      "Search Files (Grep)...")
 
-;; define minor mode
+  (easy-menu-add-item nil '("Tools") '("--") "Search Files (Grep)..."))
+
+(defun projectile-remove-menu ()
+  "Remove Projectile's menu."
+  (easy-menu-remove-item nil '("Tools") "Projectile")
+  (easy-menu-remove-item nil '("Tools") "--"))
+
+;;; define minor mode
+
+;;;###autoload
+(define-minor-mode projectile-mode
+  "Minor mode to assist project management and navigation.
+
+\\{projectile-mode-map}"
+  :lighter " Projectile"
+  :keymap projectile-mode-map
+  :group 'projectile
+  (if projectile-mode
+      ;; on start
+      (projectile-add-menu)
+    ;; on stop
+    (projectile-remove-menu)))
+
 ;;;###autoload
 (define-globalized-minor-mode projectile-global-mode
   projectile-mode
@@ -655,22 +905,6 @@ otherwise defaulting to `find-tag-default'."
 (defun projectile-off ()
   "Disable Projectile minor mode."
   (projectile-mode -1))
-
-;;;###autoload
-(define-minor-mode projectile-mode
-  "Minor mode to assist project management and navigation.
-
-\\{projectile-mode-map}"
-  :lighter " Projectile"
-  :keymap projectile-mode-map
-  :group 'projectile
-  (if projectile-mode
-      ;; on start
-      (progn
-        (projectile-load-cache)
-        (easy-menu-add projectile-mode-menu projectile-mode-map))
-    ;; on stop
-    (easy-menu-remove)))
 
 (provide 'projectile)
 
