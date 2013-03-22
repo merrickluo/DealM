@@ -22,9 +22,6 @@
 [submodule "plugins/popup"]
 	path = plugins/popup
 	url = https://github.com/emacsmirror/popup.git
-[submodule "plugins/find-things-fast"]
-	path = plugins/find-things-fast
-	url = git@github.com:chao787/find-things-fast.git
 [submodule "plugins/auctex"]
 	path = plugins/auctex
 	url = git@github.com:chao787/auctex.git
