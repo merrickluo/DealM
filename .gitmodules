@@ -13,9 +13,6 @@
 [submodule "snippets"]
 	path = snippets
 	url = git@github.com:chao787/RSnippet.git
-[submodule "python-libs/Pymacs"]
-	path = python-libs/Pymacs
-	url = git://github.com/pinard/Pymacs.git
 [submodule "plugins/auto-complete"]
 	path = plugins/auto-complete
 	url = git://github.com/auto-complete/auto-complete.git
