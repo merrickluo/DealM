@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-02-04 11:49:46 Monday by richard>
+;; Last modified: <2013-03-22 16:56:17 Friday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -40,58 +40,6 @@
         org-src-fontify-natively                       t
         org-export-kill-product-buffer-when-displayed  t
         org-src-window-setup                           'current-window)
-
-  ;;FIXME: org-babel-execution.
-  ;; for c++, python, ruby, and elisp
-  ;; #+LaTeX_CLASS: beamer in org files
-  (autoload 'org-set-generic-type "org-export-generic")
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '( (perl . t)
-      (ruby . t)
-      (sh . t)
-      (python . t)
-      (emacs-lisp . t)
-      ))
-
-  (org-set-generic-type
-   "Markdown"
-   '(:file-suffix ".markdown"
-                  :key-binding ?M
-                  :title-format "%s\n"
-                  :title-suffix ?=
-                  :body-header-section-numbers t
-                  :body-header-section-number-format "%s) "
-                  :body-section-header-prefix	("\n## " "\n### " "\n#### " "\n##### " "\n###### ")
-                  :body-section-header-format	"%s"
-                  :body-section-header-suffix "\n"
-                  :todo-keywords-export t
-                  :body-line-format "  %s\n"
-                  :body-tags-export	t
-                  :body-tags-prefix	" <tags>"
-                  :body-tags-suffix	"</tags>\n"
-                  :body-section-prefix	"<secprefix>\n"
-                  :body-section-suffix	"</secsuffix>\n"
-                  :body-line-export-preformated	t
-                  :body-line-fixed-prefix	"<pre>\n"
-                  :body-line-fixed-suffix	"\n</pre>\n"
-                  :body-line-fixed-format	"%s\n"
-                  :body-list-prefix	"\n"
-                  :body-list-suffix	"\n"
-                  :body-list-format	"  * %s\n"
-                  :body-number-list-prefix	"<ol>\n"
-                  :body-number-list-suffix	"</ol>\n"
-                  :body-number-list-format	"<li>%s</li>\n"
-                  ;; :body-number-list-leave-number	t
-                  :body-list-checkbox-todo	"[_] "
-                  :body-list-checkbox-todo-end	""
-                  :body-list-checkbox-done	"[X] "
-                  :body-list-checkbox-done-end ""
-                  :body-line-format	"%s"
-                  :body-line-wrap	75
-                  :body-text-prefix	""
-                  :body-text-suffix	""
-                  ))
 
   (unless (boundp 'org-export-latex-classes)
     (setq org-export-latex-classes nil))
@@ -251,41 +199,7 @@ origin move otherwise "
   (calendar-defkey (kbd "C-p") '(calendar-backward-week 1) 'previous-line)
   (calendar-defkey (kbd "C-n") '(calendar-forward-week 1) 'next-line)
   (calendar-defkey (kbd "C-b") '(calendar-backward-day 1) 'backward-char)
-  (calendar-defkey (kbd "C-f") '(calendar-forward-day 1) 'forward-char)
-
-  ;; (org-defkey minibuffer-local-map (kbd "M-b")
-  ;;             (lambda () (interactive)
-  ;;               (if (calendar-window-live-p)
-  ;;                   (org-eval-in-calendar '(calendar-backward-month 1))
-  ;;                 (call-interactively 'backward-word))))
-  ;; (org-defkey minibuffer-local-ns-map (kbd "M-f")
-  ;;             (lambda () (interactive)
-  ;;               (org-eval-in-calendar '(calendar-forward-month 1))))
-  ;; (org-defkey minibuffer-local-ns-map (kbd "C-M-b")
-  ;;             (lambda () (interactive)
-  ;;               (org-eval-in-calendar '(calendar-backward-year 1))))
-  ;; (org-defkey minibuffer-local-ns-map (kbd "C-e")
-  ;;             (lambda () (interactive)
-  ;;               (org-eval-in-calendar '(calendar-end-of-week 1))))
-  ;; (org-defkey minibuffer-local-ns-map (kbd "C-a")
-  ;;             (lambda () (interactive)
-  ;;               (org-eval-in-calendar '(calendar-beginning-of-week 1))))
-  ;; (org-defkey minibuffer-local-ns-map (kbd "C-M-f")
-  ;;             (lambda () (interactive)
-  ;;               (org-eval-in-calendar '(calendar-forward-year 1))))
-  ;; (org-defkey minibuffer-local-ns-map (kbd "C-p")
-  ;;             (lambda () (interactive)
-  ;;               (org-eval-in-calendar '(calendar-backward-week 1))))
-  ;; (org-defkey minibuffer-local-ns-map (kbd "C-n")
-  ;;             (lambda () (interactive)
-  ;;               (org-eval-in-calendar '(calendar-forward-week 1))))
-  ;; (org-defkey minibuffer-local-ns-map (kbd "C-b")
-  ;;             (lambda () (interactive)
-  ;;               (org-eval-in-calendar '(calendar-backward-day 1))))
-  ;; (org-defkey minibuffer-local-ns-map (kbd "C-f")
-  ;;             (lambda () (interactive)
-  ;;               (org-eval-in-calendar '(calendar-forward-day 1))))
-  )
+  (calendar-defkey (kbd "C-f") '(calendar-forward-day 1) 'forward-char))
 (defun org-agenda-settings()
   "org-agenda settings"
   (define-key org-agenda-mode-map "'" 'switch-to-other-buffer)
