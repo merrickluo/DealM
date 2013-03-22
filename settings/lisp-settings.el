@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-03-19 11:58:11 Tuesday by richard>
+;; Last modified: <2013-03-22 13:44:39 Friday by richard>
 
 ;; Copyright (C) 2013 Richard Wong
 
@@ -56,7 +56,6 @@ in a smart way. Prefix argument means switch to the Lisp
   ;; clojure integration for emacs
   '(progn
      (defun clojure-for-org-mode()
-       (add-to-list 'org-babel-tangle-lang-exts '("clojure" . "clj"))
 
        (defvar org-babel-default-header-args:clojure
          '((:results . "silent") (:tangle . "yes")))
