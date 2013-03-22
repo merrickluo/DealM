@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-01-21 09:23:20 Monday by richard>
+;; Last modified: <2013-03-22 15:54:40 Friday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -20,7 +20,7 @@
       py-indent-offset 4)
 
 (defconst pythonlib-path-r
-  (concat emacs-root-path "python-libs/") "path of python libs used by emacs.")
+  (concat emacs-root-path "python-lib/") "path of python libs used by emacs.")
 
 
 (add-to-list 'load-path (concat plugins-path-r "emacs-jedi"))
