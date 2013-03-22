@@ -43,3 +43,6 @@
 [submodule "plugins/emacs-quickrun"]
 	path = plugins/emacs-quickrun
 	url = git@github.com:syohex/emacs-quickrun.git
+[submodule "python-lib"]
+	path = python-lib
+	url = git@github.com:chao787/python-libs.git
