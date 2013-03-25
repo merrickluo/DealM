@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-02-01 13:48:12 Friday by richard>
+;; Last modified: <2013-03-25 12:31:46 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -192,6 +192,17 @@
                 ("SCons\\(cript\\|truct\\)" . python-mode)
                 ("\\.gclient$" . python-mode)
                 ) auto-mode-alist))
+
+;; tramp-settings
+(eval-after-load "tramp-sh"
+  '(progn
+     (add-to-list 'tramp-remote-process-environment "LANG=zh_CN.utf8" 'append)
+     (add-to-list 'tramp-remote-process-environment "LC_ALL=zh_CN.utf8" 'append)))
+
+(eval-after-load "tramp"
+  '(setq ido-enable-tramp-completion t
+         tramp-verbose 4                 ; 1 - 10
+         tramp-persistency-file-name (expand-file-name "~/.emacs.d/auto-save-list/tramp")))
 
 ;; learning from dadams
 (eval-after-load "ring"
