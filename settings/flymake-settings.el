@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-01-30 14:58:30 Wednesday by richard>
+;; Last modified: <2013-03-25 17:15:31 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -164,7 +164,7 @@ Use CREATE-TEMP-F for creating temp copy."
            (local-file (file-relative-name
                         temp-file
                         (file-name-directory buffer-file-name))))
-      (list (concat emacs-root-path "python-libs/pyflymake.py")
+      (list (concat emacs-root-path "python-lib/pyflymake.py")
             (list local-file))))
       ;;     check path
 
