@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-01-22 14:13:22 Tuesday by richard>
+;; Last modified: <2013-03-26 17:07:08 Tuesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -10,7 +10,6 @@
 ;; PUBLIC LICENSE: GPLv3
 
 (require 'edit-functions)
-(require 'browse-kill-ring+)
 
 
 ;; global keys
@@ -82,6 +81,9 @@
           (multi-occur-in-this-mode search-string))))))
 
 ;; other global keys.
+(autoload 'browse-kill-ring "browse-kill-ring"
+  "Display items in the `kill-ring' in another buffer." t)
+
 (global-set-key  "\C-xc"             'org-capture)
 (global-set-key (kbd "M-C-k")        'kill-whole-paragraph)
 (global-set-key (kbd "M-C-y")        'browse-kill-ring)
