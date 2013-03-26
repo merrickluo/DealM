@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-02-07 12:03:17 Thursday by richard>
+;; Last modified: <2013-03-26 18:11:04 Tuesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -9,7 +9,10 @@
 ;; Version: 1.8
 ;; PUBLIC LICENSE: GPLv3
 
-(require 'ahei-misc)
+(eval-when-compile
+  (require 'cua-base))
+
+(autoload 'cua--rectangle "cua-base" t)
 
 ;;;###autoload
 (defun gbk-to-utf-8()
@@ -112,21 +115,6 @@ If NOT-WHOLE is non-nil, do not copy whole sexp."
       (message "S-exp copied!"))))
 
 ;;;###autoload
-(defun mark-word-1 ()
-  ;;FIXME:
-  "Mark this word. No whether the cursor inside the word or on the edge of the word."
-  (interactive)
-  (push-mark)
-  (set-mark ))
-
-;;;###autoload
-(defun kill-word-1 ()
-  "Delete this word. No whether the cursor inside the word or on the edge of the word."
-  (interactive)
-  (mark-word-1)
-  (backward-kill-word-or-kill-region))
-
-;;;###autoload
 (defun mark-function ()
   "Mark function."
   (interactive)
@@ -184,22 +172,6 @@ If NOT-WHOLE is non-nil, do not copy whole sexp."
     (copy-region-as-kill (line-beginning-position) end)))
 (defalias 'copy-whole-line 'copy-cur-line)
 ;; compatible with kill-whole-line.
-
-;;;###autoload
-(defun copy-lines (&optional number)
-  "从当前行开始拷贝NUMBER行"
-  (interactive "p")
-  (if (null number)
-      (copy-cur-line)
-    (let ((lineNo))
-      (save-excursion
-        (if (< number 0)
-            (next-line))
-        (setq lineNo (line-number-at-pos nil))
-        (move-beginning-of-line nil)
-        (set-mark-command nil)
-        (goto-line (+ number lineNo))
-        (call-interactively 'copy-region-as-kill-nomark)))))
 
 ;;;###autoload
 (defun copy-line-left ()
@@ -286,22 +258,6 @@ If NOT-WHOLE is non-nil, do not copy whole sexp."
   "如果`mark-active'的话,就`uncomment-region',否则取消注释光标所在行"
   (interactive "P")
   (comment (not arg)))
-
-;;;###autoload
-(defun mark-invisible-region ()
-  "Mark invisible region."
-  (interactive)
-  (if (not (and last-region-beg last-region-end))
-      (message "No previous region.")
-    (goto-char last-region-beg)
-    (if last-region-is-rect
-        (if last-region-use-cua
-            (call-interactively 'cua-set-rectangle-mark)
-          (call-interactively 'rm-set-mark))
-      (call-interactively 'set-mark-command))
-    (goto-char last-region-end)
-    (if (and last-region-is-rect last-region-use-cua)
-        (cua--activate-rectangle))))
 
 ;;;###autoload
 (defun c-electric-backspace-kill ()
@@ -647,6 +603,11 @@ otherwise, change current buffer to that window.
             nil
           (funcall pasteMe))
       (funcall pasteMe))))
+
+;;;###autoload
+(defun am-variable-is-t (symbol)
+  "Return SYMBOL's value is t or not."
+  (and (boundp symbol) (symbol-value symbol)))
 
 ;;;###autoload
 (defmacro am-def-active-fun (symbol &optional fun-name)

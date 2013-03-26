@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-03-26 17:23:05 Tuesday by richard>
+;; Last modified: <2013-03-26 17:51:14 Tuesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -45,7 +45,6 @@
 (require 'modeline-settings)
 (require 'font-settings)
 (require 'auto-color-settings)
-(require 'encoding-settings)
 
 
 ;; default emacs behavior settings(keys and common settings)

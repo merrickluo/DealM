@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-03-26 17:50:01 Tuesday by richard>
+;; Last modified: <2013-03-26 18:06:49 Tuesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -96,7 +96,6 @@
 (global-set-key (kbd "C-k")          'smart-kill)
 (global-set-key (kbd "C-a")          'smart-move-beginning-of-line)
 (global-set-key (kbd "C-\\")         'delete-indentation)
-(global-set-key (kbd "C-x M-M")      'mark-invisible-region)
 (global-set-key (kbd "M-U")          'del-to-begin)
 (global-set-key (kbd "C-^")          'case-trans)
 (global-set-key (kbd "C-6")          'case-trans)
