@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-03-26 17:07:08 Tuesday by richard>
+;; Last modified: <2013-03-26 17:50:01 Tuesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -145,7 +145,6 @@
                    (interactive)
                    (revert-buffer t t)))
 (global-set-key (kbd "C-x M-K")  'revert-buffer-with-gbk)
-(global-set-key (kbd "C-x U")    'revert-buffer-with-coding-system-no-confirm)
 
 ;; Fastnav
 ;; ------------------------------------------------------------------

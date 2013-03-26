@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-03-25 12:31:46 Monday by richard>
+;; Last modified: <2013-03-26 17:51:03 Tuesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -137,6 +137,15 @@
 ;; set basic cua-mode.
 (setq cua-remap-control-z nil
       cua-remap-control-v nil)
+
+;; Encoding settings
+(when (not window-system)
+  (set-language-environment "UTF-8"))
+
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(prefer-coding-system 'utf-8)
+(setq buffer-file-coding-system 'utf-8)
 
 ;; log mode to replace fundamentals
 (autoload 'log4j-mode "log4j-mode" "" t )

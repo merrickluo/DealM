@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-03-06 19:07:17 Wednesday by richard>
+;; Last modified: <2013-03-26 17:54:03 Tuesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -71,24 +71,6 @@ Unconditionally turn on `magit-topgit-mode'.
 
 \(fn)" nil nil)
 
-
-;; FIXME: now obsolete..
-(defun select-vc-status ()
-  "Calls for a directory and calls `svn-status' or `git-status' depending on what
-type of version control found in that directory"
-  (interactive)
-  (let* ((local-default-dir (ftf-project-directory))
-         (targetDir
-          (read-directory-name "Status of directory: "
-                               local-default-dir
-                               local-default-dir
-                               nil)))
-    (cond ((file-exists-p (concat targetDir "/.git"))
-           (magit-status targetDir))
-          ((file-exists-p (concat targetDir "/.svn"))
-           (svn-status targetDir))
-          ((file-exists-p (concat targetDir "/CVS"))
-           (cvs-status targetDir)))))
 
 
 ;; change magit diff colors
