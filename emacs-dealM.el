@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-02-01 14:55:19 Friday by richard>
+;; Last modified: <2013-03-26 17:23:05 Tuesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -23,8 +23,6 @@
 ;; add load path
 (add-to-list 'load-path settings-path-r)
 (add-to-list 'load-path plugins-path-r)
-
-;; (require 'cedet-settings) ; cedet require first.
 
 
 ;; tools
