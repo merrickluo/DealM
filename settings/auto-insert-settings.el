@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-07-28 10:34:07 Saturday by richard>
+;; Last modified: <2013-03-26 17:33:11 Tuesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -28,10 +28,6 @@
   (define-auto-insert "\\.l[l]?$"                       '(lambda()
                                                            (insert-snippet "headxflex")))
 
-  (defun expand-template (template)
-    "Expand template."
-    (template-expand-template (concat template-path-r template)))
-
   (defun insert-headx-snippet ()
     "Insert headx snippet."
     (insert-snippet "headx"))
@@ -46,7 +42,7 @@
     "Insert snippet SNIPPET."
     (interactive "s")
     (insert snippet)
-    (yas/expand))
+    (yas-expand))
 
   (mapc
    (lambda (suffix)

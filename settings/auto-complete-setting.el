@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-01-21 09:13:24 Monday by richard>
+;; Last modified: <2013-03-26 17:31:48 Tuesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -50,7 +50,7 @@
   (require 'yasnippet) ;; FIXME: find a way to conditionally load it
   (let (candidates)
     (maphash
-     (lambda (kk vv) (push (epy-snips-from-table vv) candidates)) yas/tables)
+     (lambda (kk vv) (push (epy-snips-from-table vv) candidates)) yas--tables)
     (apply 'append candidates))
   )
 
