@@ -4,16 +4,16 @@
 ;; Description: Extensions to `help-fns.el'.
 ;; Author: Drew Adams
 ;; Maintainer: Drew Adams
-;; Copyright (C) 2007-2012, Drew Adams, all rights reserved.
+;; Copyright (C) 2007-2013, Drew Adams, all rights reserved.
 ;; Created: Sat Sep 01 11:01:42 2007
 ;; Version: 22.1
-;; Last-Updated: Thu Aug 23 13:03:20 2012 (-0700)
+;; Last-Updated: Fri Feb  8 11:55:52 2013 (-0800)
 ;;           By: dradams
-;;     Update #: 1258
-;; URL: http://www.emacswiki.org/cgi-bin/wiki/help-fns+.el
-;; Doc URL: http://emacswiki.org/emacs/HelpPlus
+;;     Update #: 1558
+;; URL: http://www.emacswiki.org/help-fns+.el
+;; Doc URL: http://emacswiki.org/HelpPlus
 ;; Keywords: help, faces, characters, packages, description
-;; Compatibility: GNU Emacs: 22.x, 23.x
+;; Compatibility: GNU Emacs: 22.x, 23.x, 24.x
 ;;
 ;; Features that might be required by this library:
 ;;
@@ -69,7 +69,7 @@
 ;;    `help-substitute-command-keys', `help-value-satisfies-type-p',
 ;;    `help-var-inherits-type-p', `help-var-is-of-type-p',
 ;;    `help-var-matches-type-p', `help-var-val-satisfies-type-p',
-;;    `Info-any-index-occurrences-p' (Emacs 23.2+),
+;;    `Info-first-index-occurrence' (Emacs 23.2+),
 ;;    `Info-indexed-find-file' (Emacs 23.2+), `Info-indexed-find-node'
 ;;    (Emacs 23.2+), `Info-index-entries-across-manuals' (Emacs
 ;;    23.2+), `Info-index-occurrences' (Emacs 23.2+),
@@ -96,7 +96,8 @@
 ;;  ***** NOTE: The following functions defined in `help-fns.el'
 ;;              have been REDEFINED HERE:
 ;;
-;;  `describe-function', `describe-function-1', `describe-variable'.
+;;  `describe-function', `describe-function-1', `describe-variable',
+;;  `help-fns--key-bindings', `help-fns--signature',
 ;;
 ;;
 ;;  ***** NOTE: The following command defined in `package.el'
@@ -118,6 +119,28 @@
 ;;
 ;;; Change Log:
 ;;
+;; 2013/02/08 dadams
+;;     describe-variable: Updated wrt Emacs 24 build of 2013-01-30.
+;; 2012/11/18 dadams
+;;     describe-(variable|function): Add completion-candidate annotation: (option|comand).
+;; 2012/10/28 dadams
+;;     help-fns--key-bindings: Fixed: forgot to mapconcat over keys.
+;; 2012/10/26 dadams
+;;     Added: help-fns--key-bindings, help-fns--signature,
+;;     Added Emacs 24.3+ version of describe-function-1.  Updated version for 23.2-24.2.
+;;     help-substitute-command-keys: Fix for \= when no match for \[, \<, \{ past it.
+;; 2012/09/24 dadams
+;;     describe-file: Added optional arg NO-ERROR-P.
+;; 2012/09/22 dadams
+;;     Info-index-occurrences, Info-first-index-occurrence:
+;;       Replace Info-directory call by short version.  Better Searching msg.
+;; 2012/09/21 dadams
+;;     Renamed Info-any-index-occurrences-p to Info-first-index-occurrence.
+;;     Info-any-index-occurrences-p: Return the first successful lookup, not t.
+;;     Info-index-entries-across-manuals, Info-index-occurrences, Info-any-index-occurrences-p:
+;;       Added optional arg INDEX-NODES.
+;;     Adjust calls to those fns accordingly, e.g., in define-button-type for help-info-manual-lookup
+;;       and help-insert-xref-button in Info-make-manuals-xref.
 ;; 2012/07/20 dadams
 ;;     Added: describe-buffer, describe-mode-1.  Bound describe-buffer to C-h B.
 ;;     describe-mode: Redefined to use describe-mode-1.
@@ -303,6 +326,7 @@
 (defvar file-local-variables-alist)
 (defvar Info-indexed-nodes)             ; In `info.el'
 (defvar help-cross-reference-manuals)   ; For Emacs < 23.2
+(defvar help-enable-auto-load)          ; For Emacs < 24.3
 (defvar package-alist)
 (defvar package-archive-contents)
 (defvar package--builtins)
@@ -331,7 +355,7 @@ Non-nil optional arg ADD-HELP-BUTTONS does that, adding buttons to key
 descriptions, which link to the key's command help."
     (let ((raw-doc  (documentation function 'RAW)))
       (if raw  raw-doc  (help-substitute-command-keys raw-doc add-help-buttons))))
-    
+
   (defun help-documentation-property (symbol prop &optional raw add-help-buttons)
     "Same as `documentation-property', but optionally adds buttons for help.
 Non-nil optional arg ADD-HELP-BUTTONS does that, adding buttons to key
@@ -351,7 +375,7 @@ descriptions, which link to the key's command help."
 
     ;; REPEAT:
     ;;  Search for first occurrence of any of the patterns: \[...], \{...}, or \<...>.
-    ;;  Handle escaping via \=, if present before the pattern.
+    ;;  Handle escaping via \=, if present before the pattern or if there is no pattern match.
     ;;  If pattern is a keymap (\<...>): use it from then on.
     ;;  If pattern is a command (\[...]): (a) substitute its key description, (b) put a button on it.
     ;;  If pattern is a bindings spec (\{...}): just substitute the usual text.
@@ -374,34 +398,37 @@ descriptions, which link to the key's command help."
                 strg      (substring strg ii))
           (save-match-data              ; ANY
             (setq ma  (string-match re-any strg))
-            (if (not ma)
-                (setq newstrg  (concat newstrg strg)
-                      ii       len-strg
-                      jj       len-strg)
-              (let ((escaped  nil)
-                    (odd      nil))
-                (save-match-data
-                  (let ((ma1  ma))
-                    (setq ii  ma)
-                    (while (string-match "\\\\=$" (substring strg 0 ma1))
-                      (setq odd  (not odd)
-                            ma1  (match-beginning 0))
-                      (when odd
-                        (setq ii       (- ii 2)
-                              escaped  ma1)))))
-                (if (not escaped)
-                    (setq ii       ma
-                          jj       (match-end 0)
-                          ma       (match-string-no-properties 0 strg)
-                          newstrg  (concat newstrg (substring strg 0 ii)))
-                  (setq jj       (match-end 0) ; End of \[...], \{...}, or \<...>
-                        newstrg  (if odd
-                                     (concat newstrg
-                                             (substring strg 0 ii) ; Unescaped \='s
-                                             (substring strg ma jj)) ; \[...], \{...}, or \<...>
-                                   (concat newstrg (substring strg 0 ii)))
-                        ma       (if odd nil (match-string-no-properties 0 strg))
-                        ii       jj)))))
+            (cond ((not ma)             ; No \[...], \{...}, or \<...>, but we need to handle \=
+                   (setq jj       0
+                         newstrg  (concat newstrg (replace-regexp-in-string
+                                                   "\\\\=\\(.\\)" "\\1" strg nil nil nil jj)))
+                   (when (match-beginning 1) (setq jj  (match-beginning 1)))
+                   (setq ii  len-strg))
+                  (t
+                   (let ((escaped  nil)
+                         (odd      nil))
+                     (save-match-data
+                       (let ((ma1  ma))
+                         (setq ii  ma)
+                         (while (string-match "\\\\=$" (substring strg 0 ma1))
+                           (setq odd  (not odd)
+                                 ma1  (match-beginning 0))
+                           (when odd
+                             (setq ii       (- ii 2)
+                                   escaped  ma1)))))
+                     (if (not escaped)
+                         (setq ii       ma
+                               jj       (match-end 0)
+                               ma       (match-string-no-properties 0 strg)
+                               newstrg  (concat newstrg (substring strg 0 ii)))
+                       (setq jj       (match-end 0) ; End of \[...], \{...}, or \<...>
+                             newstrg  (if odd
+                                          (concat newstrg
+                                                  (substring strg 0 ii) ; Unescaped \='s
+                                                  (substring strg ma jj)) ; \[...], \{...}, or \<...>
+                                        (concat newstrg (substring strg 0 ii)))
+                             ma       (if odd nil (match-string-no-properties 0 strg))
+                             ii       jj))))))
           (when ma
             (save-match-data            ; KEYMAP
               (setq ma  (copy-sequence ma))
@@ -529,31 +556,31 @@ so that matches are exact (ignoring case).")
                                      ;; (slow . t) ; $$$$$$ Useless here?
                                      ))
 
-  (defun Info-make-manuals-xref (object &optional no-newlines-after-p manuals nomsg)
+  (defun Info-make-manuals-xref (object &optional no-newlines-after-p manuals-spec nomsg)
     "Create a cross-ref link for index entries for OBJECT in manuals.
 Non-`nil' optional arg NO-NEWLINES-AFTER-P means do not add two
 newlines after the cross reference.
 
-Optional arg MANUALS controls which manuals to search.  It has the
-same form as option `help-cross-reference-manuals', and it defaults to
-the value of that option.
+Optional arg MANUALS-SPEC controls which manuals to search.  It has
+the same form as option `help-cross-reference-manuals', and it
+defaults to the value of that option.
 
-Do nothing if the car of MANUALS is nil (no manuals to search).  If
-its cdr is `nil' then create the link without first searching any
+Do nothing if the car of MANUALS-SPEC is nil (no manuals to search).
+If its cdr is `nil' then create the link without first searching any
 manuals.  Otherwise, create the link only if there are search hits in
 the manuals."
     (when (or (stringp object)  (symbolp object)) ; Exclude, e.g., a keymap as OBJECT.
-      (unless manuals (setq manuals  help-cross-reference-manuals))
-      (when (car manuals)    ; Create no link if no manuals to search.
-        (let ((books         (car manuals))
-              (search-now-p  (cdr manuals))
+      (unless manuals-spec (setq manuals-spec  help-cross-reference-manuals))
+      (when (car manuals-spec) ; Create no link if no manuals to search.
+        (let ((books         (car manuals-spec))
+              (search-now-p  (cdr manuals-spec))
               (symb-name     (if (stringp object) object (symbol-name object))))
           (when (or (not search-now-p)
-                    (save-current-buffer (Info-any-index-occurrences-p symb-name books nomsg)))
+                    (save-current-buffer (Info-first-index-occurrence symb-name () books nomsg)))
             (let ((buffer-read-only  nil))
               (insert (format "\n\nFor more information %s the "
-                              (if (cdr manuals) "see" "check")))
-              (help-insert-xref-button "manuals" 'help-info-manual-lookup symb-name books)
+                              (if (cdr manuals-spec) "see" "check")))
+              (help-insert-xref-button "manuals" 'help-info-manual-lookup symb-name () books)
               (insert ".")
               (unless no-newlines-after-p (insert "\n\n"))))))))
 
@@ -563,52 +590,64 @@ the manuals."
              (get 'help-xref 'button-category-symbol)) ; In `button.el'
     (define-button-type 'help-info-manual-lookup
         :supertype 'help-xref
-        'help-function #'(lambda (string &optional manuals nomsg)
-                           (Info-index-entries-across-manuals string manuals nomsg))
+        'help-function #'(lambda (string &optional index-nodes books nomsg)
+                           (Info-index-entries-across-manuals string () books nomsg))
         'help-echo "mouse-2, RET: Look it up in the manuals"))
 
-  (defun Info-index-entries-across-manuals (string &optional manuals nomsg)
-    "Look up STRING in indexes of Info MANUALS on your system.
+  (defun Info-index-entries-across-manuals (string &optional index-nodes manuals nomsg)
+    "Look up STRING in Info MANUALS on your system.
 Looks for exact matches (ignoring case): STRING is expected to be an
 index entry.  Build an Info menu of the possible matches.
-MANUALS has the form of `help-cross-reference-manuals'."
+
+Optional arg INDEX-NODES are the index nodes in MANUALS to search.
+ By default (nil value), all indexes are searched.
+Optional arg MANUALS is the list of manuals to search, or the symbol
+  `all', to search all.
+Optional arg NOMSG non-nil means do not display a progress message."
     (let ((nodes  Info-indexed-nodes)
           nodename)
       (while (and nodes  (not (equal string (nth 1 (car nodes)))))  (setq nodes  (cdr nodes)))
       (if nodes
           (Info-find-node Info-indexed-file (car (car nodes)))
         (setq nodename  (format "Index for `%s'" string))
-        (push (list nodename string (Info-index-occurrences string manuals nomsg)) Info-indexed-nodes)
+        (push (list nodename string (Info-index-occurrences string index-nodes manuals nomsg))
+              Info-indexed-nodes)
         (Info-find-node Info-indexed-file nodename))))
 
-  ;; Similar to `Info-apropos-matches', but using exact matches (ignoring case). 
-  (defun Info-index-occurrences (index-entry &optional manuals nomsg)
-    "Collect occurrences of INDEX-ENTRY in MANUALS.
-Optional arg MANUALS has the form of `help-cross-reference-manuals'.
-Return a list of the form ((FILE INDEX-ENTRY NODE LINE)), where:
+  ;; Similar to `Info-apropos-matches', but using exact matches (ignoring case).
+  (defun Info-index-occurrences (index-entry &optional index-nodes manuals nomsg)
+    "Collect occurrences of INDEX-ENTRY in INDEX-NODES of MANUALS.
+Return a list of the form ((FILE INDEX-ENTRY NODE LINE) ...), where:
  FILE is the name of an Info file,
  NODE is an Info node name,
  LINE is the line number of the INDEX-ENTRY occurrence in that node.
+
+Optional arg INDEX-NODES are the index nodes in MANUALS to search.
+ By default (nil value), search all indexes of each manual.
+Optional arg MANUALS is the list of manuals to search, or the symbol
+  `all', to search all.
 Optional arg NOMSG non-nil means do not display a progress message."
     (unless (string= index-entry "")
       ;; Unlike `Info-apropos-matches', we match only the exact string as an index entry.
       (let ((pattern  (format "\n\\* +\\(%s\\):[ \t]+\\([^\n]+\\)\
 \\.\\(?:[ \t\n]*(line +\\([0-9]+\\))\\)?"
                               (regexp-quote index-entry)))
-            matches index-nodes node)
+            matches node)
         (unless nomsg
-          (message "Searching indexes of %s..." (if (eq manuals 'all)
-                                                    "all manuals"
-                                                  (concat "manuals "
-                                                          (mapconcat #'identity manuals ", ")))))
+          (message "Searching indexes of %s..."
+                   (cond ((eq manuals 'all) "all manuals")
+                         ((null (cadr manuals)) (concat (car manuals) " manual"))
+                         (t (concat "manuals " (mapconcat #'identity manuals ", "))))))
         (condition-case nil
             (with-temp-buffer
+              (when (eq manuals 'all) (setq manuals  ()))
               (Info-mode)
-              (Info-directory)
-              (goto-char (point-min))
-              (re-search-forward "\\* Menu: *\n" nil t)
-              (when (eq manuals 'all)
-                (setq manuals  ())
+              ;; Next two lines are essentially `(Info-directory)'.
+              (info-initialize)
+              (Info-find-node-2 "dir" "top" 'NO-GOING-BACK)
+              (unless manuals
+                (goto-char (point-min))
+                (re-search-forward "\\* Menu: *\n" nil t)
                 (let (manual)
                   (while (re-search-forward "\\*.*: *(\\([^)]+\\))" nil t)
                     ;; `add-to-list' ensures no dups in `manuals', so the `dolist' runs faster.
@@ -617,7 +656,8 @@ Optional arg NOMSG non-nil means do not display a progress message."
                     (add-to-list 'manuals manual))))
               (dolist (manual  manuals)
                 (unless nomsg (message "Searching indexes of manual `%s'..." manual))
-                (when (setq index-nodes  (Info-index-nodes (Info-find-file manual)))
+                (when (or index-nodes
+                          (setq index-nodes  (Info-index-nodes (Info-find-file manual))))
                   (Info-find-node manual (car index-nodes))
                   (while (progn (goto-char (point-min))
                                 (while (re-search-forward pattern nil t)
@@ -632,52 +672,67 @@ Optional arg NOMSG non-nil means do not display a progress message."
           (error nil))
         matches)))
 
-  ;; Like `Info-index-occurrences', but just return non-nil as soon as we know there is a match.
-  (defun Info-any-index-occurrences-p (index-entry &optional manuals nomsg)
-    "Return non-nil if there are any occurrences of INDEX-ENTRY in MANUALS.
-Optional arg MANUALS has the form of `help-cross-reference-manuals'.
+  ;; Like `Info-index-occurrences', but return only the first occurrence found.
+  (defun Info-first-index-occurrence (index-entry &optional index-nodes manuals nomsg)
+    "Return nil or an occurrence of INDEX-ENTRY in INDEX-NODES of MANUALS.
+Search INDEX-NODES and MANUALS in order.
+A non-nil return value is the first first successful index lookup, in
+the form (FILE INDEX-ENTRY NODE LINE) - see `Info-index-occurrences'.
+
+Optional arg INDEX-NODES are the index nodes of MANUALS to search.
+ By default (nil value), search all indexes of each manual.
+Optional arg MANUALS is the list of manuals to search, or the symbol
+  `all', to search all.
 Optional arg NOMSG non-nil means do not display a progress message."
     (and (not (string= index-entry ""))
          ;; Unlike `Info-apropos-matches', we match only the exact string as an index entry.
          (let ((pattern  (format "\n\\* +\\(%s\\):[ \t]+\\([^\n]+\\)\
 \\.\\(?:[ \t\n]*(line +\\([0-9]+\\))\\)?"
                                  (regexp-quote index-entry)))
-               (any?     nil)
-               index-nodes node)
+               (found    nil)
+               node)
            (unless nomsg
-             (message "Searching indexes of %s..." (if (eq manuals 'all)
-                                                       "all manuals"
-                                                     (concat "manuals "
-                                                             (mapconcat #'identity manuals ", ")))))
+             (message "Searching indexes of %s..."
+                      (cond ((eq manuals 'all) "all manuals")
+                            ((null (cadr manuals)) (concat (car manuals) " manual"))
+                            (t (concat "manuals " (mapconcat #'identity manuals ", "))))))
            (condition-case nil
                (with-temp-buffer
+                 (when (eq manuals 'all) (setq manuals  ()))
                  (Info-mode)
-                 (Info-directory)
-                 (goto-char (point-min))
-                 (re-search-forward "\\* Menu: *\n" nil t)
-                 (when (eq manuals 'all)
-                   (setq manuals  ())
+                 ;; Next two lines are essentially `(Info-directory)'.
+                 (info-initialize)
+                 (Info-find-node-2 "dir" "top" 'NO-GOING-BACK)
+                 (unless manuals
+                   (goto-char (point-min))
+                   (re-search-forward "\\* Menu: *\n" nil t)
                    (let (manual)
                      (while (re-search-forward "\\*.*: *(\\([^)]+\\))" nil t)
                        ;; `add-to-list' ensures no dups in `manuals', so the `dolist' runs faster.
                        (setq manual  (match-string 1))
                        (set-text-properties 0 (length manual) nil manual)
                        (add-to-list 'manuals manual))))
-                 (setq any?  (catch 'Info-any-index-occurrences-p
-                               (dolist (manual  manuals)
-                                 (unless nomsg
-                                   (message "Searching indexes of manual `%s'..." manual))
-                                 (when (setq index-nodes  (Info-index-nodes (Info-find-file manual)))
-                                   (Info-find-node manual (car index-nodes))
-                                   (while (progn (goto-char (point-min))
-                                                 (when (re-search-forward pattern nil t)
-                                                   (throw 'Info-any-index-occurrences-p t))
-                                                 (setq index-nodes  (cdr index-nodes)
-                                                       node         (car index-nodes)))
-                                     (Info-goto-node node))))
-                               nil)))
+                 (setq found  (catch 'Info-first-index-occurrence
+                                (dolist (manual  manuals)
+                                  (unless nomsg
+                                    (message "Searching indexes of manual `%s'..." manual))
+                                  (when (or index-nodes
+                                            (setq index-nodes  (Info-index-nodes
+                                                                (Info-find-file manual))))
+                                    (Info-find-node manual (car index-nodes))
+                                    (while (progn (goto-char (point-min))
+                                                  (when (re-search-forward pattern nil t)
+                                                    (throw 'Info-first-index-occurrence
+                                                      (list manual
+                                                            (match-string-no-properties 1)
+                                                            (match-string-no-properties 2)
+                                                            (match-string-no-properties 3))))
+                                                  (setq index-nodes  (cdr index-nodes)
+                                                        node         (car index-nodes)))
+                                      (Info-goto-node node))))
+                                nil)))
              (error nil))
-           any?)))
+           found)))
 
   (defun describe-buffer (&optional buffer-name) ; Bound to `C-h B'
     "Describe the existing buffer named BUFFER-NAME.
@@ -838,6 +893,8 @@ Return the description that was displayed, as a string."
                                                  (symbol-nearest-point))
                                             (function-called-at-point)))
          (enable-recursive-minibuffers  t)
+         (completion-annotate-function  (lambda (fn)
+                                          (and (commandp (intern-soft fn))  "  (command)")))
          val)
      (setq val  (completing-read (if current-prefix-arg "Describe command: " "Describe function: ")
                                  obarray (if current-prefix-arg 'commandp 'fboundp) t nil nil
@@ -1001,9 +1058,10 @@ Return the description that was displayed, as a string."
 ;; REPLACE ORIGINAL in `help-fns.el':
 ;;
 ;; 1. Call `Info-make-manuals-xref' to create a cross-ref link to manuals.
-;; 2. Add key-description buttons to command help.  Use `insert', not `princ'.
+;; 2. Add key-description buttons to command help.
 ;;
-(when (boundp 'Info-virtual-files)      ; Emacs 23.2+
+(when (and (boundp 'Info-virtual-files)      ; Emacs 23.2 through 24.2
+           (not (fboundp 'help-fns--autoloaded-p)))
   (defun describe-function-1 (function)
     (let* ((advised        (and (symbolp function)  (featurep 'advice)  (ad-get-advice-info function)))
            ;; If the function is advised, use the symbol that has the real def, if already set up.
@@ -1012,9 +1070,17 @@ Return the description that was displayed, as a string."
                                function))
            ;; Get the real definition.
            (def            (if (symbolp real-function) (symbol-function real-function) function))
+           (aliased        (symbolp def))
+           (real-def       (if aliased
+                               (let ((fn  def))
+                                 (while (and  (fboundp fn)  (symbolp (symbol-function fn)))
+                                   (setq fn  (symbol-function fn)))
+                                 fn)
+                             def))
+           (file-name      (find-lisp-object-file-name function def))
            (beg            (if (commandp def) "an interactive "  "a "))
            (pt1            (with-current-buffer (help-buffer) (point)))
-           file-name string errtype)
+           string errtype)
       (setq string  (cond ((or (stringp def)  (vectorp def))  "a keyboard macro")
                           ((subrp def)  (if (eq 'unevalled (cdr (subr-arity def)))
                                             (concat beg "special form")
@@ -1049,7 +1115,6 @@ Return the description that was displayed, as a string."
         (with-current-buffer standard-output
           (save-excursion (save-match-data (when (re-search-backward "alias for `\\([^`']+\\)'" nil t)
                                              (help-xref-button 1 'help-function def)))))
-        (setq file-name  (find-lisp-object-file-name function def))
         (when file-name
           (princ " in `")
           ;; We used to add `.el' to the file name, but that's wrong when the user used `load-file'.
@@ -1165,6 +1230,169 @@ Return the description that was displayed, as a string."
                 (Info-make-manuals-xref function)) ; Link to manuals.  (With progress message.)
               (insert (or doc  "Not documented.")))))))))
 
+(when (fboundp 'help-fns--autoloaded-p) ; Emacs 24.3+
+  (defun describe-function-1 (function)
+    (let* ((advised        (and (symbolp function)  (featurep 'advice)  (ad-get-advice-info function)))
+           ;; If the function is advised, use the symbol that has the real def, if already set up.
+           (real-function  (or (and advised  (let ((origname  (cdr (assq 'origname advised))))
+                                               (and (fboundp origname)  origname)))
+                               function))
+           ;; Get the real definition.
+           (def            (if (symbolp real-function) (symbol-function real-function) function))
+           (aliased        (symbolp def))
+           (real-def       (if aliased
+                               (let ((fn  def))
+                                 (while (and  (fboundp fn)  (symbolp (symbol-function fn)))
+                                   (setq fn  (symbol-function fn)))
+                                 fn)
+                             def))
+           (file-name      (find-lisp-object-file-name function def))
+           (pt1            (with-current-buffer (help-buffer) (point)))
+           (beg            (if (and (or (byte-code-function-p def)  (keymapp def)
+                                        (memq (car-safe def) '(macro lambda closure)))
+                                    file-name
+                                    (help-fns--autoloaded-p function file-name))
+                               (if (commandp def) "an interactive autoloaded " "an autoloaded ")
+                             (if (commandp def) "an interactive " "a "))))
+      ;; Print what kind of function-like object FUNCTION is.
+      (princ (cond ((or (stringp def)  (vectorp def))  "a keyboard macro")
+                   ((subrp def)  (if (eq 'unevalled (cdr (subr-arity def)))
+                                     (concat beg "special form")
+                                   (concat beg "built-in function")))
+                   ((byte-code-function-p def)  (concat beg "compiled Lisp function"))
+                   (aliased (format "an alias for `%s'" real-def))
+                   ((eq (car-safe def) 'lambda)  (concat beg "Lisp function"))
+                   ((eq (car-safe def) 'macro)  (concat beg "Lisp macro"))
+                   ((eq (car-safe def) 'closure)  (concat beg "Lisp closure"))
+                   ((autoloadp def)
+                    (format "%s autoloaded %s" (if (commandp def) "an interactive"  "an")
+                            (if (eq (nth 4 def) 'keymap)
+                                "keymap"
+                              (if (nth 4 def) "Lisp macro" "Lisp function"))))
+                   ((keymapp def)  (let ((is-full  nil)
+                                         (elts     (cdr-safe def)))
+                                     (while elts
+                                       (when (char-table-p (car-safe elts))
+                                         (setq is-full  t
+                                               elts     ()))
+                                       (setq elts  (cdr-safe elts)))
+                                     (concat beg (if is-full "keymap"  "sparse keymap"))))
+                   (t  "")))
+      (if (and aliased (not (fboundp real-def)))
+          (princ ",\nwhich is not defined.  Please submit a bug report.")
+        (with-current-buffer standard-output
+          (save-excursion (save-match-data (when (re-search-backward "alias for `\\([^`']+\\)'" nil t)
+                                             (help-xref-button 1 'help-function real-def)))))
+        (when file-name
+          (princ " in `")
+          ;; We used to add `.el' to the file name, but that's wrong when the user used `load-file'.
+          (princ (if (eq file-name 'C-source) "C source code" (file-name-nondirectory file-name)))
+          (princ "'")
+          ;; Make a hyperlink to the library.
+          (with-current-buffer standard-output
+            (save-excursion (re-search-backward "`\\([^`']+\\)'" nil t)
+                            (help-xref-button 1 'help-function-def function file-name))))
+        (princ ".")
+        (with-current-buffer (help-buffer)
+          (fill-region-as-paragraph (save-excursion (goto-char pt1) (forward-line 0) (point)) (point)))
+        (terpri) (terpri)
+        (let* ((doc-raw  (documentation function 'RAW))
+               ;; If the function is autoloaded, and its docstring has key substitution constructs,
+               ;; load the library.  In any case, add help buttons.
+               (doc      (if (and (autoloadp real-def)  doc-raw
+                                     help-enable-auto-load
+                                     (string-match "\\([^\\]=\\|[^=]\\|\\`\\)\\\\[[{<]" doc-raw)
+                                     (load (cadr real-def) t))
+                              (help-substitute-command-keys doc-raw 'ADD-HELP-BUTTONS)
+                           (condition-case err
+                               (help-documentation function nil 'ADD-HELP-BUTTONS)
+                             (error (format "No Doc! %S" err))))))
+          (help-fns--key-bindings function)
+          (with-current-buffer standard-output
+            (setq doc  (help-fns--signature function doc real-def real-function))
+            (help-fns--compiler-macro function)
+            (help-fns--parent-mode function)
+            (help-fns--obsolete function)
+            (insert "\n")
+            (when (and doc  (boundp 'Info-virtual-files)) ; Emacs 23.2+
+              (Info-make-manuals-xref function)) ; Link to manuals.  (With progress message.)
+            (insert (or doc  "Not documented.")))))))
+
+
+  ;; REPLACE ORIGINAL in `help-fns.el':
+  ;;
+  ;; Use `naked-key-description' if available.
+  ;;
+  (defun help-fns--key-bindings (function)
+    (when (commandp function)
+      (let ((pt2       (with-current-buffer standard-output (point)))
+            (remapped  (command-remapping function)))
+        (unless (memq remapped '(ignore undefined))
+          (let ((keys  (where-is-internal (or remapped  function) overriding-local-map nil nil))
+                non-modified-keys)
+            (if (and (eq function 'self-insert-command)  (vectorp (car-safe keys))
+                     (consp (aref (car keys) 0)))
+                (princ "It is bound to many ordinary text characters.\n")
+              (dolist (key  keys) ; Which non-control non-meta keys run this command?
+                (when (member (event-modifiers (aref key 0))  '(nil (shift)))  (push key non-modified-keys)))
+              (when remapped
+                (princ "Its keys are remapped to ")
+                (princ (if (symbolp remapped)
+                           (concat "`" (symbol-name remapped) "'")
+                         "an anonymous command"))
+                (princ ".\n"))
+              (when keys
+                (princ (if remapped "Without this remapping, it would be bound to " "It is bound to "))
+                ;; If lots of ordinary text characters run this command, don't mention them one by one.
+                (if (< (length non-modified-keys) 10)
+                    (princ (mapconcat (if (fboundp 'naked-key-description)
+                                          #'naked-key-description
+                                        #'key-description)
+                                      keys ", "))
+                  (dolist (key  non-modified-keys) (setq keys  (delq key keys)))
+                  (if keys
+                      (progn (princ (mapconcat (if (fboundp 'naked-key-description)
+                                                   #'naked-key-description
+                                                 #'key-description)
+                                               keys ", "))
+                             (princ ", and many ordinary text characters"))
+                    (princ "many ordinary text characters"))))
+              (when (or remapped  keys  non-modified-keys) (princ ".") (terpri)))))
+        (with-current-buffer standard-output
+          (fill-region-as-paragraph pt2 (point))
+          (unless (looking-back "\n\n") (terpri))))))
+
+
+  ;; REPLACE ORIGINAL in `help-fns.el'
+  ;;
+  ;; Add key-description buttons to command help.
+  ;;
+  (defun help-fns--signature (function doc real-def real-function)
+    (unless (keymapp function) ; If definition is a keymap, skip arglist note.
+      (let* ((advertised  (gethash real-def advertised-signature-table t))
+             (arglist     (if (listp advertised) advertised (help-function-arglist real-def)))
+             (usage       (help-split-fundoc doc function)))
+        (when usage (setq doc  (cdr usage)))
+        (let* ((use   (cond ((and usage  (not (listp advertised))) (car usage))
+                            ((listp arglist) (format "%S" (help-make-usage function arglist)))
+                            ((stringp arglist) arglist)
+                            ;; Maybe the arglist is in the docstring of a symbol this one is aliased to.
+                            ((let ((fun  real-function))
+                               (while (and (symbolp fun)  (setq fun  (symbol-function fun))
+                                           (not (setq usage  (help-split-fundoc
+                                                              (help-documentation fun nil 'ADD-HELP-BUTTONS)
+                                                              function)))))
+                               usage)
+                             (car usage))
+                            ((or (stringp real-def)  (vectorp real-def))
+                             (format "\nMacro: %s" (format-kbd-macro real-def)))
+                            (t "[Missing arglist.  Please submit a bug report.]")))
+               (high  (help-highlight-arguments use doc)))
+          (let ((fill-begin  (point)))
+            (insert (car high) "\n")
+            (fill-region fill-begin (point)))
+          (cdr high))))))
+
 ;;;###autoload
 (defun describe-command (function)      ; Bound to `C-h c'
   "Describe an Emacs command (interactive function).
@@ -1205,6 +1433,8 @@ it is displayed along with the global value."
                                               (and (symbolp (variable-at-point))
                                                    (variable-at-point))))
            (enable-recursive-minibuffers  t)
+           (completion-annotate-function  (lambda (var)
+                                            (and (custom-variable-p (intern-soft var))  "  (option)")))
            val)
        (setq val  (completing-read "Describe variable: " obarray
                                    (if current-prefix-arg
@@ -1398,6 +1628,8 @@ it is displayed along with the global value."
                                               (and (symbolp (variable-at-point))
                                                    (variable-at-point))))
            (enable-recursive-minibuffers  t)
+           (completion-annotate-function  (lambda (var)
+                                            (and (custom-variable-p (intern-soft var))  "  (option)")))
            val)
        (setq val  (completing-read
                    "Describe variable: " obarray
@@ -1601,13 +1833,13 @@ it is displayed along with the global value."
                                               (and (symbolp (variable-at-point))
                                                    (variable-at-point))))
            (enable-recursive-minibuffers  t)
+           (completion-annotate-function  (lambda (vv) (and (custom-variable-p (intern-soft vv))  "  (option)")))
            val)
        (setq val (completing-read
                   "Describe variable: " obarray (if current-prefix-arg
                                                     (lambda (vv) (user-variable-p vv))
-                                                  (lambda (vv)
-                                                    (or (get vv 'variable-documentation)
-                                                        (and (boundp vv)  (not (keywordp vv))))))
+                                                  (lambda (vv) (or (get vv 'variable-documentation)
+                                                              (and (boundp vv)  (not (keywordp vv))))))
                   t nil nil (and (symbolp symb)  (symbol-name symb))))
        (list (if (equal val "") symb (intern val))
              nil
@@ -1622,10 +1854,10 @@ it is displayed along with the global value."
           (error "Not a defined Emacs user option: `%s'" variable))
         ;;$$ (unless (boundp variable) (error "Not a defined Emacs variable: `%s'" variable))
         (save-excursion
-          (let ((valvoid  (not (with-current-buffer buffer (boundp variable))))
-                val val-start-pos locus)
-            ;; Extract the value before setting up the output buffer, in case BUFFER *is* the
-            ;; output buffer.
+          (let ((valvoid           (not (with-current-buffer buffer (boundp variable))))
+                (permanent-local   (get variable 'permanent-local))
+                val val-start-pos  locus)
+            ;; Extract the value before setting up the output buffer, in case BUFFER *is* the output buffer.
             (unless valvoid
               (with-selected-frame frame
                 (with-current-buffer buffer
@@ -1639,13 +1871,13 @@ it is displayed along with the global value."
                 (setq file-name  (find-lisp-object-file-name variable 'defvar))
                 (if file-name
                     (progn (princ " is a variable defined in `")
-                           (princ (if (eq file-name 'C-source) "C source code"
+                           (princ (if (eq file-name 'C-source)
+                                      "C source code"
                                     (file-name-nondirectory file-name)))
                            (princ "'.\n")
                            (with-current-buffer standard-output
-                             (save-excursion
-                               (re-search-backward "`\\([^`']+\\)'" nil t)
-                               (help-xref-button 1 'help-variable-def variable file-name)))
+                             (save-excursion (re-search-backward "`\\([^`']+\\)'" nil t)
+                                             (help-xref-button 1 'help-variable-def variable file-name)))
                            (if valvoid (princ "It is void as a variable.") (princ "Its ")))
                   (if valvoid (princ " is void as a variable.") (princ "'s "))))
               (unless valvoid
@@ -1671,24 +1903,30 @@ it is displayed along with the global value."
                         (when (< (point) (+ from 20)) (delete-region (1- from) from)))))))
               (terpri)
               (when locus
-                (if (bufferp locus)
-                    (princ (format "%socal in buffer %s; "
-                                   (if (get variable 'permanent-local) "Permanently l"  "L")
-                                   (buffer-name)))
-                  (princ (format "It is a frame-local variable; ")))
+                (cond ((bufferp locus)
+                       (princ (format "%socal in buffer `%s'; "
+                                      (if (get variable 'permanent-local)  "Permanently l"  "L")
+                                      (buffer-name buffer))))
+                      ((framep locus)
+                       (princ (format "It is a frame-local variable; ")))
+                      ((terminal-live-p locus)
+                       (princ (format "It is a terminal-local variable; ")))
+                      (t (princ (format "It is local to %S" locus))))
                 (if (not (default-boundp variable))
                     (princ "globally void")
-                  (let ((val  (default-value variable)))
+                  (let ((global-val  (default-value variable)))
                     (with-current-buffer standard-output
-                      (princ "global value is ") (terpri)
-                      ;; Fixme: `pp' can take an age if you happen to ask for a very large expression.
-                      ;; We should probably print it raw once and check it's a sensible size before
-                      ;; prettyprinting.  -- fx
-                      (let ((from  (point)))
-                        (pp val)
-                        ;; See previous comment for this function.
-                        ;; (help-xref-on-pp from (point))
-                        (when (< (point) (+ from 20))  (delete-region (1- from) from))))))
+                      (princ "global value is ")
+                      (if (eq val global-val)
+                          (princ "the same.")
+                        (terpri)
+                        ;; Fixme: `pp' can take an age if you happen to ask for a very large expression.
+                        ;; We should probably print it raw once and check whether it is a sensible size,
+                        ;; before prettyprinting.  -- fx
+                        (let ((from  (point)))
+                          (pp global-val)
+                          ;; See previous comment for this function.  (help-xref-on-pp from (point))
+                          (when (< (point) (+ from 20)) (delete-region (1- from) from)))))))
                 (terpri))
               (with-current-buffer standard-output ; If the value is large, move it to the end.
                 (when (> (count-lines (point-min) (point-max)) 10)
@@ -1696,11 +1934,10 @@ it is displayed along with the global value."
                   ;; `'s' at the end of a symbol.
                   (set-syntax-table emacs-lisp-mode-syntax-table)
                   (goto-char val-start-pos)
-                  ;; The line below previously read as
-                  ;; (delete-region (point) (progn (end-of-line) (point)))
+                  ;; The line below previously read as (delete-region (point) (progn (end-of-line) (point))),
                   ;; which suppressed display of the buffer local value for large values.
                   (when (looking-at "value is") (replace-match ""))
-                  (save-excursion (insert "\n\nValue:") (terpri)
+                  (save-excursion (insert "\n\nValue:") (terpri) ; Vanilla Emacs has no `terpri' here.
                                   (set (make-local-variable 'help-button-cache) (point-marker)))
                   (insert "value is shown ")
                   (insert-button "below" 'action help-button-cache 'follow-link t
@@ -1718,64 +1955,66 @@ it is displayed along with the global value."
                      (extra-line  nil))
                 (when (and (> (length doc) 1)  (eq ?* (elt doc 0)))
                   (setq doc  (substring doc 1))) ; Remove any user-variable prefix `*'.
-                ;; Add a note for variables that have been `make-var-buffer-local'.
-                (when (and (local-variable-if-set-p variable)
-                           (or (not (local-variable-p variable))
-                               (with-temp-buffer (local-variable-if-set-p variable))))
-                  (setq extra-line  t)
-                  (princ "  Automatically becomes buffer-local when set in any fashion.\n"))
-                (unless (eq alias variable) ; Mention if it's an alias
+                (cond ((and (local-variable-if-set-p variable) ; Mention if it's a local variable.
+                            (or (not (local-variable-p variable))
+                                (with-temp-buffer (local-variable-if-set-p variable))))
+                       (setq extra-line  t)
+                       (princ "  Automatically becomes ")
+                       (when permanent-local (princ "permanently "))
+                       (princ "buffer-local when set.\n"))
+                      ((not permanent-local))
+                      ((bufferp locus)  (princ "  This variable's buffer-local value is permanent.\n"))
+                      (t (princ "  This variable's value is permanent when it is given a local binding.\n")))
+                (unless (eq alias variable) ; Mention if it's an alias.
                   (setq extra-line  t)
                   (princ (format "  This variable is an alias for `%s'.\n" alias)))
                 (when obsolete
-                  (setq extra-line  t)
+                  (setq extra-line t)
                   (princ "  This variable is obsolete")
                   (when (nth 2 obsolete) (princ (format " since %s" (nth 2 obsolete))))
-                  (princ (cond ((stringp use)  (concat ";\n  " use))
-                               (use  (format ";\n  use `%s' instead." (car obsolete)))
-                               (t  ".")))
+                  (princ (cond ((stringp use) (concat ";\n  " use))
+                               (use           (format ";\n  use `%s' instead." (car obsolete)))
+                               (t             ".")))
                   (terpri))
                 (when (member (cons variable val) file-local-variables-alist)
                   (setq extra-line  t)
                   (if (member (cons variable val) dir-local-variables-alist)
-                      (let ((file  (and (buffer-file-name)
-                                        (not (file-remote-p (buffer-file-name)))
-                                        (dir-locals-find-file (buffer-file-name))))
-                            (type  "file"))
-                        (princ "  This variable is a directory local variable")
-                        (when file
-                          (when (consp file) ; result from cache
-                            ;; If the cache element has an `mtime', we assume it came from a file.
-                            (if (nth 2 file)
+                      (let ((file      (and (buffer-file-name)
+                                            (not (file-remote-p (buffer-file-name)))
+                                            (dir-locals-find-file (buffer-file-name))))
+                            (dir-file  t))
+                        (princ "  This variable's value is directory-local")
+                        (if (null file)
+                            (princ ".\n")
+                          (princ ", set ")
+                          (when (consp file) ; When result is from cache...
+                            (if (nth 2 file) ; If cache element has an mtime, assume it came from a file.
                                 (setq file  (expand-file-name dir-locals-file (car file)))
-                              ;; Otherwise, assume it was set directly.
-                              (setq type  "directory")))
-                          (princ (format "\n  from the %s \"%s\"" type file)))
-                        (princ ".\n"))
-                    (princ "  This variable is a file local variable.\n")))
+                              (setq dir-file  nil))) ; Otherwise, assume it was set directly.
+                          (princ (if dir-file "by the file\n  `" "for the directory\n  `"))
+                          (with-current-buffer standard-output
+                            (insert-text-button file 'type 'help-dir-local-var-def
+                                                'help-args (list variable file)))
+                          (princ "'.\n")))
+                    (princ "  This variable's value is file-local.\n")))
                 (when (memq variable ignored-local-variables)
                   (setq extra-line  t)
-                  (princ "  This variable is ignored when used as a file local \
-variable.\n"))
-                ;; Can be both risky and safe, eg `auto-fill-function'.
-                (when (risky-local-variable-p variable)
+                  (princ "  This variable is ignored when used as a file-local variable.\n"))
+                (when (risky-local-variable-p variable) ; Can be both risky & safe, eg `auto-fill-function'.
                   (setq extra-line  t)
-                  (princ "  This variable is potentially risky when used as a \
-file local variable.\n")
+                  (princ "  This variable can be risky when used as a file-local variable.\n")
                   (when (assq variable safe-local-variable-values)
-                    (princ "  However, you have added it to \
-`safe-local-variable-values'.\n")))
+                    (princ "  However, it has been added to `safe-local-variable-values'.\n")))
                 (when safe-var
                   (setq extra-line  t)
                   (princ "  This variable is safe as a file local variable ")
                   (princ "if its value\n  satisfies the predicate ")
                   (princ (if (byte-code-function-p safe-var)
-                             "which is byte-compiled expression.\n"
+                             "which is a byte-compiled expression.\n"
                            (format "`%s'.\n" safe-var))))
                 (when extra-line (terpri))
                 (princ "Documentation:\n")
-                (with-current-buffer standard-output
-                  (insert (or doc  "Not documented as a variable."))))
+                (with-current-buffer standard-output (insert (or doc  "Not documented as a variable."))))
               ;; Make a link to customize if this variable can be customized.
               (when (custom-variable-p variable)
                 (let ((customize-label  "customize"))
@@ -2072,7 +2311,7 @@ If FRAME is omitted or nil, use the selected frame."
               (terpri))))))))
 
 ;;;###autoload
-(defun describe-file (filename &optional internal-form-p) ; Bound to `C-h M-f'
+(defun describe-file (filename &optional internal-form-p no-error-p) ; Bound to `C-h M-f'
   "Describe the file named FILENAME.
 If FILENAME is nil, describe current directory (`default-directory').
 
@@ -2085,97 +2324,104 @@ Starting with Emacs 22, if the file is an image file then:
 
 If FILENAME is the name of an autofile bookmark and you use library
 `Bookmark+', then show also the bookmark information (tags etc.).  In
-this case, a prefix arg shows the internal form of the bookmark."
+this case, a prefix arg shows the internal form of the bookmark.
+
+In Lisp code:
+
+Non-nil optional arg INTERNAL-FORM-P shows the internal form.
+Non-nil optional arg NO-ERROR-P prints an error message but does not
+ raise an error."
   (interactive "FDescribe file: \nP")
   (unless filename (setq filename default-directory))
-  (help-setup-xref `(describe-file ,filename ,internal-form-p) (interactive-p))
+  (help-setup-xref `(describe-file ,filename ,internal-form-p ,no-error-p) (interactive-p))
   (let ((attrs  (file-attributes filename))
         ;; Functions `bmkp-*' are defined in `bookmark+.el'.
         (bmk    (and (fboundp 'bmkp-get-autofile-bookmark)  (bmkp-get-autofile-bookmark filename))))
-    (unless attrs (error(format "Cannot open file `%s'" filename)))
-    (let* ((type             (nth 0 attrs))
-           (numlinks         (nth 1 attrs))
-           (uid              (nth 2 attrs))
-           (gid              (nth 3 attrs))
-           (last-access      (nth 4 attrs))
-           (last-mod         (nth 5 attrs))
-           (last-status-chg  (nth 6 attrs))
-           (size             (nth 7 attrs))
-           (permissions      (nth 8 attrs))
-           ;; Skip 9: t iff file's gid would change if file were deleted and recreated.
-           (inode            (nth 10 attrs))
-           (device           (nth 11 attrs))
-           (thumb-string     (and (fboundp 'image-file-name-regexp) ; In `image-file.el' (Emacs 22+).
-                                  (if (fboundp 'string-match-p)
-                                      (string-match-p (image-file-name-regexp) filename)
-                                    (save-match-data
-                                      (string-match (image-file-name-regexp) filename)))
-                                  (if (fboundp 'display-graphic-p) (display-graphic-p) window-system)
-                                  (require 'image-dired nil t)
-                                  (image-dired-get-thumbnail-image filename)
-                                  (apply #'propertize "XXXX"
-                                         `(display ,(append (image-dired-get-thumbnail-image filename)
-                                                            '(:margin 10))
-                                                   rear-nonsticky (display)
-                                                   mouse-face highlight
-                                                   follow-link t
-                                                   help-echo "`mouse-2' or `RET': Show full image"
-                                                   keymap (keymap
-                                                           (mouse-2 . (lambda (e) (interactive "e")
-                                                                         (find-file ,filename)))
-                                                           (13 . (lambda () (interactive)
-                                                                    (find-file ,filename))))))))
-           (image-info       (and (require 'image-dired nil t)
-                                  (fboundp 'image-file-name-regexp)
-                                  (if (fboundp 'string-match-p)
-                                      (string-match-p (image-file-name-regexp) filename)
-                                    (save-match-data
-                                      (string-match (image-file-name-regexp) filename)))
-                                  (progn (when (interactive-p) (message "Gathering image data..."))  t)
-                                  (condition-case nil
-                                      (let ((all  (help-all-exif-data (expand-file-name filename))))
-                                        (concat
-                                         (and all  (not (zerop (length all)))
-                                              (format "\nImage Data (EXIF)\n-----------------\n%s"
-                                                      all))))
-                                    (error nil))))
-           (help-text        (concat
-                              (format "`%s'\n%s\n\n" filename (make-string (+ 2 (length filename)) ?-))
-                              (format "File Type:                       %s\n"
-                                      (cond ((eq t type)  "Directory")
-                                            ((stringp type)  (format "Symbolic link to `%s'" type))
-                                            (t  "Normal file")))
-                              (format "Permissions:                %s\n" permissions)
-                              (and (not (eq t type))  (format "Size in bytes:              %g\n" size))
-                              (format-time-string
-                               "Time of last access:        %a %b %e %T %Y (%Z)\n" last-access)
-                              (format-time-string
-                               "Time of last modification:  %a %b %e %T %Y (%Z)\n" last-mod)
-                              (format-time-string
-                               "Time of last status change: %a %b %e %T %Y (%Z)\n" last-status-chg)
-                              (format "Number of links:            %d\n" numlinks)
-                              (format "User ID (UID):              %s\n" uid)
-                              (format "Group ID (GID):             %s\n" gid)
-                              (format "Inode:                      %S\n" inode)
-                              (format "Device number:              %s\n" device)
-                              image-info)))
-      (with-output-to-temp-buffer "*Help*"
-        (when bmk
-          (if internal-form-p
-              (let* ((bname     (bookmark-name-from-full-record bmk))
-                     (bmk-defn  (format "Bookmark `%s'\n%s\n\n%s" bname
-                                        (make-string (+ 11 (length bname)) ?-)
-                                        (pp-to-string bmk))))
-                (princ bmk-defn) (terpri) (terpri))
-            (princ (bmkp-bookmark-description bmk 'NO-IMAGE)) (terpri) (terpri)))
-        (princ help-text))
-      (when thumb-string
-        (with-current-buffer "*Help*"
-          (save-excursion
-            (goto-char (point-min))
-            (let ((buffer-read-only  nil))
-              (when (re-search-forward "Device number:.+\n" nil t) (insert thumb-string))))))
-      help-text)))                      ; Return displayed text.
+    (if (not attrs)
+        (if no-error-p (message "Cannot open file `%s'" filename) (error "Cannot open file `%s'" filename))
+      (let* ((type             (nth 0 attrs))
+             (numlinks         (nth 1 attrs))
+             (uid              (nth 2 attrs))
+             (gid              (nth 3 attrs))
+             (last-access      (nth 4 attrs))
+             (last-mod         (nth 5 attrs))
+             (last-status-chg  (nth 6 attrs))
+             (size             (nth 7 attrs))
+             (permissions      (nth 8 attrs))
+             ;; Skip 9: t iff file's gid would change if file were deleted and recreated.
+             (inode            (nth 10 attrs))
+             (device           (nth 11 attrs))
+             (thumb-string     (and (fboundp 'image-file-name-regexp) ; In `image-file.el' (Emacs 22+).
+                                    (if (fboundp 'string-match-p)
+                                        (string-match-p (image-file-name-regexp) filename)
+                                      (save-match-data
+                                        (string-match (image-file-name-regexp) filename)))
+                                    (if (fboundp 'display-graphic-p) (display-graphic-p) window-system)
+                                    (require 'image-dired nil t)
+                                    (image-dired-get-thumbnail-image filename)
+                                    (apply #'propertize "XXXX"
+                                           `(display ,(append (image-dired-get-thumbnail-image filename)
+                                                              '(:margin 10))
+                                                     rear-nonsticky (display)
+                                                     mouse-face highlight
+                                                     follow-link t
+                                                     help-echo "`mouse-2' or `RET': Show full image"
+                                                     keymap (keymap
+                                                             (mouse-2 . (lambda (e) (interactive "e")
+                                                                           (find-file ,filename)))
+                                                             (13 . (lambda () (interactive)
+                                                                      (find-file ,filename))))))))
+             (image-info       (and (require 'image-dired nil t)
+                                    (fboundp 'image-file-name-regexp)
+                                    (if (fboundp 'string-match-p)
+                                        (string-match-p (image-file-name-regexp) filename)
+                                      (save-match-data
+                                        (string-match (image-file-name-regexp) filename)))
+                                    (progn (when (interactive-p) (message "Gathering image data..."))  t)
+                                    (condition-case nil
+                                        (let ((all  (help-all-exif-data (expand-file-name filename))))
+                                          (concat
+                                           (and all  (not (zerop (length all)))
+                                                (format "\nImage Data (EXIF)\n-----------------\n%s"
+                                                        all))))
+                                      (error nil))))
+             (help-text        (concat
+                                (format "`%s'\n%s\n\n" filename (make-string (+ 2 (length filename)) ?-))
+                                (format "File Type:                       %s\n"
+                                        (cond ((eq t type)  "Directory")
+                                              ((stringp type)  (format "Symbolic link to `%s'" type))
+                                              (t  "Normal file")))
+                                (format "Permissions:                %s\n" permissions)
+                                (and (not (eq t type))  (format "Size in bytes:              %g\n" size))
+                                (format-time-string
+                                 "Time of last access:        %a %b %e %T %Y (%Z)\n" last-access)
+                                (format-time-string
+                                 "Time of last modification:  %a %b %e %T %Y (%Z)\n" last-mod)
+                                (format-time-string
+                                 "Time of last status change: %a %b %e %T %Y (%Z)\n" last-status-chg)
+                                (format "Number of links:            %d\n" numlinks)
+                                (format "User ID (UID):              %s\n" uid)
+                                (format "Group ID (GID):             %s\n" gid)
+                                (format "Inode:                      %S\n" inode)
+                                (format "Device number:              %s\n" device)
+                                image-info)))
+        (with-output-to-temp-buffer "*Help*"
+          (when bmk
+            (if internal-form-p
+                (let* ((bname     (bookmark-name-from-full-record bmk))
+                       (bmk-defn  (format "Bookmark `%s'\n%s\n\n%s" bname
+                                          (make-string (+ 11 (length bname)) ?-)
+                                          (pp-to-string bmk))))
+                  (princ bmk-defn) (terpri) (terpri))
+              (princ (bmkp-bookmark-description bmk 'NO-IMAGE)) (terpri) (terpri)))
+          (princ help-text))
+        (when thumb-string
+          (with-current-buffer "*Help*"
+            (save-excursion
+              (goto-char (point-min))
+              (let ((buffer-read-only  nil))
+                (when (re-search-forward "Device number:.+\n" nil t) (insert thumb-string))))))
+        help-text))))                   ; Return displayed text.
 
 (defun help-all-exif-data (file)
   "Return all EXIF data from FILE, using command-line tool `exiftool'."
