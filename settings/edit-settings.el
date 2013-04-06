@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-03-26 18:06:49 Tuesday by richard>
+;; Last modified: <2013-04-04 14:38:56 Thursday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -36,6 +36,10 @@
 (global-set-key (kbd "C-x C-o") (lambda () (interactive) (other-window 2))) ;; forward two
 (global-set-key (kbd "C-c q") 'join-line)
 
+;; Mac integration.
+(global-set-key (kbd "s-x") 'clipboard-kill-region) ;;cut
+(global-set-key (kbd "s-c") 'clipboard-kill-ring-save) ;;copy
+(global-set-key (kbd "s-v") 'clipboard-yank) ;;paste
 
 ;; back-button settings
 ;; -----------------------------------[back-button settings]
