@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-03-22 16:56:17 Friday by richard>
+;; Last modified: <2013-04-09 06:50:12 Tuesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -41,36 +41,36 @@
         org-export-kill-product-buffer-when-displayed  t
         org-src-window-setup                           'current-window)
 
-  (unless (boundp 'org-export-latex-classes)
-    (setq org-export-latex-classes nil))
-  (add-to-list 'org-export-latex-classes
+  (unless (boundp 'org-latex-classes)
+    (setq org-latex-classes nil))
+  (add-to-list 'org-latex-classes
                ;; beamer class, for presentations
                '("beamer"
                  "\\documentclass[11pt]{beamer}\n
-      % UTF-8 encoding\n
-      \\mode<{{{beamermode}}}>\n
-      \\usetheme{{{{beamertheme}}}}\n
-      \\usecolortheme{{{{beamercolortheme}}}}\n
-      \\beamertemplateballitem\n
-      \\setbeameroption{show notes}
-      \\usepackage{xeCJK}
-      \\usepackage[utf8]{inputenc}\n
-      \\usepackage[T1]{fontenc}\n
-      \\usepackage{hyperref}\n
-      \\usepackage{color}
-      \\usepackage{listings}
-      \\setCJKmainfont{Microsoft YaHei}
-      \\lstset{numbers=none,language=[ISO]C++,tabsize=4,
-  frame=single,
-  basicstyle=\\small,
-  showspaces=false,showstringspaces=false,
-  showtabs=false,
-  keywordstyle=\\color{blue}\\bfseries,
-  commentstyle=\\color{red},
-  }\n
-      \\usepackage{verbatim}\n
-      \\institute{{{{beamerinstitute}}}}\n
-       \\subject{{{{beamersubject}}}}\n"
+        % UTF-8 encoding\n
+        \\mode<{{{beamermode}}}>\n
+        \\usetheme{{{{beamertheme}}}}\n
+        \\usecolortheme{{{{beamercolortheme}}}}\n
+        \\beamertemplateballitem\n
+        \\setbeameroption{show notes}
+        \\usepackage{xeCJK}
+        \\usepackage[utf8]{inputenc}\n
+        \\usepackage[T1]{fontenc}\n
+        \\usepackage{hyperref}\n
+        \\usepackage{color}
+        \\usepackage{listings}
+        \\setCJKmainfont{Microsoft YaHei}
+        \\lstset{numbers=none,language=[ISO]C++,tabsize=4,
+    frame=single,
+    basicstyle=\\small,
+    showspaces=false,showstringspaces=false,
+    showtabs=false,
+    keywordstyle=\\color{blue}\\bfseries,
+    commentstyle=\\color{red},
+    }\n
+        \\usepackage{verbatim}\n
+        \\institute{{{{beamerinstitute}}}}\n
+         \\subject{{{{beamersubject}}}}\n"
 
                  ("\\section{%s}" . "\\section*{%s}")
 
@@ -82,7 +82,7 @@
 
   ;; letter class, for formal letters
 
-  (add-to-list 'org-export-latex-classes
+  (add-to-list 'org-latex-classes
 
                '("letter"
                  "\\documentclass[11pt]{letter}\n
@@ -96,7 +96,7 @@
                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
-  (add-to-list 'org-export-latex-classes
+  (add-to-list 'org-latex-classes
                '("chinese-export"
                  "% Compile with xelatex
 % UTF-8 encoding
