@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-01-06 10:21:32 Sunday by richard>
+;; Last modified: <2013-04-09 06:38:52 Tuesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -14,11 +14,15 @@
   (set-face-attribute 'default nil :font "Monofur-16"))
 
 ;; Set chinese font
-(if (string= system-type "windows-nt")
-    (set-fontset-font "fontset-default"
-                      'gb18030 '("Microsoft Yahei" . "unicode-bmp"))
-  (set-fontset-font "fontset-default"
-                    'gb18030 '("Zhunyuan" . "unicode-bmp")))
+(cond ((string= system-type "windows-nt")
+       (set-fontset-font "fontset-default"
+                         'gb18030 '("Microsoft Yahei" . "unicode-bmp")))
+      ((string= system-type "darwin")
+       (set-fontset-font "fontset-default"
+                         'gb18030 '("Hei" . "unicode-bmp")))
+      ((string= system-type "gnu/linux")
+       (set-fontset-font "fontset-default"
+                         'gb18030 '("Zhunyuan" . "unicode-bmp"))))
 
 (defun special-font()
   "Change special buffer to special font.
