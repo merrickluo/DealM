@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-01-08 19:48:20 Tuesday by richard>
+;; Last modified: <2013-04-09 06:41:49 Tuesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -77,7 +77,7 @@
 
 ;; fullscreen settings
 ;; ------------------------------------------------------------------
-(when window-system
+(when (and window-system (string= system-type "gnu-linux"))
   (defun fullscreen ()
     "Fullscreen."
     (if (string= system-type "windows-nt")
