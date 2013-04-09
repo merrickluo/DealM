@@ -1,10 +1,10 @@
 ;;; flymake.el --- a universal on-the-fly syntax checker
 
-;; Copyright (C) 2003-2012  Free Software Foundation, Inc.
+;; Copyright (C) 2003-2012 Free Software Foundation, Inc.
 
 ;; Author:  Pavel Kobyakov <pk_at_work@yahoo.com>
 ;; Maintainer: Sam Graham <libflymake-emacs BLAHBLAH illusori.co.uk>
-;; Version: 0.4.7
+;; Version: 0.4.15
 ;; Keywords: c languages tools
 
 ;; This file is part of GNU Emacs.
@@ -62,6 +62,10 @@
   "Non-nil if syntax check was killed by `flymake-compile'.")
 (make-variable-buffer-local 'flymake-check-was-interrupted)
 
+(defvar flymake-check-should-restart nil
+  "Non-nil if syntax check should restart after terminating.")
+(make-variable-buffer-local 'flymake-check-should-restart)
+
 (defvar flymake-err-info nil
   "Sorted list of line numbers and lists of err info in the form (file, err-text).")
 (make-variable-buffer-local 'flymake-err-info)
@@ -93,9 +97,10 @@ file (and thus on the remote machine), or in the same place as
 
 ;;;###autoload
 (define-minor-mode flymake-mode
-  "Minor mode to do on-the-fly syntax checking.
-When called interactively, toggles the minor mode.
-With arg, turn Flymake mode on if and only if arg is positive."
+  "Toggle on-the-fly syntax checking.
+With a prefix argument ARG, enable the mode if ARG is positive,
+and disable it otherwise.  If called from Lisp, enable the mode
+if ARG is omitted or nil."
   :group 'flymake :lighter flymake-mode-line
   (cond
 
@@ -428,7 +433,7 @@ Return its file name if found, or nil if not found."
   (or (flymake-get-buildfile-from-cache source-dir-name)
       (let* ((file (locate-dominating-file source-dir-name buildfile-name)))
         (if file
-            (progn
+            (let* ((file (file-truename file)))
               (flymake-log 3 "found buildfile at %s" file)
               (flymake-add-buildfile-to-cache source-dir-name file)
               file)
@@ -715,7 +720,10 @@ It's flymake process filter."
 
                 (flymake-parse-residual)
                 (flymake-post-syntax-check exit-status command)
-                (setq flymake-is-running nil))))
+                (setq flymake-is-running nil)
+                (when flymake-check-should-restart
+                  (flymake-log 2 "restarting syntax check")
+                  (flymake-start-syntax-check)))))
         (error
          (let ((err-str (format "Error in process sentinel for buffer %s: %s"
                                 source-buffer (error-message-string err))))
@@ -1050,7 +1058,7 @@ Convert it to flymake internal format."
      ;; LaTeX warnings (fileless) ("\\(LaTeX \\(Warning\\|Error\\): .*\\) on input line \\([0-9]+\\)" 20 3 nil 1)
      ;; gcc after 4.5 (includes column number)
      (" *\\(\\([a-zA-Z]:\\)?[^:(\t\n]+\\)\:\\([0-9]+\\)\:\\([0-9]+\\)\:[ \t\n]*\\(.+\\)"
-      2 3 4 5)
+      1 3 4 5)
      ;; ant/javac, also matches gcc prior to 4.5
      (" *\\(\\[javac\\] *\\)?\\(\\([a-zA-Z]:\\)?[^:(\t\n]+\\)\:\\([0-9]+\\)\:[ \t\n]*\\(.+\\)"
       2 4 nil 5))
@@ -1326,6 +1334,7 @@ complete the `flymake-after-syntax-check-hook' hook will be run."
         (flymake-clear-project-include-dirs-cache)
 
         (setq flymake-check-was-interrupted nil)
+        (setq flymake-check-should-restart nil)
 
         (let* ((source-file-name  buffer-file-name)
                (init-f (flymake-get-init-function source-file-name))
@@ -1423,6 +1432,23 @@ Otherwise we fall through to using `default-directory'."
         (setq flymake-check-was-interrupted t))))
   (flymake-log 1 "killed process %d" (process-id proc)))
 
+(defun flymake-stop-syntax-check (&optional buffer)
+  "Kill any queued or running syntax check for BUFFER.
+Defaults to `current-buffer' if not supplied.
+
+NOTE: Stopping a syntax check will not complete until the spawned process has
+been terminated, this happens asynchronously and it is highly likely that
+immediately after calling `flymake-stop-syntax-check' the process will still
+be running. Among other things, this will prevent starting a new syntax check
+in the buffer until the process terminates. If you want to queue up a new
+syntax check, you should look at `flymake-restart-syntax-check' which handles
+this async delay correctly for you."
+  (interactive)
+  (let ((buffer (or buffer (current-buffer))))
+    (flymake-remove-queued-syntax-check buffer)
+    (dolist (proc flymake-processes)
+      (if (equal (process-buffer proc) buffer) (flymake-kill-process proc)))))
+
 (defun flymake-stop-all-syntax-checks ()
   "Kill all syntax check processes."
   (interactive)
@@ -1430,6 +1456,18 @@ Otherwise we fall through to using `default-directory'."
     (flymake-remove-queued-syntax-check (car flymake-syntax-check-queue)))
   (while flymake-processes
     (flymake-kill-process (pop flymake-processes))))
+
+(defun flymake-restart-syntax-check (&optional buffer)
+  "Kill any queued or running syntax check for BUFFER and start a new one.
+Defaults to `current-buffer' if not supplied."
+  (interactive)
+  (let ((buffer (or buffer (current-buffer))))
+    (flymake-remove-queued-syntax-check buffer)
+    (dolist (proc flymake-processes)
+      (when (equal (process-buffer proc) buffer)
+        (with-current-buffer buffer
+          (setq flymake-check-should-restart t))
+        (flymake-kill-process proc)))))
 
 (defun flymake-compilation-is-running ()
   (and (boundp 'compilation-in-progress)
@@ -1723,10 +1761,10 @@ copy."
     (error "Invalid file-name"))
   (or prefix
       (setq prefix "flymake"))
-  (let* ((temp-name   (concat (file-name-sans-extension file-name)
-                              "_" prefix
-                              (and (file-name-extension file-name)
-                                   (concat "." (file-name-extension file-name))))))
+  (let* ((temp-name (file-truename (concat (file-name-sans-extension file-name)
+                                           "_" prefix
+                                           (and (file-name-extension file-name)
+                                                (concat "." (file-name-extension file-name)))))))
     (flymake-log 3 "create-temp-inplace: file=%s temp=%s" file-name temp-name)
     temp-name))
 
@@ -1759,7 +1797,7 @@ copy."
                  (file-name-nondirectory (file-name-sans-extension file-name))
                  "_" prefix))
          (ext  (concat "." (file-name-extension file-name)))
-         (temp-name (make-temp-file name nil ext)))
+         (temp-name (file-truename (make-temp-file name nil ext))))
     (flymake-log 3 "create-temp-intemp: file=%s temp=%s" file-name temp-name)
       temp-name))
 
@@ -1931,7 +1969,7 @@ Return full-name.  Names are real, not patched."
         (list "-s"
               "-C"
               base-dir
-              (concat "CHK_SOURCES=" source)
+              (concat "CHK_SOURCES=" (shell-quote-argument source))
               "SYNTAX_CHECK_MODE=1"
               "check-syntax")))
 
@@ -1939,7 +1977,7 @@ Return full-name.  Names are real, not patched."
   (list "ant"
         (list "-buildfile"
               (concat base-dir "/" "build.xml")
-              (concat "-DCHK_SOURCES=" source)
+              (concat "-DCHK_SOURCES=" (shell-quote-argument source))
               "check-syntax")))
 
 (defun flymake-simple-make-init-impl (create-temp-f use-relative-base-dir use-relative-source build-file-name get-cmdline-f)
@@ -2125,7 +2163,7 @@ wish to have supplied to Perl -I."
 
 ;;;; xml-specific init-cleanup routines
 (defun flymake-xml-init ()
-  (list "xmlstarlet" (list "val" (flymake-init-create-temp-buffer-copy 'flymake-create-temp-copy))))
+  (list "xmlstarlet" (list "val" "-e" (flymake-init-create-temp-buffer-copy 'flymake-create-temp-copy))))
 
 (provide 'flymake)
 

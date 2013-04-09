@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-03-25 17:15:31 Monday by richard>
+;; Last modified: <2013-04-09 15:10:25 Tuesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -19,6 +19,8 @@
   (require 'rfringe)
 
   (require 'flymake-cursor)
+
+  (setq temporary-file-directory "/tmp/")
 
   (defvar flymake-mode-map (make-sparse-keymap))
 
@@ -159,7 +161,7 @@ Use CREATE-TEMP-F for creating temp copy."
   ;; Learn code from https://github.com/akaihola/flymake-python
   (defun flymake-pylint-init ()
     (let* ((temp-file (flymake-init-create-temp-buffer-copy
-                       'flymake-create-temp-inplace))
+                       'flymake-create-temp-intemp))
 
            (local-file (file-relative-name
                         temp-file
