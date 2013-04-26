@@ -46,3 +46,6 @@
 [submodule "python-lib"]
 	path = python-lib
 	url = git@github.com:chao787/python-libs.git
+[submodule "plugins/rainbow-delimiters"]
+	path = plugins/rainbow-delimiters
+	url = git@github.com:jlr/rainbow-delimiters.git
