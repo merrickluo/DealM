@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-04-09 06:50:12 Tuesday by richard>
+;; Last modified: <2013-04-10 16:10:14 Wednesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -40,6 +40,12 @@
         org-src-fontify-natively                       t
         org-export-kill-product-buffer-when-displayed  t
         org-src-window-setup                           'current-window)
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((ruby . t)
+     (sh . t)
+     (python . t)
+     (emacs-lisp . t)))
 
   (unless (boundp 'org-latex-classes)
     (setq org-latex-classes nil))
