@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-03-22 13:44:39 Friday by richard>
+;; Last modified: <2013-04-26 17:26:24 Friday by richard>
 
 ;; Copyright (C) 2013 Richard Wong
 
@@ -12,45 +12,21 @@
 ;; Settings for clojure
 ;; -----------------------------------[Settings for clojure]
 (add-to-list 'load-path (concat plugins-path-r "clojure-mode"))
-
-(autoload 'clojure-mode "clojure-mode" "" t)
-
-;; nrepl path plugin for clojure
 (add-to-list 'load-path (concat plugins-path-r "nrepl"))
 (add-to-list 'load-path (concat plugins-path-r "ac-nrepl"))
 
-(eval-after-load "clojure-mode"
-  '(progn
-     (defun lisp-eval-smart()
-       "Evaluate sexp or marked things to the inferior Lisp process
-in a smart way. Prefix argument means switch to the Lisp
- buffer afterwards.."
-       (interactive)
-       (save-excursion
-         (save-restriction
-           (if mark-active
-               (call-interactively 'lisp-eval-region)
-             (call-interactively 'lisp-eval-last-sexp)))))
-     (defun clojure-settings ()
-       (require 'nrepl)
-       (autoload 'ac-nrepl-setup "ac-nrepl" "DOCSTRING" t)
-       (setq nrepl-popup-stacktraces nil)
-       (add-to-list 'same-window-buffer-names "*nrepl*"))
-     (add-hook 'clojure-mode-hook 'clojure-settings)
-     (define-key clojure-mode-map (kbd "C-x C-e") 'lisp-eval-smart)
-     (define-key clojure-mode-map (kbd "C-c C-e") 'lisp-eval-smart)
-     ))
+(eval-after-load "auto-complete"
+  '(add-to-list 'ac-modes 'nrepl-mode))
 
-(eval-after-load "nrepl"
-  '(progn
-     (defun nrepl-settings()
-       (subword-mode t)
-       (ac-nrepl-setup t)
-       (paredit-mode t))
-     (add-hook 'nrepl-mode-hook 'nrepl-settings)
-     (setq nrepl-hide-special-buffers t)
-     (add-hook 'clojure-nrepl-mode-hook 'ac-nrepl-setup)
-     (add-hook 'nrepl-interaction-mode-hook 'nrepl-turn-on-eldoc-mode)))
+(require 'nrepl)
+(require 'clojure-mode)
+
+(autoload 'clojure-mode "clojure-mode" "" t)
+(autoload 'ac-nrepl-setup "ac-nrepl" "" t)
+(add-hook 'nrepl-mode-hook 'ac-nrepl-setup)
+(add-hook 'nrepl-interaction-mode-hook 'ac-nrepl-setup)
+(add-hook 'nrepl-interaction-mode-hook 'nrepl-turn-on-eldoc-mode)
+
 
 (eval-after-load "ob"
   ;; clojure integration for emacs
