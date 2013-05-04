@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-03-26 17:51:03 Tuesday by richard>
+;; Last modified: <2013-05-03 13:52:46 Friday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -167,7 +167,8 @@
                 ("\\.[Ll][Oo][Gg]$" . log4j-mode)
                 ("\\.h$" . c++-mode)
                 ("\\.i$" . c++-mode)    ; SWIG
-                ("\\.mm?$" . objc-mode)
+                ("\\.m$" . octave-mode)
+                ("\\.mm$" . objc-mode)
                 ("_emacs" . lisp-mode)
                 ("\\.el\\.gz$" . emacs-lisp-mode)
                 ("\\.mak$" . makefile-mode)

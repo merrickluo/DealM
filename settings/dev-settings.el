@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-03-22 16:47:20 Friday by richard>
+;; Last modified: <2013-04-26 18:24:19 Friday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -133,6 +133,10 @@ Add this to .emacs to run gofmt on the current buffer when saving:
 
 ;; parenthses settings
 ;; ------------------------------------------------------------------
+(add-to-list 'load-path (concat plugins-path-r "rainbow-delimiters/"))
+(autoload 'rainbow-delimiters-mode "rainbow-delimiters.el" "" t)
+(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+(setq rainbow-delimiters-unmatched-face)
 (autoload 'highlight-parentheses-mode "highlight-parentheses")
 
 (setq hl-paren-colors '("red" "yellow" "cyan" "magenta" "green" "red"))
