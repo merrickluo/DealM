@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-05-03 13:52:46 Friday by richard>
+;; Last modified: <2013-05-27 14:58:47 Monday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -246,6 +246,24 @@
   '(require 'bookmark+))
 
 (require 'simple+)
+
+
+(when (string= system-type "darwin")
+;;; ENV path correction for (Mac os x)
+ (if (and (getenv "PATH") (not (string= (getenv "PATH") "")))
+     (setenv "PATH"
+             (concat
+              "/usr/local/share/python" path-separator
+              "/usr/local/bin" path-separator
+              (getenv "PATH")))
+   (setenv "PATH"
+           (concat
+            "/usr/local/share/python" path-separator
+            "/usr/local/bin" path-separator
+            "/usr/bin" path-separator
+            "/bin" path-separator
+            "/usr/sbin" path-separator
+            "/sbin" path)-separator)))
 
 (provide 'default-behavior-settings)
 ;; default-behavior-settings ends here.
