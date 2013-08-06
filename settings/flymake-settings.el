@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-04-09 15:10:25 Tuesday by richard>
+;; Last modified: <2013-06-15 12:02:59 Saturday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -158,10 +158,12 @@ Use CREATE-TEMP-F for creating temp copy."
          "TMPERR" (format "Can't create temp file for %s" source-file-name)))
       args))
 
+  (defun flymake-create-temp-in-system-tempdir (filename prefix)
+    (make-temp-file (or prefix "flymake")))
   ;; Learn code from https://github.com/akaihola/flymake-python
   (defun flymake-pylint-init ()
     (let* ((temp-file (flymake-init-create-temp-buffer-copy
-                       'flymake-create-temp-intemp))
+                       'flymake-create-temp-in-system-tempdir))
 
            (local-file (file-relative-name
                         temp-file
