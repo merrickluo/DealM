@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-05-27 14:58:47 Monday by wongrichard>
+;; Last modified: <2013-06-17 20:01:28 Monday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -50,11 +50,12 @@
 ;; emacs 24 default
 ;; (setq x-select-enable-clipboard t)
 
-;; 不产生备份文件
-(setq-default make-backup-files nil)
+;; Diable backup
+(setq-default make-backup-files nil
+              auto-save-default nil)
 
 (add-hook 'text-mode-hook 'text-mode-hook-identify)
-(add-hook 'text-mode-hook 'turn-on-auto-fill)
+(add-hook 'text-mode-hook 'turn-off-auto-fill)
 
 ;; insert two spaces after two colon:
 (setq colon-double-space t)
@@ -247,6 +248,8 @@
 
 (require 'simple+)
 
+(setq line-move-visual nil)
+(setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
 
 (when (string= system-type "darwin")
 ;;; ENV path correction for (Mac os x)
