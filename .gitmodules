@@ -19,9 +19,6 @@
 [submodule "plugins/popup"]
 	path = plugins/popup
 	url = https://github.com/emacsmirror/popup.git
-[submodule "plugins/auctex"]
-	path = plugins/auctex
-	url = git@github.com:chao787/auctex.git
 [submodule "plugins/jade-mode"]
 	path = plugins/jade-mode
 	url = git://github.com/brianc/jade-mode.git
