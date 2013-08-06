@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-04-09 06:38:52 Tuesday by richard>
+;; Last modified: <2013-06-11 23:14:10 Tuesday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -9,20 +9,22 @@
 ;; Version: 0.4
 ;; PUBLIC LICENSE: GPLv3
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;line have 80 length;;
-(if (string= system-type "windows-nt")
-    (set-face-attribute 'default nil :font "Consolas-13")
-  (set-face-attribute 'default nil :font "Monofur-16"))
+(cond ((string= system-type "windows-nt")
+       (set-face-attribute 'default nil :font "Consolas-13"))
+      ((string= system-type "darwin")
+       (set-face-attribute 'default nil :font "monaco-16"))
+      ((string= system-type "gnu/linux")
+      (set-face-attribute 'default nil :font "Monofur-16")))
 
 ;; Set chinese font
 (cond ((string= system-type "windows-nt")
        (set-fontset-font "fontset-default"
                          'gb18030 '("Microsoft Yahei" . "unicode-bmp")))
-      ((string= system-type "darwin")
-       (set-fontset-font "fontset-default"
-                         'gb18030 '("Hei" . "unicode-bmp")))
       ((string= system-type "gnu/linux")
        (set-fontset-font "fontset-default"
                          'gb18030 '("Zhunyuan" . "unicode-bmp"))))
+
+(require 'unicode-fonts)
 
 (defun special-font()
   "Change special buffer to special font.
