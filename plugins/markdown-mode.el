@@ -2013,7 +2013,7 @@ This is an exact copy of `line-number-at-pos' for use in emacs21."
 
 (define-derived-mode gfm-mode markdown-mode "GFM"
   "Major mode for editing GitHub Flavored Markdown files."
-  (auto-fill-mode 0)
+  (turn-off-auto-fill)
   (longlines-mode 1))
 
 (provide 'markdown-mode)
