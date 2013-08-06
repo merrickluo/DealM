@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-04-10 16:10:14 Wednesday by richard>
+;; Last modified: <2013-06-14 08:25:32 Friday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -23,6 +23,7 @@
 (setq auto-mode-alist
       (cons '("\\.te?xt" . markdown-mode) auto-mode-alist))
 
+(require 'org-tree-slide)
 
 ;; org-mode settings
 ;; ------------------------------------------------------------------
@@ -40,6 +41,16 @@
         org-src-fontify-natively                       t
         org-export-kill-product-buffer-when-displayed  t
         org-src-window-setup                           'current-window)
+
+;;   (add-hook 'org-mode-hook 'soft-wrap-lines)
+
+;;   (defun soft-wrap-lines ()
+;;     "Make lines wrap at window edge and on word boundary,
+;; in current buffer."
+;;     (interactive)
+;;     (setq truncate-lines nil)
+;;     (setq word-wrap t)
+;;     )
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((ruby . t)
@@ -274,8 +285,7 @@ origin move otherwise "
 
 (mapc (lambda (mode)
         (add-hook 'LaTeX-mode-hook mode))
-      (list 'auto-fill-mode
-            'LaTeX-math-mode
+      (list 'LaTeX-math-mode
             'turn-on-reftex
             'linum-mode))
 
