@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-03-22 16:34:29 Friday by richard>
+;; Last modified: <2013-05-28 12:16:58 Tuesday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -154,6 +154,16 @@
 (add-hook 'python-mode-hook
           '(lambda ()
              (define-key python-mode-map "\C-m" 'newline-and-indent)))
+
+(when (string= system-type "darwin")
+;;; ENV path correction for (Mac os x)
+  (setenv "PYTHONPATH"
+          (concat
+           (getenv "PYTHONPATH") path-separator
+           "/Library/Python/2.7/site-packages/" path-separator
+           "/usr/local/lib/python2.7/site-packages/" path-separator
+           )))
+
 
 (provide 'python-settings)
 ;; python-settings ends here.
