@@ -243,8 +243,6 @@
 (eval-after-load "mouse"
   '(require 'mouse+))
 
-(eval-after-load "bookmark"
-  '(require 'bookmark+))
 
 (require 'simple+)
 
@@ -253,20 +251,16 @@
 
 (when (string= system-type "darwin")
 ;;; ENV path correction for (Mac os x)
- (if (and (getenv "PATH") (not (string= (getenv "PATH") "")))
-     (setenv "PATH"
-             (concat
-              "/usr/local/share/python" path-separator
-              "/usr/local/bin" path-separator
-              (getenv "PATH")))
-   (setenv "PATH"
-           (concat
-            "/usr/local/share/python" path-separator
-            "/usr/local/bin" path-separator
-            "/usr/bin" path-separator
-            "/bin" path-separator
-            "/usr/sbin" path-separator
-            "/sbin" path)-separator)))
+(let ((PATH (or (and (string= (getenv "PATH") "")
+                     (concat "/usr/bin" path-separator
+                             "/bin" path-separator
+                             "/usr/sbin" path-separator
+                             "/sbin"))
+                (getenv "PATH"))))
+  (setenv "PATH" (concat "/Developer/NVIDIA/CUDA-5.5/bin" path-separator
+                         "/usr/local/share/python" path-separator
+                         "/usr/local/bin" path-separator
+                         PATH))))
 
 (provide 'default-behavior-settings)
 ;; default-behavior-settings ends here.
