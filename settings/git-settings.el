@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-03-26 17:54:03 Tuesday by richard>
+;; Last modified: <2013-08-27 11:45:34 Tuesday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -10,11 +10,8 @@
 ;; PUBLIC LICENSE: GPLv3
 
 (add-to-list 'load-path (concat plugins-path-r "magit"))
-(add-to-list 'load-path (concat plugins-path-r "git-modes"))
 
 
-(require 'gitconfig-mode)
-(require 'gitignore-mode)
 
 ;; magit settings.
 (autoload 'magit-status "magit" "\
