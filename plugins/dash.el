@@ -3,7 +3,7 @@
 ;; Copyright (C) 2012 Magnar Sveen
 
 ;; Author: Magnar Sveen <magnars@gmail.com>
-;; Version: 1.0.3
+;; Version: 2.1.0
 ;; Keywords: lists
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -37,6 +37,7 @@
 
 (defmacro --each (list &rest body)
   "Anaphoric form of `-each'."
+  (declare (debug t))
   (let ((l (make-symbol "list")))
     `(let ((,l ,list)
            (it-index 0))
@@ -89,6 +90,7 @@ Returns nil, used for side-effects only."
 
 (defmacro --map (form list)
   "Anaphoric form of `-map'."
+  (declare (debug t))
   `(mapcar (lambda (it) ,form) ,list))
 
 (defmacro --reduce-from (form initial-value list)
@@ -128,6 +130,41 @@ exposed as `acc`."
       (-reduce-from fn (car list) (cdr list))
     (funcall fn)))
 
+(defun -reduce-r-from (fn initial-value list)
+  "Replace conses with FN, nil with INITIAL-VALUE and evaluate
+the resulting expression. If LIST is empty, INITIAL-VALUE is
+returned and FN is not called.
+
+Note: this function works the same as `-reduce-from' but the
+operation associates from right instead of from left."
+  (if (not list) initial-value
+    (funcall fn (car list) (-reduce-r-from fn initial-value (cdr list)))))
+
+(defmacro --reduce-r-from (form initial-value list)
+  "Anaphoric version of `-reduce-r-from'."
+  `(-reduce-r-from (lambda (&optional it acc) ,form) ,initial-value ,list))
+
+(defun -reduce-r (fn list)
+  "Replace conses with FN and evaluate the resulting expression.
+The final nil is ignored. If LIST contains no items, FN must
+accept no arguments as well, and reduce returns the result of
+calling FN with no arguments. If LIST has only 1 item, it is
+returned and FN is not called.
+
+The first argument of FN is the new item, the second is the
+accumulated value.
+
+Note: this function works the same as `-reduce' but the operation
+associates from right instead of from left."
+  (cond
+   ((not list) (funcall fn))
+   ((not (cdr list)) (car list))
+   (t (funcall fn (car list) (-reduce-r fn (cdr list))))))
+
+(defmacro --reduce-r (form list)
+  "Anaphoric version of `-reduce-r'."
+  `(-reduce-r (lambda (&optional it acc) ,form) ,list))
+
 (defmacro --filter (form list)
   "Anaphoric form of `-filter'."
   (let ((r (make-symbol "result")))
@@ -146,6 +183,7 @@ Alias: `-select'"
 
 (defmacro --remove (form list)
   "Anaphoric form of `-remove'."
+  (declare (debug t))
   `(--filter (not ,form) ,list))
 
 (defun -remove (pred list)
@@ -201,7 +239,7 @@ through the REP function."
 
 (defun -flatten (l)
   "Takes a nested list L and returns its contents as a single, flat list."
-  (if (listp l)
+  (if (and (listp l) (listp (cdr l)))
       (-mapcat '-flatten l)
     (list l)))
 
@@ -211,11 +249,12 @@ through the REP function."
 
 (defmacro --mapcat (form list)
   "Anaphoric form of `-mapcat'."
+  (declare (debug t))
   `(apply 'append (--map ,form ,list)))
 
 (defun -mapcat (fn list)
-  "Returns the result of applying concat to the result of applying map to FN and LIST.
-Thus function FN should return a collection."
+  "Returns the concatenation of the result of mapping FN over LIST.
+Thus function FN should return a list."
   (--mapcat (funcall fn it) list))
 
 (defun -cons* (&rest args)
@@ -226,14 +265,14 @@ result so if the final member of ARGS is not a list the result is
 a dotted list."
   (let (res)
     (--each
-     args
+        args
       (cond
-        ((not res)
-         (setq res it))
-        ((consp res)
-         (setcdr res (cons (cdr res) it)))
-        (t
-         (setq res (cons res it)))))
+       ((not res)
+        (setq res it))
+       ((consp res)
+        (setcdr res (cons (cdr res) it)))
+       (t
+        (setq res (cons res it)))))
     res))
 
 (defmacro --first (form list)
@@ -249,6 +288,36 @@ a dotted list."
 
 To get the first item in the list no questions asked, use `car'."
   (--first (funcall pred it) list))
+
+(defmacro --last (form list)
+  "Anaphoric form of `-last'."
+  (let ((n (make-symbol "needle")))
+    `(let (,n)
+       (--each ,list
+         (when ,form (setq ,n it)))
+       ,n)))
+
+(defun -last (pred list)
+  "Return the last x in LIST where (PRED x) is non-nil, else nil."
+  (--last (funcall pred it) list))
+
+(defalias '-first-item 'car
+  "Returns the first item of LIST, or nil on an empty list.")
+
+(defun -last-item (list)
+  "Returns the first item of LIST, or nil on an empty list."
+  (car (last list)))
+
+(defmacro --count (pred list)
+  "Anaphoric form of `-count'."
+  (let ((r (make-symbol "result")))
+    `(let ((,r 0))
+       (--each ,list (when ,pred (setq ,r (1+ ,r))))
+       ,r)))
+
+(defun -count (pred list)
+  "Counts the number of items in LIST where (PRED item) is non-nil."
+  (--count (funcall pred it) list))
 
 (defun ---truthy? (val)
   (not (null val)))
@@ -320,6 +389,28 @@ Returns `nil` both if all items match the predicate, and if none of the items ma
 (defalias '-only-some-p '-only-some?)
 (defalias '--only-some-p '--only-some?)
 
+(defun -slice (list from &optional to)
+  "Return copy of LIST, starting from index FROM to index TO.
+FROM or TO may be negative."
+  (let ((length (length list))
+        (new-list nil)
+        (index 0))
+    ;; to defaults to the end of the list
+    (setq to (or to length))
+    ;; handle negative indices
+    (when (< from 0)
+      (setq from (mod from length)))
+    (when (< to 0)
+      (setq to (mod to length)))
+
+    ;; iterate through the list, keeping the elements we want
+    (while (< index to)
+      (when (>= index from)
+        (!cons (car list) new-list))
+      (!cdr list)
+      (setq index (1+ index)))
+    (nreverse new-list)))
+
 (defun -take (n list)
   "Returns a new list of the first N items in LIST, or all items if there are fewer than N."
   (let (result)
@@ -358,17 +449,44 @@ Returns `nil` both if all items match the predicate, and if none of the items ma
   (--drop-while (funcall pred it) list))
 
 (defun -split-at (n list)
-  "Returns a list of ((-take N LIST) (-drop N LIST))"
-  (list (-take n list)
-        (-drop n list)))
+  "Returns a list of ((-take N LIST) (-drop N LIST)), in no more than one pass through the list."
+  (let (result)
+    (--dotimes n
+      (when list
+        (!cons (car list) result)
+        (!cdr list)))
+    (list (nreverse result) list)))
 
-(defmacro --split-with (form list)
+(defun -rotate (n list)
+  "Rotate LIST N places to the right.  With N negative, rotate to the left.
+The time complexity is O(n)."
+  (if (> n 0)
+      (append (last list n) (butlast list n))
+    (append (-drop (- n) list) (-take (- n) list))))
+
+(defun -insert-at (n x list)
+  "Returns a list with X inserted into LIST at position N."
+  (let ((split-list (-split-at n list)))
+    (nconc (car split-list) (cons x (cadr split-list)))))
+
+(defmacro --split-with (pred list)
   "Anaphoric form of `-split-with'."
-  `(list (--take-while ,form ,list)
-         (--drop-while ,form ,list)))
+  (let ((l (make-symbol "list"))
+        (r (make-symbol "result"))
+        (c (make-symbol "continue")))
+    `(let ((,l ,list)
+           (,r nil)
+           (,c t))
+       (while (and ,l ,c)
+         (let ((it (car ,l)))
+           (if (not ,pred)
+               (setq ,c nil)
+             (!cons it ,r)
+             (!cdr ,l))))
+       (list (nreverse ,r) ,l))))
 
 (defun -split-with (pred list)
-  "Returns a list of ((-take-while PRED LIST) (-drop-while PRED LIST))"
+  "Returns a list of ((-take-while PRED LIST) (-drop-while PRED LIST)), in no more than one pass through the list."
   (--split-with (funcall pred it) list))
 
 (defmacro --separate (form list)
@@ -380,34 +498,44 @@ Returns `nil` both if all items match the predicate, and if none of the items ma
        (list (nreverse ,y) (nreverse ,n)))))
 
 (defun -separate (pred list)
-  "Returns a list of ((-filter PRED LIST) (-remove PRED LIST))."
+  "Returns a list of ((-filter PRED LIST) (-remove PRED LIST)), in one pass through the list."
   (--separate (funcall pred it) list))
 
-(defun -partition (n list)
-  "Returns a new list with the items in LIST grouped into N-sized sublists.
-If there are not enough items to make the last group N-sized,
-those items are discarded."
+(defun ---partition-all-in-steps-reversed (n step list)
+  "Private: Used by -partition-all-in-steps and -partition-in-steps."
+  (when (< step 1)
+    (error "Step must be a positive number, or you're looking at some juicy infinite loops."))
   (let ((result nil)
-        (sublist nil)
         (len 0))
     (while list
-      (!cons (car list) sublist)
-      (setq len (1+ len))
-      (when (= len n)
-        (!cons (nreverse sublist) result)
-        (setq sublist nil)
-        (setq len 0))
-      (!cdr list))
+      (!cons (-take n list) result)
+      (setq list (-drop step list)))
+    result))
+
+(defun -partition-all-in-steps (n step list)
+  "Returns a new list with the items in LIST grouped into N-sized sublists at offsets STEP apart.
+The last groups may contain less than N items."
+  (nreverse (---partition-all-in-steps-reversed n step list)))
+
+(defun -partition-in-steps (n step list)
+  "Returns a new list with the items in LIST grouped into N-sized sublists at offsets STEP apart.
+If there are not enough items to make the last group N-sized,
+those items are discarded."
+  (let ((result (---partition-all-in-steps-reversed n step list)))
+    (while (and result (< (length (car result)) n))
+      (!cdr result))
     (nreverse result)))
 
 (defun -partition-all (n list)
   "Returns a new list with the items in LIST grouped into N-sized sublists.
 The last group may contain less than N items."
-  (let (result)
-    (while list
-      (!cons (-take n list) result)
-      (setq list (-drop n list)))
-    (nreverse result)))
+  (-partition-all-in-steps n n list))
+
+(defun -partition (n list)
+  "Returns a new list with the items in LIST grouped into N-sized sublists.
+If there are not enough items to make the last group N-sized,
+those items are discarded."
+  (-partition-in-steps n n list))
 
 (defmacro --partition-by (form list)
   "Anaphoric form of `-partition-by'."
@@ -436,8 +564,45 @@ The last group may contain less than N items."
            (nreverse ,r))))))
 
 (defun -partition-by (fn list)
-  "Applies FN to each value in LIST, splitting it each time FN returns a new value."
+  "Applies FN to each item in LIST, splitting it each time FN returns a new value."
   (--partition-by (funcall fn it) list))
+
+(defmacro --partition-by-header (form list)
+  "Anaphoric form of `-partition-by-header'."
+  (let ((r (make-symbol "result"))
+        (s (make-symbol "sublist"))
+        (h (make-symbol "header-value"))
+        (b (make-symbol "seen-body?"))
+        (n (make-symbol "new-value"))
+        (l (make-symbol "list")))
+    `(let ((,l ,list))
+       (when ,l
+         (let* ((,r nil)
+                (it (car ,l))
+                (,s (list it))
+                (,h ,form)
+                (,b nil)
+                (,l (cdr ,l)))
+           (while ,l
+             (let* ((it (car ,l))
+                    (,n ,form))
+               (if (equal ,h ,n)
+                   (when ,b
+                     (!cons (nreverse ,s) ,r)
+                     (setq ,s nil)
+                     (setq ,b nil))
+                 (setq ,b t))
+               (!cons it ,s)
+               (!cdr ,l)))
+           (!cons (nreverse ,s) ,r)
+           (nreverse ,r))))))
+
+(defun -partition-by-header (fn list)
+  "Applies FN to the first item in LIST. That is the header
+  value. Applies FN to each item in LIST, splitting it each time
+  FN returns the header value, but only after seeing at least one
+  other value (the body)."
+  (--partition-by-header (funcall fn it) list))
 
 (defmacro --group-by (form list)
   "Anaphoric form of `-group-by'."
@@ -490,6 +655,41 @@ elements of LIST.  Keys are compared by `equal'."
       (setq lists (-map 'cdr lists)))
     (nreverse result)))
 
+(defmacro --zip-with (form list1 list2)
+  "Anaphoric form of `-zip-with'.
+
+The elements in list1 is bound as `it`, the elements in list2 as `other`."
+  (let ((r (make-symbol "result"))
+        (l1 (make-symbol "list1"))
+        (l2 (make-symbol "list2")))
+    `(let ((,r nil)
+           (,l1 ,list1)
+           (,l2 ,list2))
+       (while (and ,l1 ,l2)
+         (let ((it (car ,l1))
+               (other (car ,l2)))
+           (!cons ,form ,r)
+           (!cdr ,l1)
+           (!cdr ,l2)))
+       (nreverse ,r))))
+
+(defun -zip-with (fn list1 list2)
+  "Zip the two lists LIST1 and LIST2 using a function FN.  This
+function is applied pairwise taking as first argument element of
+LIST1 and as second argument element of LIST2 at corresponding
+position.
+
+The anaphoric form `--zip-with' binds the elements from LIST1 as `it`,
+and the elements from LIST2 as `other`."
+  (--zip-with (funcall fn it other) list1 list2))
+
+(defun -zip (list1 list2)
+  "Zip the two lists together.  Return the list where elements
+are cons pairs with car being element from LIST1 and cdr being
+element from LIST2.  The length of the returned list is the
+length of the shorter one."
+  (-zip-with 'cons list1 list2))
+
 (defun -partial (fn &rest args)
   "Takes a function FN and fewer than the normal arguments to FN,
 and returns a fn that takes a variable number of additional ARGS.
@@ -497,20 +697,64 @@ When called, the returned function calls FN with ARGS first and
 then additional args."
   (apply 'apply-partially fn args))
 
-(defun -rpartial (fn &rest args)
-  "Takes a function FN and fewer than the normal arguments to FN,
-and returns a fn that takes a variable number of additional ARGS.
-When called, the returned function calls FN with the additional
-args first and then ARGS.
+(defun -elem-index (elem list)
+  "Return the index of the first element in the given LIST which
+is equal to the query element ELEM, or nil if there is no
+such element."
+  (car (-elem-indices elem list)))
 
-Requires Emacs 24 or higher."
-  `(closure (t) (&rest args)
-            (apply ',fn (append args ',args))))
+(defun -elem-indices (elem list)
+  "Return the indices of all elements in LIST equal to the query
+element ELEM, in ascending order."
+  (-find-indices (-partial 'equal elem) list))
 
-(defun -applify (fn)
-  "Changes an n-arity function FN to a 1-arity function that
-expects a list with n items as arguments"
-  (apply-partially 'apply fn))
+(defun -find-indices (pred list)
+  "Return the indices of all elements in LIST satisfying the
+predicate PRED, in ascending order."
+  (let ((i 0))
+    (apply 'append (--map-indexed (when (funcall pred it) (list it-index)) list))))
+
+(defmacro --find-indices (form list)
+  "Anaphoric version of `-find-indices'."
+  `(-find-indices (lambda (it) ,form) ,list))
+
+(defun -find-index (pred list)
+  "Take a predicate PRED and a LIST and return the index of the
+first element in the list satisfying the predicate, or nil if
+there is no such element."
+  (car (-find-indices pred list)))
+
+(defmacro --find-index (form list)
+  "Anaphoric version of `-find-index'."
+  `(-find-index (lambda (it) ,form) ,list))
+
+(defun -select-by-indices (indices list)
+  "Return a list whose elements are elements from LIST selected
+as `(nth i list)` for all i from INDICES."
+  (let (r)
+    (--each indices
+      (!cons (nth it list) r))
+    (nreverse r)))
+
+(defun -grade-up (comparator list)
+  "Grades elements of LIST using COMPARATOR relation, yielding a
+permutation vector such that applying this permutation to LIST
+sorts it in ascending order."
+  ;; ugly hack to "fix" lack of lexical scope
+  (let ((comp `(lambda (it other) (funcall ',comparator (car it) (car other)))))
+    (->> (--map-indexed (cons it it-index) list)
+      (-sort comp)
+      (-map 'cdr))))
+
+(defun -grade-down (comparator list)
+  "Grades elements of LIST using COMPARATOR relation, yielding a
+permutation vector such that applying this permutation to LIST
+sorts it in descending order."
+  ;; ugly hack to "fix" lack of lexical scope
+  (let ((comp `(lambda (it other) (funcall ',comparator (car other) (car it)))))
+    (->> (--map-indexed (cons it it-index) list)
+      (-sort comp)
+      (-map 'cdr))))
 
 (defmacro -> (x &optional form &rest more)
   "Threads the expr through the forms. Inserts X as the second
@@ -549,6 +793,66 @@ in in second form, etc."
 (put '-> 'lisp-indent-function 1)
 (put '->> 'lisp-indent-function 1)
 (put '--> 'lisp-indent-function 1)
+
+(defmacro -when-let (var-val &rest body)
+  "If VAL evaluates to non-nil, bind it to VAR and execute body.
+VAR-VAL should be a (VAR VAL) pair."
+  (let ((var (car var-val))
+        (val (cadr var-val)))
+    `(let ((,var ,val))
+       (when ,var
+         ,@body))))
+
+(defmacro -when-let* (vars-vals &rest body)
+  "If all VALS evaluate to true, bind them to their corresponding
+  VARS and execute body. VARS-VALS should be a list of (VAR VAL)
+  pairs (corresponding to bindings of `let*')."
+  (if (= (length vars-vals) 1)
+      `(-when-let ,(car vars-vals)
+         ,@body)
+    `(-when-let ,(car vars-vals)
+       (-when-let* ,(cdr vars-vals)
+         ,@body))))
+
+(defmacro --when-let (val &rest body)
+  "If VAL evaluates to non-nil, bind it to `it' and execute
+body."
+  `(let ((it ,val))
+     (when it
+       ,@body)))
+
+(defmacro -if-let (var-val then &optional else)
+  "If VAL evaluates to non-nil, bind it to VAR and do THEN,
+otherwise do ELSE. VAR-VAL should be a (VAR VAL) pair."
+  (let ((var (car var-val))
+        (val (cadr var-val)))
+    `(let ((,var ,val))
+       (if ,var ,then ,else))))
+
+(defmacro -if-let* (vars-vals then &optional else)
+  "If all VALS evaluate to true, bind them to their corresponding
+  VARS and do THEN, otherwise do ELSE. VARS-VALS should be a list
+  of (VAR VAL) pairs (corresponding to the bindings of `let*')."
+  (let ((first-pair (car vars-vals))
+        (rest (cdr vars-vals)))
+    (if (= (length vars-vals) 1)
+        `(-if-let ,first-pair ,then ,else)
+      `(-if-let ,first-pair
+         (-if-let* ,rest ,then ,else)
+         ,else))))
+
+(defmacro --if-let (val then &optional else)
+  "If VAL evaluates to non-nil, bind it to `it' and do THEN,
+otherwise do ELSE."
+  `(let ((it ,val))
+     (if it ,then ,else)))
+
+(put '-when-let 'lisp-indent-function 1)
+(put '-when-let* 'lisp-indent-function 1)
+(put '--when-let 'lisp-indent-function 1)
+(put '-if-let 'lisp-indent-function 1)
+(put '-if-let* 'lisp-indent-function 1)
+(put '--if-let 'lisp-indent-function 1)
 
 (defun -distinct (list)
   "Return a new list with all duplicates removed.
@@ -607,12 +911,68 @@ or with `-compare-fn' if that's non-nil."
 
 (defalias '-contains-p '-contains?)
 
+(defun -sort (comparator list)
+  "Sort LIST, stably, comparing elements using COMPARATOR.
+Returns the sorted list.  LIST is NOT modified by side effects.
+COMPARATOR is called with two elements of LIST, and should return non-nil
+if the first element should sort before the second."
+  (sort (copy-sequence list) comparator))
+
+(defmacro --sort (form list)
+  "Anaphoric form of `-sort'."
+  (declare (debug t))
+  `(-sort (lambda (it other) ,form) ,list))
+
 (defun -repeat (n x)
   "Return a list with X repeated N times.
 Returns nil if N is less than 1."
   (let (ret)
     (--dotimes n (!cons x ret))
     ret))
+
+(defun -sum (list)
+  "Return the sum of LIST."
+  (apply '+ list))
+
+(defun -product (list)
+  "Return the product of LIST."
+  (apply '* list))
+
+(defun -max (list)
+  "Return the largest value from LIST of numbers or markers."
+  (apply 'max list))
+
+(defun -min (list)
+  "Return the smallest value from LIST of numbers or markers."
+  (apply 'min list))
+
+(defun -max-by (comparator list)
+  "Take a comparison function COMPARATOR and a LIST and return
+the greatest element of the list by the comparison function.
+
+See also combinator `-on' which can transform the values before
+comparing them."
+  (--reduce (if (funcall comparator it acc) it acc) list))
+
+(defun -min-by (comparator list)
+  "Take a comparison function COMPARATOR and a LIST and return
+the least element of the list by the comparison function.
+
+See also combinator `-on' which can transform the values before
+comparing them."
+  (--reduce (if (funcall comparator it acc) acc it) list))
+
+(defmacro --max-by (form list)
+  "Anaphoric version of `-max-by'.
+
+The items for the comparator form are exposed as \"it\" and \"other\"."
+  `(-max-by (lambda (it other) ,form) ,list))
+
+(defmacro --min-by (form list)
+  "Anaphoric version of `-min-by'.
+
+The items for the comparator form are exposed as \"it\" and \"other\"."
+  `(-min-by (lambda (it other) ,form) ,list))
 
 (eval-after-load "lisp-mode"
   '(progn
@@ -629,6 +989,10 @@ Returns nil if N is less than 1."
                            "-reduce-from"
                            "--reduce"
                            "-reduce"
+                           "--reduce-r-from"
+                           "-reduce-r-from"
+                           "--reduce-r"
+                           "-reduce-r"
                            "--filter"
                            "-filter"
                            "-select"
@@ -676,21 +1040,54 @@ Returns nil if N is less than 1."
                            "--drop-while"
                            "-drop-while"
                            "-split-at"
+                           "-rotate"
+                           "-insert-at"
                            "--split-with"
                            "-split-with"
                            "-partition"
+                           "-partition-in-steps"
                            "-partition-all"
+                           "-partition-all-in-steps"
                            "-interpose"
                            "-interleave"
+                           "--zip-with"
+                           "-zip-with"
+                           "-zip"
+                           "--map-indexed"
+                           "-map-indexed"
                            "--map-when"
                            "-map-when"
                            "--replace-where"
                            "-replace-where"
                            "-partial"
                            "-rpartial"
+                           "-juxt"
+                           "-applify"
+                           "-on"
+                           "-flip"
+                           "-const"
+                           "-cut"
+                           "-orfn"
+                           "-andfn"
+                           "-elem-index"
+                           "-elem-indices"
+                           "-find-indices"
+                           "--find-indices"
+                           "-find-index"
+                           "--find-index"
+                           "-select-by-indices"
+                           "-grade-up"
+                           "-grade-down"
                            "->"
                            "->>"
                            "-->"
+                           "-when-let"
+                           "-when-let*"
+                           "--when-let"
+                           "-if-let"
+                           "-if-let*"
+                           "--if-let"
+                           "-union"
                            "-distinct"
                            "-intersection"
                            "-difference"
@@ -698,11 +1095,20 @@ Returns nil if N is less than 1."
                            "-contains-p"
                            "-repeat"
                            "-cons*"
+                           "-sum"
+                           "-product"
+                           "-min"
+                           "-min-by"
+                           "--min-by"
+                           "-max"
+                           "-max-by"
+                           "--max-by"
                            ))
            (special-variables '(
                                 "it"
                                 "it-index"
                                 "acc"
+                                "other"
                                 )))
        (font-lock-add-keywords 'emacs-lisp-mode `((,(concat "\\<" (regexp-opt special-variables 'paren) "\\>")
                                                    1 font-lock-variable-name-face)) 'append)
