@@ -13,6 +13,7 @@
 ;; autoloads
 ;; ------------------------------------------------------------------
 (autoload 'highlight-indentation-mode "highlight-indentation" "")
+(autoload 'yaml-mode "yaml-mode" "")
 
 (eval-after-load "highlight-indentation"
   '(progn

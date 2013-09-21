@@ -165,6 +165,7 @@
                 ("\\.[Cc][Pp][Pp]$" . c++-mode)
                 ("\\.[Hh][Xx][Xx]$" . c++-mode)
                 ("\\.[Tt][Cc][Cc]$" . c++-mode)
+                ("\\.[Yy][Mm][Ll]$" . yaml-mode)
                 ("\\.[Ll][Oo][Gg]$" . log4j-mode)
                 ("\\.h$" . c++-mode)
                 ("\\.i$" . c++-mode)    ; SWIG
