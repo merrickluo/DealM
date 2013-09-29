@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-03-26 17:33:11 Tuesday by richard>
+;; Last modified: <2013-09-29 10:40:26 Sunday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -55,12 +55,13 @@
      "headx"                       ;; snippet
      "y[s]?"                       ;; yassnippet
      "yy"                          ;; bison
+     "[Yy][Aa]?[Mm][Ll]"           ;; YAML
      "el"                          ;; elisp
      "sh"                          ;; shell
      "org"                         ;; org
      "pl"
      "py"                          ;; python
-     "htm\\(l\\)?")))              ;;html
+     "htm\\(l\\)?")))              ;; HTML
 
 (eval-after-load "autoinsert"
   `(auto-insert-settings))
