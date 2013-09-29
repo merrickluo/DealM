@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-06-11 23:14:10 Tuesday by wongrichard>
+;; Last modified: <2013-09-29 11:15:16 Sunday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -9,22 +9,17 @@
 ;; Version: 0.4
 ;; PUBLIC LICENSE: GPLv3
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;line have 80 length;;
-(cond ((string= system-type "windows-nt")
-       (set-face-attribute 'default nil :font "Consolas-13"))
-      ((string= system-type "darwin")
-       (set-face-attribute 'default nil :font "monaco-16"))
-      ((string= system-type "gnu/linux")
-      (set-face-attribute 'default nil :font "Monofur-16")))
 
-;; Set chinese font
-(cond ((string= system-type "windows-nt")
-       (set-fontset-font "fontset-default"
-                         'gb18030 '("Microsoft Yahei" . "unicode-bmp")))
-      ((string= system-type "gnu/linux")
-       (set-fontset-font "fontset-default"
-                         'gb18030 '("Zhunyuan" . "unicode-bmp"))))
+(autoload 'unicode-fonts-setup "unicode-fonts"
+  "Set up Unicode fonts for FONTSET-NAMES.
 
-(require 'unicode-fonts)
+FONTSET-NAMES must be a list of strings.  Fontset names
+which do not currently exist will be ignored.  The
+default value is `unicode-fonts-fontset-names'."
+  t)
+
+(unicode-fonts-setup)
+(set-face-attribute 'default nil :font "Source Code Pro-14")
 
 (defun special-font()
   "Change special buffer to special font.
