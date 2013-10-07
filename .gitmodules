@@ -43,3 +43,6 @@
 [submodule "plugins/rainbow-delimiters"]
 	path = plugins/rainbow-delimiters
 	url = git@github.com:jlr/rainbow-delimiters.git
+[submodule "plugins/git-modes"]
+	path = plugins/git-modes
+	url = git@github.com:magit/git-modes.git
