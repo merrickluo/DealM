@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-09-21 21:25:48 Saturday by wongrichard>
+;; Last modified: <2013-10-08 17:47:57 Tuesday by wongrichard>
 
 ;; Copyright (C) 2012-2013 Richard Wong
 
@@ -159,12 +159,15 @@
 
 (autoload 'xahk-mode "xahk-mode" "" t)
 
+(autoload 'coffee-mode "coffee-mode" "" t)
+
 ;; modes definition.
 (setq auto-mode-alist
       (append '(("\\.[Cc][Xx][Xx]$" . c++-mode)
                 ("\\.[Cc][Pp][Pp]$" . c++-mode)
                 ("\\.[Hh][Xx][Xx]$" . c++-mode)
                 ("\\.[Tt][Cc][Cc]$" . c++-mode)
+                ("\\.coffee$" . coffee-mode)
                 ("\\.[Yy][Mm][Ll]$" . yaml-mode)
                 ("\\.[Ll][Oo][Gg]$" . log4j-mode)
                 ("\\.[Cc][Uu][Hh]?$" . cuda-mode)
