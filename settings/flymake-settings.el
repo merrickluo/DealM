@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-06-15 12:02:59 Saturday by wongrichard>
+;; Last modified: <2013-11-15 12:20:41 Friday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -16,7 +16,6 @@
 (defun flymake-settings()
   "settings for flymake"
   ;; display the buffer-relative positions of flymake errors and warnings on the fringe.
-  (require 'rfringe)
 
   (require 'flymake-cursor)
 
