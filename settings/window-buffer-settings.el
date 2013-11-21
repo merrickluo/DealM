@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-04-09 06:51:54 Tuesday by richard>
+;; Last modified: <2013-11-21 22:09:07 Thursday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -32,8 +32,6 @@
                           nil t))))
 (defalias 'recent-files 'recentf-open-files "Open recent file list.")
 
-(global-set-key (kbd "C-M-o") 'xsteve-ido-choose-from-recentf)
-
 (eval-after-load "projectile"
   `(progn
      (defun smart-ido-recentf ()
@@ -43,7 +41,9 @@
          (call-interactively 'xsteve-ido-choose-from-recentf)))
 
      ;; global-set-key settings
-     (global-set-key (kbd "C-M-o") 'smart-ido-recentf))
+     (global-set-key (kbd "C-M-o") 'smart-ido-recentf)
+     (define-key dired-mode-map (kbd "C-M-o") 'smart-ido-recentf))
+
   )
 ;; Immediately close the current buffer.
 (global-set-key (kbd "C-x k")   'kill-this-buffer)
