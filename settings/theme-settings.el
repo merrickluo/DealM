@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-01-05 16:17:59 Saturday by richard>
+;; Last modified: <2013-10-07 17:02:54 Monday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -10,12 +10,11 @@
 ;; PUBLIC LICENSE: FreeBSD
 (add-to-list 'custom-theme-load-path (concat plugins-path-r "emacs-color-theme-solarized/"))
 
-(load-theme 'wheatgrass t)
+(load-theme 'tomorrow-night t)
 
 (autoload 'hl-line-face "hl-line+")
 (eval-after-load "hl-line"
-  '(set-face-background hl-line-face "grey20")
-)
+  '(set-face-background hl-line-face "grey20"))
 ;; hl-line-face
 
 (provide 'theme-settings)
