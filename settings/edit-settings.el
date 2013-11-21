@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-04-04 14:38:56 Thursday by richard>
+;; Last modified: <2013-11-21 11:12:28 Thursday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -41,16 +41,6 @@
 (global-set-key (kbd "s-c") 'clipboard-kill-ring-save) ;;copy
 (global-set-key (kbd "s-v") 'clipboard-yank) ;;paste
 
-;; back-button settings
-;; -----------------------------------[back-button settings]
-(autoload 'back-button-global-backward            "back-button" "" t)
-(autoload 'back-button-global-forward             "back-button" "" t)
-(autoload 'back-button-local-forward              "back-button" "" t)
-(autoload 'back-button-local-backward             "back-button" "" t)
-(autoload 'back-button-push-mark-local-and-global "back-button" "" t)
-(autoload 'back-button-mode                       "back-button" )
-(back-button-mode t)
-
 ;; Set iedit-mode directly
 (setq iedit-mode t)
 (global-set-key (kbd "C-;") 'iedit-dwim)
@@ -76,13 +66,13 @@
        (if isearch-regexp isearch-string (regexp-quote isearch-string))))))
 
 (eval-after-load "projectile"
-  (define-key isearch-mode-map (kbd "C-S-O")
-    (lambda () (interactive)
-      (let ((case-fold-search isearch-case-fold-search)
-            (search-string (if isearch-regexp isearch-string (regexp-quote isearch-string))))
-        (if (projectile-project-p)
-            (projectile-multi-occur search-string)
-          (multi-occur-in-this-mode search-string))))))
+  '(define-key isearch-mode-map (kbd "C-S-O")
+     (lambda () (interactive)
+       (let ((case-fold-search isearch-case-fold-search)
+             (search-string (if isearch-regexp isearch-string (regexp-quote isearch-string))))
+         (if (projectile-project-p)
+             (projectile-multi-occur search-string)
+           (multi-occur-in-this-mode search-string))))))
 
 ;; other global keys.
 (autoload 'browse-kill-ring "browse-kill-ring"
