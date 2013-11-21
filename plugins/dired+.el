@@ -2840,7 +2840,7 @@ If no one is selected, symmetric encryption will be performed.  "
 (define-key dired-mode-map "\M-i"    'diredp-insert-subdirs)                ; `M-i'
 (define-key dired-mode-map "\M-l"    'diredp-downcase-this-file)            ; `M-l'
 (define-key dired-mode-map [(meta shift ?m)] 'diredp-chmod-this-file)       ; `M-M'
-(define-key dired-mode-map "\C-o"    'diredp-find-file-other-frame)         ; `C-o'
+;; (define-key dired-mode-map "\C-o"    'diredp-find-file-other-frame)         ; `C-o'
 (when (fboundp 'diredp-chown-this-file)
   (define-key dired-mode-map [(meta shift ?o)] 'diredp-chown-this-file))    ; `M-O'
 (define-key dired-mode-map "\C-\M-o" 'dired-display-file)                   ; `C-M-o' (not `C-o')

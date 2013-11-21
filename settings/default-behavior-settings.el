@@ -224,33 +224,6 @@
 (eval-after-load "ring"
   '(progn (require 'ring+)))
 
-(eval-after-load "thingatpt"
-  '(require 'thingatpt+))
-
-(eval-after-load "grep"
-  '(require 'grep+))
-
-(eval-after-load "window"
-  '(require 'window+))
-
-(eval-after-load "help"
-  '(require 'help+))
-
-(eval-after-load "help-fns"
-  '(require 'help-fns+))
-
-(eval-after-load "help-mode"
-  '(require 'help-mode+))
-
-(eval-after-load "info"
-  '(require 'info+))
-
-(eval-after-load "mouse"
-  '(require 'mouse+))
-
-
-(require 'simple+)
-
 (setq line-move-visual nil)
 (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
 
