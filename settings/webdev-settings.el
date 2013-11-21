@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-01-31 15:32:56 Thursday by richard>
+;; Last modified: <2013-08-27 14:46:32 Tuesday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -63,11 +63,9 @@
 ;; --------------------------------------------------[Hooks]
 (add-hook 'sgml-mode-hook
           (lambda ()
-            (folding-mode)
             (define-key sgml-mode-map (kbd "C-c c")  'fold-dwim-toggle)
             (define-key sgml-mode-map "\C-e"         'html-end-of-line)
-            (define-key sgml-mode-map (kbd "C-c c")  'folding-toggle-show-hide)
-            (define-key folding-mode-map  (kbd "C-c c") 'folding-toggle-show-hide)))
+            (define-key sgml-mode-map (kbd "C-c c")  'folding-toggle-show-hide)))
 
 
 (provide 'webdev-settings)
