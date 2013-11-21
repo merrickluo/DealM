@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-10-07 16:43:11 Monday by wongrichard>
+;; Last modified: <2013-10-10 10:23:32 Thursday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -81,6 +81,9 @@ Unconditionally turn on `magit-topgit-mode'.
      (set-face-attribute 'magit-diff-file-header nil :foreground "RoyalBlue1")
      (set-face-attribute 'magit-diff-hunk-header nil :foreground "#fbde2d")))
 
+(add-hook 'magit-key-mode-popup-committing
+          (lambda () (progn (make-local-variable scroll-margin)
+                            (setq scroll-margin 0))))
 
 ;; keys in magit...
 (global-set-key  (kbd "C-x v z") 'magit-status)
