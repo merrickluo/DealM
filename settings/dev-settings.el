@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-09-28 13:20:17 Saturday by wongrichard>
+;; Last modified: <2013-10-25 00:55:59 Friday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -14,9 +14,11 @@
 ;; ------------------------------------------------------------------
 (autoload 'highlight-indentation-mode "highlight-indentation" "")
 (autoload 'cuda-mode "cuda-mode" "")
+(autoload 'lua-mode "lua-mode" "")
 (autoload 'yaml-mode "yaml-mode" "")
 (add-to-list 'auto-mode-alist '("\\.cuh?\\'" . cuda-mode))
 
+(require 'sr-speedbar)
 (eval-after-load "highlight-indentation"
   '(progn
      (set-face-background 'highlight-indentation-face "grey30")
