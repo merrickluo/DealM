@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-11-21 11:05:12 Thursday by wongrichard>
+;; Last modified: <2013-11-21 11:30:45 Thursday by wongrichard>
 
 ;; Copyright (C) 2013 Richard Wong
 
@@ -12,19 +12,21 @@
 ;; Settings for clojure
 ;; -----------------------------------[Settings for clojure]
 (add-to-list 'load-path (concat plugins-path-r "clojure-mode"))
-(add-to-list 'load-path (concat plugins-path-r "nrepl"))
+(add-to-list 'load-path (concat plugins-path-r "cider"))
 (add-to-list 'load-path (concat plugins-path-r "ac-nrepl"))
 
 (eval-after-load "auto-complete"
   '(add-to-list 'ac-modes 'nrepl-mode))
 
 (require 'clojure-mode)
+(require 'cider)
 
 (autoload 'clojure-mode "clojure-mode" "" t)
 (autoload 'ac-nrepl-setup "ac-nrepl" "" t)
 (add-hook 'nrepl-mode-hook 'ac-nrepl-setup)
 (add-hook 'nrepl-interaction-mode-hook 'ac-nrepl-setup)
-(add-hook 'nrepl-interaction-mode-hook 'nrepl-turn-on-eldoc-mode)
+(add-hook 'nrepl-interaction-mode-hook 'cider-turn-on-eldoc-mode)
+(add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
 
 
 (eval-after-load "ob"
