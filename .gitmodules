@@ -43,3 +43,6 @@
 [submodule "plugins/git-modes"]
 	path = plugins/git-modes
 	url = git@github.com:magit/git-modes.git
+[submodule "plugins/cider"]
+	path = plugins/cider
+	url = git@github.com:clojure-emacs/cider.git
