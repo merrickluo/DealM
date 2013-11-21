@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-04-26 17:26:24 Friday by richard>
+;; Last modified: <2013-11-21 11:05:12 Thursday by wongrichard>
 
 ;; Copyright (C) 2013 Richard Wong
 
@@ -18,7 +18,6 @@
 (eval-after-load "auto-complete"
   '(add-to-list 'ac-modes 'nrepl-mode))
 
-(require 'nrepl)
 (require 'clojure-mode)
 
 (autoload 'clojure-mode "clojure-mode" "" t)
