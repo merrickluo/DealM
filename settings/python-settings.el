@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-05-28 12:16:58 Tuesday by wongrichard>
+;; Last modified: <2013-11-02 12:31:20 Saturday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -46,16 +46,16 @@
   ;; ------------------------------------------------------------------
   (setenv "PYMACS_PYTHON" "python2")
   (message "****************************")
-  (if (and (getenv "PYTHONPATH") (not (string= (getenv "PYTHONPATH") "")))
-      (setenv "PYTHONPATH"
-              (concat
-               (getenv "PYTHONPATH") path-separator
-               (concat pythonlib-path-r path-separator
-                       pymacs-path-r)))
-
-    (setenv "PYTHONPATH"
-            (concat pymacs-path-r path-separator
-                    pythonlib-path-r)))
+  (let ((pythonlib-path
+         (mapconcat 'identity
+                    (list pythonlib-path-r pymacs-path-r)
+                    path-separator)))
+    (if (and (getenv "PYTHONPATH")
+             (not (string= (getenv "PYTHONPATH") "")))
+        (unless (string-prefix-p pythonlib-path (getenv "PYTHONPATH"))
+          (setenv "PYTHONPATH"
+                  (concat pythonlib-path (getenv "PYTHONPATH"))))
+      (setenv "PYTHONPATH" pythonlib-path)))
   (message (concat "Current PYTHONPATH is " (getenv "PYTHONPATH")))
   (message "****************************")
 
