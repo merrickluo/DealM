@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-06-14 08:25:32 Friday by wongrichard>
+;; Last modified: <2013-08-07 11:49:02 Wednesday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -41,7 +41,7 @@
         org-src-fontify-natively                       t
         org-export-kill-product-buffer-when-displayed  t
         org-src-window-setup                           'current-window)
-
+  (turn-off-auto-fill)
 ;;   (add-hook 'org-mode-hook 'soft-wrap-lines)
 
 ;;   (defun soft-wrap-lines ()
@@ -235,8 +235,9 @@ origin move otherwise "
   (define-key org-columns-map "f" (key-binding (kbd "M-f")))
   (define-key org-columns-map "b" (key-binding (kbd "M-b"))))
 
-(eval-after-load "org"
-  '(org-settings))
+;; (eval-after-load "org"
+;;   '(org-settings))
+(add-hook 'org-mode-hook 'org-settings)
 
 (eval-after-load "org-agenda"
   '(org-agenda-settings))
@@ -268,7 +269,7 @@ origin move otherwise "
     (let ((TeX-save-query nil)
           (TeX-process-asynchronous nil)
           (master-file (TeX-master-file)))
-      (TeX-save-document "")
+      ;; (TeX-save-document "")
       (TeX-run-TeX "latexmk" "latexmk" master-file)
       (if (plist-get TeX-error-report-switches (intern master-file))
           (TeX-next-error t)
@@ -291,11 +292,13 @@ origin move otherwise "
 
 (add-hook 'LaTeX-mode-hook
           (lambda ()
-            (setq TeX-auto-untabify t     ; remove all tabs before saving
-                  TeX-engine 'xetex       ; use xelatex default
-                  TeX-show-compilation t) ; display compilation windows
-            (TeX-global-PDF-mode t)       ; PDF mode enable, not plain
-            (setq TeX-save-query nil)
+            (add-to-list 'TeX-command-list '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t))
+            (setq TeX-auto-untabify t           ; remove all tabs before saving
+                  TeX-engine 'xetex             ; use xelatex default
+                  TeX-save-query nil
+                  TeX-command-default "XeLaTeX" ;
+                  TeX-show-compilation t)       ; display compilation windows
+            (TeX-global-PDF-mode t)             ; PDF mode enable, not plain
             (imenu-add-menubar-index)
             (flyspell-mode t)
             (local-set-key (kbd "C-0") 'run-latexmk)
