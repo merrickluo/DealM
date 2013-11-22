@@ -1,14 +1,14 @@
 ;;; ucs-utils.el --- Utilities for Unicode characters
 ;;
-;; Copyright (c) 2012 Roland Walker
+;; Copyright (c) 2012-13 Roland Walker
 ;;
 ;; Author: Roland Walker <walker@pobox.com>
 ;; Homepage: http://github.com/rolandwalker/ucs-utils
 ;; URL: http://raw.github.com/rolandwalker/ucs-utils/master/ucs-utils.el
-;; Version: 0.7.2
-;; Last-Updated:  5 Oct 2012
+;; Version: 0.7.6
+;; Last-Updated: 22 Oct 2013
 ;; EmacsWiki: UcsUtils
-;; Package-Requires: ((persistent-soft "0.8.6") (pcache "0.2.3"))
+;; Package-Requires: ((persistent-soft "0.8.8") (pcache "0.2.3"))
 ;; Keywords: i18n, extensions
 ;;
 ;; Simplified BSD License
@@ -38,7 +38,7 @@
 ;; when Unicode display is not possible.
 ;;
 ;; Some ambiguities in Emacs' built-in Unicode data are resolved, and
-;; character support is updated to Unicode 6.1.
+;; character support is updated to Unicode 6.3.
 ;;
 ;; There are three interactive commands:
 ;;
@@ -75,8 +75,8 @@
 ;;
 ;; Compatibility and Requirements
 ;;
-;;     GNU Emacs version 24.3-devel     : yes, at the time of writing
-;;     GNU Emacs version 24.1 & 24.2    : yes
+;;     GNU Emacs version 24.4-devel     : yes, at the time of writing
+;;     GNU Emacs version 24.3           : yes
 ;;     GNU Emacs version 23.3           : yes (*)
 ;;     GNU Emacs version 22.3 and lower : no
 ;;
@@ -138,12 +138,8 @@
 ;;; requirements
 
 (eval-and-compile
-  ;; for callf, callf2, assert, flet/cl-flet*, loop, gensym
-  (require 'cl)
-  (unless (fboundp 'cl-flet*)
-    (defalias 'cl-flet* 'flet)
-    (put 'cl-flet* 'lisp-indent-function 1)
-    (put 'cl-flet* 'edebug-form-spec '((&rest (defun*)) cl-declarations body))))
+  ;; for callf, callf2, assert, loop, gensym
+  (require 'cl))
 
 (autoload 'pp                        "pp"              "Output the pretty-printed representation of OBJECT, any Lisp object.")
 (autoload 'pp-display-expression     "pp"              "Prettify and display EXPRESSION in an appropriate way, depending on length.")
@@ -164,9 +160,9 @@
 ;;;###autoload
 (defgroup ucs-utils nil
   "Utilities for Unicode characters."
-  :version "0.7.2"
+  :version "0.7.6"
   :link '(emacs-commentary-link :tag "Commentary" "ucs-utils")
-  :link '(url-link :tag "Github" "http://github.com/rolandwalker/ucs-utils")
+  :link '(url-link :tag "GitHub" "http://github.com/rolandwalker/ucs-utils")
   :link '(url-link :tag "EmacsWiki" "http://emacswiki.org/emacs/UcsUtils")
   :prefix "ucs-utils-"
   :group 'i18n
@@ -992,8 +988,16 @@ of the persistent data store."
     ("GRIMACING FACE"                                            . #x1F62C)
     ("FACE WITH OPEN MOUTH"                                      . #x1F62E)
     ("HUSHED FACE"                                               . #x1F62F)
-    ("SLEEPING FACE"                                             . #x1F634))
-  "Corrections for ambiguities or omissions in `ucs-names', resolved in favor of Unicode 6.1.")
+    ("SLEEPING FACE"                                             . #x1F634)
+    ;; Unicode 6.1 to 6.2 delta
+    ("TURKISH LIRA SIGN"                                         . #x20BA)
+    ;; Unicode 6.2 to 6.3 delta
+    ("ARABIC LETTER MARK"                                        . #x061C)
+    ("LEFT-TO-RIGHT ISOLATE"                                     . #x2066)
+    ("RIGHT-TO-LEFT ISOLATE"                                     . #x2067)
+    ("FIRST STRONG ISOLATE"                                      . #x2068)
+    ("POP DIRECTIONAL ISOLATE"                                   . #x2069))
+  "Corrections for ambiguities or omissions in `ucs-names', resolved in favor of Unicode 6.3.")
 
 ;; attempt to load Unicode 6.0 characters for Emacs 23.x
 (when (< emacs-major-version 24)
@@ -1005,7 +1009,35 @@ of the persistent data store."
 (defvar ucs-utils-char-mem (make-hash-table :test 'equal)
   "Memoization data for `ucs-utils-char'.")
 
+;;; macros
+
+(defmacro ucs-utils--with-mocked-function (func ret-val &rest body)
+  "Execute BODY, mocking FUNC (a symbol) to unconditionally return RET-VAL.
+
+This is portable to versions of Emacs without dynamic `flet`."
+  (declare (debug t) (indent 2))
+  (let ((o (gensym "--function--")))
+    `(let ((,o (symbol-function ,func)))
+       (fset ,func #'(lambda (&rest _ignored) ,ret-val))
+       (unwind-protect
+           (progn ,@body)
+         (fset ,func ,o)))))
+
 ;;; compatibility functions
+
+(unless (fboundp 'string-match-p)
+  ;; added in 23.x
+  (defun string-match-p (regexp string &optional start)
+    "Same as `string-match' except this function does not change the match data."
+    (let ((inhibit-changing-match-data t))
+      (string-match regexp string start))))
+
+(unless (fboundp 'characterp)
+  (defun characterp (char)
+    "Return non-nil if CHAR is a character."
+    (and (integerp char)
+         (> char 0)
+         (<= char #x3FFFFF))))
 
 (defun persistent-softest-store (symbol value location &optional expiration)
   "Call `persistent-soft-store' but don't fail when library not present."
@@ -1151,21 +1183,22 @@ title-cased for readability, and will not match into the
 Returns a hexified string if no name is found.  If NO-HEX is
 non-nil, then a nil value will be returned when no name is
 found."
-  (let ((name (get-char-code-property char 'name)))
-    (when (equal "<control>" name)
-      (setq name (get-char-code-property char 'old-name)))
-    (when (eq char ?\s)
-      (callf or name "Space"))
-    (when (= (length name) 0)
-      (setq name (car (rassoc char ucs-utils-names-corrections))))
-    (cond
-      ((and no-hex
-            (= (length name) 0))
-       (setq name nil))
-      ((= (length name) 0)
-       (setq name (concat "#x" (upcase (format "%02x" char)))))
-      (t
-       (ucs-utils-prettify-ucs-string name)))))
+  (when (characterp char)
+    (let ((name (get-char-code-property char 'name)))
+      (when (equal "<control>" name)
+        (setq name (get-char-code-property char 'old-name)))
+      (when (eq char ?\s)
+        (callf or name "Space"))
+      (when (= (length name) 0)
+        (setq name (car (rassoc char ucs-utils-names-corrections))))
+      (cond
+        ((and no-hex
+              (= (length name) 0))
+         (setq name nil))
+        ((= (length name) 0)
+         (setq name (concat "#x" (upcase (format "%02x" char)))))
+        (t
+         (ucs-utils-prettify-ucs-string name))))))
 
 ;;;###autoload
 (defun ucs-utils-all-prettified-names (&optional progress regenerate)
@@ -1272,9 +1305,9 @@ TEST is set, in which case it must pass TEST."
         (setq char (ucs-utils--lookup char)))
       (when (stringp fallback)
         (setq fallback (ucs-utils--lookup fallback))
-        (assert (integerp fallback) nil "Invalid fallback: %s" orig-fallback))
+        (assert (characterp fallback) nil "Invalid fallback: %s" orig-fallback))
       (setq retval (cond
-                     ((and (integerp char)
+                     ((and (characterp char)
                            (or (not test) (funcall test char)))
                       char)
                      ((eq fallback 'error)
@@ -1285,7 +1318,7 @@ TEST is set, in which case it must pass TEST."
                      ((vectorp fallback)
                       fallback)
                      (t
-                      (assert (integerp fallback) nil "Invalid fallback: %s" orig-fallback)
+                      (assert (characterp fallback) nil "Invalid fallback: %s" orig-fallback)
                       fallback)))
       (when ucs-utils-trade-memory-for-speed
         (puthash args retval ucs-utils-char-mem))
@@ -1505,7 +1538,7 @@ its UCS name translation."
     (assert result nil "Failed to find name for character at: %s" pos)
     (cond
       ((equal arg '(4))
-       (cl-flet* ((frame-width (&rest _ignored) 0))
+       (ucs-utils--with-mocked-function 'frame-width 0
          (pp-display-expression result "*Pp Eval Output*")))
       ((consp arg)
        (if (and (not pos)

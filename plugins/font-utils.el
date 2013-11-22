@@ -1,14 +1,14 @@
 ;;; font-utils.el --- Utility functions for working with fonts
 ;;
-;; Copyright (c) 2012 Roland Walker
+;; Copyright (c) 2012-13 Roland Walker
 ;;
 ;; Author: Roland Walker <walker@pobox.com>
 ;; Homepage: http://github.com/rolandwalker/font-utils
 ;; URL: http://raw.github.com/rolandwalker/font-utils/master/font-utils.el
-;; Version: 0.6.8
-;; Last-Updated: 10 Oct 2012
+;; Version: 0.7.0
+;; Last-Updated: 22 Oct 2013
 ;; EmacsWiki: FontUtils
-;; Package-Requires: ((persistent-soft "0.8.6") (pcache "0.2.3"))
+;; Package-Requires: ((persistent-soft "0.8.8") (pcache "0.2.3"))
 ;; Keywords: extensions
 ;;
 ;; Simplified BSD License
@@ -57,8 +57,8 @@
 ;;
 ;; Compatibility and Requirements
 ;;
-;;     GNU Emacs version 24.3-devel     : yes, at the time of writing
-;;     GNU Emacs version 24.1 & 24.2    : yes
+;;     GNU Emacs version 24.4-devel     : yes, at the time of writing
+;;     GNU Emacs version 24.3           : yes
 ;;     GNU Emacs version 23.3           : yes
 ;;     GNU Emacs version 22.3 and lower : no
 ;;
@@ -143,9 +143,9 @@
 ;;;###autoload
 (defgroup font-utils nil
   "Utility functions for working with fonts."
-  :version "0.6.8"
+  :version "0.7.0"
   :link '(emacs-commentary-link :tag "Commentary" "font-utils")
-  :link '(url-link :tag "Github" "http://github.com/rolandwalker/font-utils")
+  :link '(url-link :tag "GitHub" "http://github.com/rolandwalker/font-utils")
   :link '(url-link :tag "EmacsWiki" "http://emacswiki.org/emacs/FontUtils")
   :prefix "font-utils-"
   :group 'extensions)
@@ -202,6 +202,13 @@ the pathological case with regard to startup time."
   "Memoization data for `font-utils-exists-p'.")
 
 ;;; compatibility functions
+
+(unless (fboundp 'string-match-p)
+  ;; added in 23.x
+  (defun string-match-p (regexp string &optional start)
+    "Same as `string-match' except this function does not change the match data."
+    (let ((inhibit-changing-match-data t))
+      (string-match regexp string start))))
 
 (defun persistent-softest-store (symbol value location &optional expiration)
   "Call `persistent-soft-store' but don't fail when library not present."
