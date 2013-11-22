@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-03-04 13:32:45 Monday by richard>
+;; Last modified: <2013-11-21 22:13:37 Thursday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -61,7 +61,7 @@
   (defun compile-keys ()
     (local-set-key (kbd "C-c C-m")  'make)
     (local-set-key (kbd "C-c m")    'make-check)
-    (local-set-key (kbd "C-c t")    'unittest)
+    ;; (local-set-key (kbd "C-c t")    'unittest)
     (local-set-key (kbd "C-c M")    'make-clean)
     (local-set-key (kbd "C-c c")    'compile-buffer)
     (local-set-key (kbd "C-c r")    'quickrun))
