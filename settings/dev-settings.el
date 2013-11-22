@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-10-25 00:55:59 Friday by wongrichard>
+;; Last modified: <2013-11-21 16:57:22 Thursday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -224,10 +224,11 @@ Add this to .emacs to run gofmt on the current buffer when saving:
 (defun python-short-cut()
   "python mode short-cut key settings."
   (smart-operator-mode-on)
+  (eldoc-mode 1)
   (start-program-short-cut)
-  (local-set-key (kbd "C-c g") 'rope-goto-definition)
-  (local-set-key (kbd "M-/") 'rope-completions)
-  (local-set-key (kbd "C-c d") 'rope-show-doc))
+  (local-set-key (kbd "C-c g") 'jedi:goto-definition)
+  (local-set-key (kbd "M-/") 'jedi:complete)
+  (local-set-key (kbd "C-c d") 'jedi:show-doc))
 
 ;; awk mode short cut settings.
 ;; ==================================================================
