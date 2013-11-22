@@ -51,6 +51,8 @@
           (compile (format "gcc -g %s -o %s" file (file-name-sans-extension base-name))))
          ((equal extension "java")
           (compile (format "javac -g %s" file)))
+         ((equal extension "m")
+          (compile (format "clang -fobjc-arc %s" file)))
          ((equal extension "jj")
           (compile (format "javacc %s" file)))
          ((equal extension "sh")

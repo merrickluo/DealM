@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-10-08 17:47:57 Tuesday by wongrichard>
+;; Last modified: <2013-11-22 20:01:46 Friday by wongrichard>
 
 ;; Copyright (C) 2012-2013 Richard Wong
 
@@ -173,7 +173,8 @@
                 ("\\.[Cc][Uu][Hh]?$" . cuda-mode)
                 ("\\.h$" . c++-mode)
                 ("\\.i$" . c++-mode)    ; SWIG
-                ("\\.m$" . octave-mode)
+                ;; ("\\.m$" . octave-mode)
+                ("\\.m$" . objc-mode)
                 ("\\.mm$" . objc-mode)
                 ("_emacs" . lisp-mode)
                 ("\\.el\\.gz$" . emacs-lisp-mode)

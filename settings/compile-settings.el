@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-11-21 22:13:37 Thursday by wongrichard>
+;; Last modified: <2013-11-22 20:29:33 Friday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -36,6 +36,7 @@
   '(progn
      (add-to-list 'smart-compile-alist '(python-mode    .  "python2 %f"))
      (add-to-list 'smart-compile-alist '(jade-mode      .  "pyjade -c jinja %f"))
+     (add-to-list 'smart-compile-alist '(objc-mode      .  "clang -fobjc-arc %f -o %n"))
      ))
 
 (defun compile-settings ()
@@ -68,6 +69,7 @@
   (dolist (hook '(c-mode-base-hook
                   sh-mode-hook
                   compilation-mode-hook
+                  objc-mode-hook
                   ruby-mode-hook
                   jade-mode-hook
                   python-mode-hook))
