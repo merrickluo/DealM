@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-08-27 12:13:48 Tuesday by wongrichard>
+;; Last modified: <2013-11-22 09:28:56 Friday by wongrichard>
 
 ;; Copyright (C) 2012-2013 Richard Wong
 
@@ -11,6 +11,11 @@
 
 (require 'dired+)
 (require 'dired-details+)
+
+(add-hook 'dired-mode-hook '(lambda ()
+                              (require 'dired-x)
+                              (dired-omit-mode t)))
+
 
 (setq dired-dwim-target t)
 
