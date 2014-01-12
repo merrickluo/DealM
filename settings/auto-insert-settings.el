@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-09-29 10:40:26 Sunday by wongrichard>
+;; Last modified: <2013-12-20 18:24:36 Friday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -24,6 +24,9 @@
   ;; Add plan Snippet.
   (define-auto-insert "\\.\\(todo\\|do\\|plan\\)$"      '(lambda()
                                                            (insert-snippet "headxplan")))
+  ;; Add js Snippet.
+  (define-auto-insert "\\.\\(js\\)$"                    '(lambda()
+                                                           (insert-snippet "headx")))
   ;; Flex snippet.
   (define-auto-insert "\\.l[l]?$"                       '(lambda()
                                                            (insert-snippet "headxflex")))

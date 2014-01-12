@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-08-27 14:46:32 Tuesday by wongrichard>
+;; Last modified: <2014-01-12 18:58:15 Sunday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -23,8 +23,15 @@
 ;; For css
 ;; ------------------------------------------------[For css]
 (require 'less-css-mode)
+(require 'sass-mode)
+(eval-after-load "sass-mode"
+  '(progn
 
-
+     ))
+(add-hook 'sass-mode-hook (lambda ()
+                            (linum-mode t)
+                            (setq comment-start "//")
+                            (rainbow-mode t)))
 
 ;; For html
 ;; -----------------------------------------------[For html]
