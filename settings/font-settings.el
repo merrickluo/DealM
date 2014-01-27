@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-09-29 11:15:16 Sunday by wongrichard>
+;; Last modified: <2014-01-27 09:41:26 Monday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -18,7 +18,8 @@ which do not currently exist will be ignored.  The
 default value is `unicode-fonts-fontset-names'."
   t)
 
-(unicode-fonts-setup)
+(add-hook 'org-mode-hook 'unicode-fonts-setup)
+
 (set-face-attribute 'default nil :font "Source Code Pro-14")
 
 (defun special-font()
