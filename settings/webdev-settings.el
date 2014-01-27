@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2014-01-12 18:58:15 Sunday by wongrichard>
+;; Last modified: <2014-01-27 09:53:30 Monday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -22,12 +22,14 @@
 
 ;; For css
 ;; ------------------------------------------------[For css]
-(require 'less-css-mode)
-(require 'sass-mode)
-(eval-after-load "sass-mode"
-  '(progn
+(autoload 'less-css-mode "less-css-mode"
+  "Major mode for editing LESS files, http://lesscss.org/
+Special commands:
+\\{less-css-mode-map}")
 
-     ))
+(autoload 'sass-mode
+  "sass-mode" "Major mode for editing Sass files.")
+
 (add-hook 'sass-mode-hook (lambda ()
                             (linum-mode t)
                             (setq comment-start "//")

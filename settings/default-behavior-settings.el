@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-11-22 20:01:46 Friday by wongrichard>
+;; Last modified: <2014-01-27 09:58:18 Monday by wongrichard>
 
 ;; Copyright (C) 2012-2013 Richard Wong
 
@@ -171,6 +171,8 @@
                 ("\\.[Yy][Mm][Ll]$" . yaml-mode)
                 ("\\.[Ll][Oo][Gg]$" . log4j-mode)
                 ("\\.[Cc][Uu][Hh]?$" . cuda-mode)
+                ("\\.sass$" . sass-mode)
+                ("\\.less\\'" . less-css-mode)
                 ("\\.h$" . c++-mode)
                 ("\\.i$" . c++-mode)    ; SWIG
                 ;; ("\\.m$" . octave-mode)
