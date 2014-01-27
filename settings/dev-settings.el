@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-11-21 16:57:22 Thursday by wongrichard>
+;; Last modified: <2014-01-27 09:32:17 Monday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -210,7 +210,7 @@ Add this to .emacs to run gofmt on the current buffer when saving:
   "c common mode short-cut key settings."
   (start-program-short-cut)
   (smart-operator-mode-on)
-
+  (setq c-basic-offset 2)
   (paren-toggle-open-paren-context 1)
   (local-set-key (kbd "C-c C-k") 'kill-function)
   (local-set-key (kbd "C-c M-w") 'copy-function-whole)
@@ -284,7 +284,7 @@ Major mode for editing JavaScript code.
 
   "js2 mode short-cut key settings."
   (start-program-short-cut)
-
+  (setq js2-basic-offset 2)
   ;; compatible with flyspell.
   (smart-operator-mode-on))
 
