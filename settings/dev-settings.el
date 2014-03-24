@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2014-01-27 09:32:17 Monday by wongrichard>
+;; Last modified: <2014-02-16 12:19:22 Sunday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -129,8 +129,14 @@ Add this to .emacs to run gofmt on the current buffer when saving:
            (call-interactively 'projectile-find-file)
     (call-interactively 'ido-find-file)))
 
+(defun smart-grep ()
+  (interactive)
+  (if (string-equal (projectile-project-vcs) "git")
+      (call-interactively 'magit-grep)
+    (call-interactively 'projectile-grep)))
+
 (global-set-key '[f1] 'smart-find-file)
-(global-set-key '[f2] 'projectile-grep)
+(global-set-key '[f2] 'smart-grep)
 
 (eval-after-load "dired"
   '(define-key dired-mode-map '[f1] 'smart-find-file))
