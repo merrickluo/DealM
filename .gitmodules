@@ -46,3 +46,6 @@
 [submodule "plugins/cider"]
 	path = plugins/cider
 	url = git@github.com:clojure-emacs/cider.git
+[submodule "plugins/ggtags"]
+	path = plugins/ggtags
+	url = git@github.com:leoliu/ggtags.git
