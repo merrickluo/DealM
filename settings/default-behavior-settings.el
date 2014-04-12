@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2014-01-27 09:58:18 Monday by wongrichard>
+;; Last modified: <2014-04-12 10:25:45 Saturday by wongrichard>
 
 ;; Copyright (C) 2012-2013 Richard Wong
 
@@ -199,6 +199,8 @@
                 ("\\.[Aa][Hh][Kk]$" . xahk-mode)
                 ("\\.textile$" . textile-mode)
                 ("\\.kfn$" . kfn-mode)
+                ("Podfile\\'" . ruby-mode)
+                ("\\.podspec\\'" . ruby-mode)
                 ("\\.rb$" . ruby-mode)
                 ("\\.cml$" . xml-mode)
                 ("\\.cg$" . cg-mode)
