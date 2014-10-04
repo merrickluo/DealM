@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2014-02-16 12:19:22 Sunday by wongrichard>
+;; Last modified: <2014-05-24 17:02:41 Saturday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -223,7 +223,11 @@ Add this to .emacs to run gofmt on the current buffer when saving:
   (local-set-key (kbd "C-M-h") 'mark-function)
   (local-set-key (kbd "C-c C") 'comment-function))
 
-
+;; object c short cut settings.
+;; ==================================================================
+(defun objc-short-cut()
+  "object C short-cut key settings."
+  (highlight-indentation-mode nil))
 
 ;; python mode short cut settings.
 ;; ==================================================================
@@ -300,6 +304,7 @@ Major mode for editing JavaScript code.
 (add-hook 'emacs-lisp-mode-hook 'elisp-short-cut)
 (add-hook 'clojure-mode-hook    'clojure-short-cut)
 (add-hook 'c-mode-common-hook   'c-common-short-cut)
+(add-hook 'objc-mode-hook       'objc-short-cut)
 (add-hook 'python-mode-hook     'python-short-cut)
 (add-hook 'awk-mode-hook        'awk-short-cut);; After emacs 21 work here.
 (add-hook 'sh-mode-hook         'shell-short-cut)

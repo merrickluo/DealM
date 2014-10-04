@@ -36,7 +36,7 @@
 (require 'compile-settings)
 (require 'auto-insert-settings)
 (require 'autopair-settings)
-
+(require 'ggtags-settings)
 
 
 ;; Theme, color and fonts, encoding settings.

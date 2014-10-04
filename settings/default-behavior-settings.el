@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2014-04-12 10:25:45 Saturday by wongrichard>
+;; Last modified: <2014-09-14 09:39:13 Sunday by wongrichard>
 
 ;; Copyright (C) 2012-2013 Richard Wong
 
@@ -161,6 +161,8 @@
 
 (autoload 'coffee-mode "coffee-mode" "" t)
 
+(autoload 'dockerfile-mode "dockerfile-mode" "" t)
+
 ;; modes definition.
 (setq auto-mode-alist
       (append '(("\\.[Cc][Xx][Xx]$" . c++-mode)
@@ -168,13 +170,14 @@
                 ("\\.[Hh][Xx][Xx]$" . c++-mode)
                 ("\\.[Tt][Cc][Cc]$" . c++-mode)
                 ("\\.coffee$" . coffee-mode)
-                ("\\.[Yy][Mm][Ll]$" . yaml-mode)
+                ("\\.[Yy][Aa]?[Mm][Ll]$" . yaml-mode)
                 ("\\.[Ll][Oo][Gg]$" . log4j-mode)
                 ("\\.[Cc][Uu][Hh]?$" . cuda-mode)
                 ("\\.sass$" . sass-mode)
                 ("\\.less\\'" . less-css-mode)
                 ("\\.h$" . c++-mode)
                 ("\\.i$" . c++-mode)    ; SWIG
+                ("Dockerfile\\'" . dockerfile-mode)
                 ;; ("\\.m$" . octave-mode)
                 ("\\.m$" . objc-mode)
                 ("\\.mm$" . objc-mode)

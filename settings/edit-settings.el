@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-11-21 11:12:28 Thursday by wongrichard>
+;; Last modified: <2014-05-01 19:32:31 Thursday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -168,7 +168,7 @@ matching the keyboard event.
 (def-position-command goto-emacs-root
   (kbd "C-x g e") emacs-root-path)
 (def-position-command goto-tmp
-  (kbd "C-x g t") "/tmp")
+  (kbd "C-x g t") "~/.tmp/")
 
 (global-set-key (kbd "C-]")     'goto-paren)
 (global-set-key (kbd "C-M-]")   'ywb-indent-accoding-to-paren)
