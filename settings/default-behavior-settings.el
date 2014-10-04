@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2014-09-14 09:39:13 Sunday by wongrichard>
+;; Last modified: <2014-10-04 13:52:24 Saturday by wongrichard>
 
 ;; Copyright (C) 2012-2013 Richard Wong
 
@@ -237,16 +237,16 @@
 
 (when (string= system-type "darwin")
 ;;; ENV path correction for (Mac os x)
-(let ((PATH (or (and (string= (getenv "PATH") "")
-                     (concat "/usr/bin" path-separator
-                             "/bin" path-separator
-                             "/usr/sbin" path-separator
-                             "/sbin"))
-                (getenv "PATH"))))
-  (setenv "PATH" (concat "/Developer/NVIDIA/CUDA-5.5/bin" path-separator
-                         "/usr/local/share/python" path-separator
-                         "/usr/local/bin" path-separator
-                         PATH))))
+  (dolist (ensure-path '("/usr/bin"
+                         "/bin"
+                         "/usr/sbin"
+                         "/sbin"
+                         "/Developer/NVIDIA/CUDA-5.5/bin"
+                         "/usr/local/share/python"
+                         "/usr/local/bin"))
+    (unless (member ensure-path exec-path)
+      (add-to-list 'exec-path ensure-path)))
+  (setenv "PATH" (mapconcat 'identity exec-path ":")))
 
 (provide 'default-behavior-settings)
 ;; default-behavior-settings ends here.

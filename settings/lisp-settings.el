@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-11-21 11:30:45 Thursday by wongrichard>
+;; Last modified: <2014-10-04 13:16:17 Saturday by wongrichard>
 
 ;; Copyright (C) 2013 Richard Wong
 
@@ -27,6 +27,17 @@
 (add-hook 'nrepl-interaction-mode-hook 'ac-nrepl-setup)
 (add-hook 'nrepl-interaction-mode-hook 'cider-turn-on-eldoc-mode)
 (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
+(add-hook 'cider-repl-mode-hook 'subword-mode)
+
+
+(setq nrepl-hide-special-buffers t
+      nrepl-buffer-name-show-port t
+      cider-prefer-local-resources t
+      cider-repl-display-in-current-window t
+      cider-repl-history-size 10000
+      cider-repl-result-prefix ";; => "
+      cider-repl-history-file (concat emacs-root-path "cider-repl.history")
+      cider-stacktrace-fill-column 80)
 
 
 (eval-after-load "ob"
