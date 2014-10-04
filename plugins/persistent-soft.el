@@ -4,7 +4,7 @@
 ;;
 ;; Author: Roland Walker <walker@pobox.com>
 ;; Homepage: http://github.com/rolandwalker/persistent-soft
-;; URL: http://raw.github.com/rolandwalker/persistent-soft/master/persistent-soft.el
+;; URL: http://raw.githubusercontent.com/rolandwalker/persistent-soft/master/persistent-soft.el
 ;; Version: 0.8.8
 ;; Last-Updated: 22 Oct 2013
 ;; EmacsWiki: PersistentSoft
@@ -183,11 +183,12 @@
 This is portable to versions of Emacs without dynamic `flet`."
   (declare (debug t) (indent 2))
   (let ((o (gensym "--function--")))
-    `(let ((,o (symbol-function ,func)))
+    `(let ((,o (ignore-errors (symbol-function ,func))))
        (fset ,func #'(lambda (&rest _ignored) ,ret-val))
        (unwind-protect
            (progn ,@body)
-         (fset ,func ,o)))))
+         (when ,o
+           (fset ,func ,o))))))
 
 (defmacro persistent-soft--with-suppressed-messages (&rest body)
   "Execute BODY, suppressing all output to \"message\".

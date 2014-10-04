@@ -1,12 +1,12 @@
 ;;; font-utils.el --- Utility functions for working with fonts
 ;;
-;; Copyright (c) 2012-13 Roland Walker
+;; Copyright (c) 2012-14 Roland Walker
 ;;
 ;; Author: Roland Walker <walker@pobox.com>
 ;; Homepage: http://github.com/rolandwalker/font-utils
-;; URL: http://raw.github.com/rolandwalker/font-utils/master/font-utils.el
-;; Version: 0.7.0
-;; Last-Updated: 22 Oct 2013
+;; URL: http://raw.githubusercontent.com/rolandwalker/font-utils/master/font-utils.el
+;; Version: 0.7.2
+;; Last-Updated: 12 Jul 2014
 ;; EmacsWiki: FontUtils
 ;; Package-Requires: ((persistent-soft "0.8.8") (pcache "0.2.3"))
 ;; Keywords: extensions
@@ -143,7 +143,7 @@
 ;;;###autoload
 (defgroup font-utils nil
   "Utility functions for working with fonts."
-  :version "0.7.0"
+  :version "0.7.2"
   :link '(emacs-commentary-link :tag "Commentary" "font-utils")
   :link '(url-link :tag "GitHub" "http://github.com/rolandwalker/font-utils")
   :link '(url-link :tag "EmacsWiki" "http://emacswiki.org/emacs/FontUtils")
@@ -451,7 +451,7 @@ Uses `ido-completing-read' if optional IDO is set."
                                    (replace-regexp-in-string " " "_" x))
                               (font-utils-list-names))))
       (replace-regexp-in-string "_" " "
-         (funcall reader prompt font-names nil nil nil font-name-history)))))
+         (funcall reader prompt font-names nil nil nil 'font-name-history)))))
 
 ;;;###autoload
 (defun font-utils-exists-p (font-name &optional point-size strict scope)
@@ -535,7 +535,8 @@ must \(leniently\) match."
                         ;; find the font
                         (catch 'font
                           (dolist (name font-name-list)
-                            (let* ((query-name (concat name fontconfig-params))
+                            ;; trailing colon disambiguates eg font names ending with "Italic"
+                            (let* ((query-name (concat name fontconfig-params ":"))
                                    (font-vec (with-local-quit (ignore-errors (font-info query-name)))))
                               (when (and font-vec
                                          (or (find-font (font-spec :name name))    ; verify - some systems return the
