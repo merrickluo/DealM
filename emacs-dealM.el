@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-03-26 17:51:14 Tuesday by richard>
+;; Last modified: <2014-10-04 14:10:56 Saturday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -23,6 +23,7 @@
 ;; add load path
 (add-to-list 'load-path settings-path-r)
 (add-to-list 'load-path plugins-path-r)
+(add-to-list 'load-path (concat plugins-path-r "dash/"))
 
 
 ;; tools

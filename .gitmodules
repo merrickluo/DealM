@@ -49,3 +49,6 @@
 [submodule "plugins/ggtags"]
 	path = plugins/ggtags
 	url = git@github.com:leoliu/ggtags.git
+[submodule "plugins/dash"]
+	path = plugins/dash
+	url = git@github.com:magnars/dash.el.git
