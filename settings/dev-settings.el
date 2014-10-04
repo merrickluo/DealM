@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2014-05-24 17:02:41 Saturday by wongrichard>
+;; Last modified: <2014-10-04 13:47:24 Saturday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -128,6 +128,8 @@ Add this to .emacs to run gofmt on the current buffer when saving:
   (if (projectile-project-p)
            (call-interactively 'projectile-find-file)
     (call-interactively 'ido-find-file)))
+
+(autoload 'magit-grep "magit" "" t)
 
 (defun smart-grep ()
   (interactive)
