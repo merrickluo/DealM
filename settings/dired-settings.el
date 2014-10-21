@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-11-22 09:28:56 Friday by wongrichard>
+;; Last modified: <2014-10-21 20:39:01 Tuesday by wongrichard>
 
 ;; Copyright (C) 2012-2013 Richard Wong
 
@@ -10,7 +10,6 @@
 ;; PUBLIC LICENSE: GPLv3
 
 (require 'dired+)
-(require 'dired-details+)
 
 (add-hook 'dired-mode-hook '(lambda ()
                               (require 'dired-x)
