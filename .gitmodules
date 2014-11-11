@@ -52,3 +52,6 @@
 [submodule "plugins/dash"]
 	path = plugins/dash
 	url = git@github.com:magnars/dash.el.git
+[submodule "plugins/emacs-python-environment"]
+	path = plugins/emacs-python-environment
+	url = git@github.com:tkf/emacs-python-environment.git
