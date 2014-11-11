@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2014-10-21 20:39:01 Tuesday by wongrichard>
+;; Last modified: <2014-11-11 14:24:06 Tuesday by wongrichard>
 
 ;; Copyright (C) 2012-2013 Richard Wong
 
@@ -10,11 +10,11 @@
 ;; PUBLIC LICENSE: GPLv3
 
 (require 'dired+)
+(define-key dired-mode-map "\C-o"    'dired-display-file)         ; `C-o'
 
 (add-hook 'dired-mode-hook '(lambda ()
                               (require 'dired-x)
                               (dired-omit-mode t)))
-
 
 (setq dired-dwim-target t)
 
