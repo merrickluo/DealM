@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-11-21 22:25:38 Thursday by wongrichard>
+;; Last modified: <2014-11-11 14:25:55 Tuesday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -16,6 +16,9 @@
       jedi:key-goto-definition (kbd "C-c g"))
 
 (add-to-list 'load-path (concat plugins-path-r "emacs-jedi/"))
+(add-to-list 'load-path (concat plugins-path-r "emacs-python-environment/"))
+(require 'python-environment)
+
 (autoload 'jedi:ac-setup "jedi" "" t)
 (autoload 'jedi-mode "jedi" "" t)
 
