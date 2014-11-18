@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2014-11-11 14:24:06 Tuesday by wongrichard>
+;; Last modified: <2014-11-12 11:48:58 Wednesday by wongrichard>
 
 ;; Copyright (C) 2012-2013 Richard Wong
 
@@ -11,6 +11,7 @@
 
 (require 'dired+)
 (define-key dired-mode-map "\C-o"    'dired-display-file)         ; `C-o'
+(define-key dired-mode-map "\M-b"    'backward-word)              ; `M-b'
 
 (add-hook 'dired-mode-hook '(lambda ()
                               (require 'dired-x)
