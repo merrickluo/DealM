@@ -18,7 +18,7 @@
 	url = git://github.com/auto-complete/auto-complete.git
 [submodule "plugins/popup"]
 	path = plugins/popup
-	url = https://github.com/emacsmirror/popup.git
+	url = https://github.com/auto-complete/popup-el.git
 [submodule "plugins/jade-mode"]
 	path = plugins/jade-mode
 	url = git://github.com/brianc/jade-mode.git
