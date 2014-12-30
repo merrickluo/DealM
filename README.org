@@ -1,5 +1,5 @@
 # -*- mode: org -*-
-# Last modified: <2014-10-21 21:01:29 Tuesday by wongrichard>
+# Last modified: <2014-12-09 10:12:17 Tuesday by wongrichard>
 #+STARTUP: showall
 #+TITLE:   README
 
@@ -32,7 +32,7 @@
        [[][pymacs]]
        [[][pyflake]]
        [[][pep8]]
-       [[][pylint]]
+       [[][pylint]] (pip{2/3} install pylint)
        [[][epylint]]
        ATTENTION:You need to make the pymacs by your own.
   3. Flymake:
@@ -41,7 +41,8 @@
      chmod +x plugins/pychecker.sh
      #+end_src
   4. compile auctex compile settings.
-  5. If you have met (Error: No word lists can be found for the language "en_US".)
+  5. =pip install epc= if you want to use jedi server
+  6. If you have met (Error: No word lists can be found for the language "en_US".)
      install flymake lib aspell-en.
      #+begin_src emacs-lisp :tangle yes
      # pacman -S aspell-en
