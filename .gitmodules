@@ -55,3 +55,6 @@
 [submodule "plugins/emacs-python-environment"]
 	path = plugins/emacs-python-environment
 	url = git@github.com:tkf/emacs-python-environment.git
+[submodule "plugins/scala-mode2"]
+	path = plugins/scala-mode2
+	url = git@github.com:hvesalai/scala-mode2.git

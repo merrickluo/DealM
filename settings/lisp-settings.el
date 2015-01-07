@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2014-10-04 13:16:17 Saturday by wongrichard>
+;; Last modified: <2015-01-07 08:03:14 Wednesday by wongrichard>
 
 ;; Copyright (C) 2013 Richard Wong
 
@@ -12,6 +12,7 @@
 ;; Settings for clojure
 ;; -----------------------------------[Settings for clojure]
 (add-to-list 'load-path (concat plugins-path-r "clojure-mode"))
+(add-to-list 'load-path (concat plugins-path-r "scala-mode2"))
 (add-to-list 'load-path (concat plugins-path-r "cider"))
 (add-to-list 'load-path (concat plugins-path-r "ac-nrepl"))
 
@@ -19,6 +20,7 @@
   '(add-to-list 'ac-modes 'nrepl-mode))
 
 (require 'clojure-mode)
+(require 'scala-mode2)
 (require 'cider)
 
 (autoload 'clojure-mode "clojure-mode" "" t)
