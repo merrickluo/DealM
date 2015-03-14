@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2014-12-30 15:21:39 Tuesday by wongrichard>
+;; Last modified: <2014-12-30 16:16:31 Tuesday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -16,8 +16,7 @@
       jedi:key-goto-definition (kbd "C-c g")
       jedi:environment-root "jedi"
       jedi:environment-virtualenv '("--python" "/usr/local/bin/python3")
-      jedi:server-command (list "python3" (concat plugins-path-r "emacs-jedi/jediepcserver.py")
-                                "--virtual-env" "../.env/\"${PWD##*/}\"/"))
+      jedi:server-command (list "python3" (concat plugins-path-r "emacs-jedi/jediepcserver.py")))
 
 (add-to-list 'load-path (concat plugins-path-r "emacs-jedi/"))
 (add-to-list 'load-path (concat plugins-path-r "emacs-python-environment/"))
@@ -39,6 +38,19 @@
 (autoload 'nosetests-pdb-all    "nose" "" t)
 (autoload 'nosetests-pdb-module "nose" "" t)
 (autoload 'nosetests-pdb-one    "nose" "" t)
+
+(eval-after-load "quickrun"
+  '(progn
+     (message "quickrun eval triggered")
+     (quickrun-add-command "python"
+                           '((:command . "ss && python3")
+                             (:description . "Run Python 3 script"))
+                           :default "python"
+                           :mode 'python-mode
+                           :override t)
+     )
+  )
+
 
 (defun python-dev-settings()
 

@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-11-22 20:29:33 Friday by wongrichard>
+;; Last modified: <2014-12-30 16:24:31 Tuesday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -34,7 +34,7 @@
 
 (eval-after-load "smart-compile"
   '(progn
-     (add-to-list 'smart-compile-alist '(python-mode    .  "python2 %f"))
+     (add-to-list 'smart-compile-alist '(python-mode    .  "source ../.env/\"${PWD##*/}\"/bin/activate && python3 %f"))
      (add-to-list 'smart-compile-alist '(jade-mode      .  "pyjade -c jinja %f"))
      (add-to-list 'smart-compile-alist '(objc-mode      .  "clang -fobjc-arc %f -o %n"))
      ))

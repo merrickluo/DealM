@@ -58,3 +58,6 @@
 [submodule "plugins/scala-mode2"]
 	path = plugins/scala-mode2
 	url = git@github.com:hvesalai/scala-mode2.git
+[submodule "plugins/rust-mode"]
+	path = plugins/rust-mode
+	url = git@github.com:rust-lang/rust-mode.git

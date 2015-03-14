@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2014-01-27 09:53:30 Monday by wongrichard>
+;; Last modified: <2015-02-04 16:35:36 Wednesday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -29,6 +29,9 @@ Special commands:
 
 (autoload 'sass-mode
   "sass-mode" "Major mode for editing Sass files.")
+
+(autoload 'scss-mode
+  "scss-mode" "Major mode for editing Sass files.")
 
 (add-hook 'sass-mode-hook (lambda ()
                             (linum-mode t)

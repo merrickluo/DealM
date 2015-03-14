@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-11-21 22:09:07 Thursday by wongrichard>
+;; Last modified: <2015-01-28 16:22:16 Wednesday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -14,11 +14,12 @@
 ;; ------------------------------------------------------------------
 ;;recentf
 (autoload 'recentf-mode "recentf" "" t)
-(recentf-mode 1)
 (setq recentf-exclude '("\\.windows\\'"
-                        "\\/ssh\\'"))
+                        "/ssh"
+                        "/tmp/"))
 (setq recentf-max-saved-items 500)
 (setq recentf-max-menu-items 60)
+(recentf-mode 1)
 
 (defun xsteve-ido-choose-from-recentf ()
   "Use ido to select a recently opened file from the `recentf-list'"

@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2014-10-04 13:52:24 Saturday by wongrichard>
+;; Last modified: <2015-02-04 16:35:46 Wednesday by wongrichard>
 
 ;; Copyright (C) 2012-2013 Richard Wong
 
@@ -163,6 +163,8 @@
 
 (autoload 'dockerfile-mode "dockerfile-mode" "" t)
 
+(autoload 'cython-mode "cython-mode" "" t)
+
 ;; modes definition.
 (setq auto-mode-alist
       (append '(("\\.[Cc][Xx][Xx]$" . c++-mode)
@@ -174,6 +176,7 @@
                 ("\\.[Ll][Oo][Gg]$" . log4j-mode)
                 ("\\.[Cc][Uu][Hh]?$" . cuda-mode)
                 ("\\.sass$" . sass-mode)
+                ("\\.scss$" . scss-mode)
                 ("\\.less\\'" . less-css-mode)
                 ("\\.h$" . c++-mode)
                 ("\\.i$" . c++-mode)    ; SWIG
@@ -213,6 +216,7 @@
                 ("\\.org$" . org-mode)
                 ("\\.\\(todo\\|do\\|plan\\)$". org-mode)
                 ("\\.scons$" . python-mode)
+                ("\\.pyx$" . cython-mode)
                 ("SCons\\(cript\\|truct\\)" . python-mode)
                 ("\\.gclient$" . python-mode)
                 ) auto-mode-alist))
