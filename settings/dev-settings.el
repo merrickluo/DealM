@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2015-01-06 11:18:55 Tuesday by wongrichard>
+;; Last modified: <2015-03-14 09:50:32 Saturday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -299,6 +299,13 @@ Major mode for editing JavaScript code.
   ;; compatible with flyspell.
   (smart-operator-mode-on))
 
+(defun rust-short-cut()
+
+  "js2 mode short-cut key settings."
+  (start-program-short-cut)
+  ;; compatible with flyspell.
+  (smart-operator-mode-on))
+
 
 ;; Short cut Hooks here.
 ;; ==================================================================
@@ -312,6 +319,7 @@ Major mode for editing JavaScript code.
 (add-hook 'LaTex-mode-hook      'tex-short-cut)
 (add-hook 'js2-mode-hook        'js2-short-cut)
 (add-hook 'jade-mode-hook       'jade-short-cut)
+(add-hook 'rust-mode-hook       'rust-short-cut)
 (when (string= system-type "windows-nt")
   (autoload 'powershell "powershell" "DOCSTRING" t)
 )

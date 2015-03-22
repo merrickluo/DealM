@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2015-02-04 16:35:46 Wednesday by wongrichard>
+;; Last modified: <2015-03-14 09:40:27 Saturday by wongrichard>
 
 ;; Copyright (C) 2012-2013 Richard Wong
 
@@ -165,6 +165,10 @@
 
 (autoload 'cython-mode "cython-mode" "" t)
 
+(add-to-list 'load-path (concat plugins-path-r "rust-mode/"))
+
+(autoload 'rust-mode "rust-mode" "" t)
+
 ;; modes definition.
 (setq auto-mode-alist
       (append '(("\\.[Cc][Xx][Xx]$" . c++-mode)
@@ -214,6 +218,7 @@
                 ("\\.l[l]?$" . flex-mode)
                 ("\\.lua$" . lua-mode)
                 ("\\.org$" . org-mode)
+                ("\\.rs\\'" . rust-mode)
                 ("\\.\\(todo\\|do\\|plan\\)$". org-mode)
                 ("\\.scons$" . python-mode)
                 ("\\.pyx$" . cython-mode)
