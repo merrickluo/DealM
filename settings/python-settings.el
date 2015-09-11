@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2014-12-30 16:16:31 Tuesday by wongrichard>
+;; Last modified: <2015-09-11 19:06:18 Friday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -57,6 +57,7 @@
   ;; set environment conform my python3 venv rules
   ;; alias ss='source ../.env/"${PWD##*/}"/bin/activate'
   ;; alias pss='python3 -m venv ../.env/"${PWD##*/}"'
+  ;; alias pss2='virtualenv ../.env/"${PWD##*/}"'
   ;; alias rmss='rm -rf ../.env/"${PWD##*/}"'
   (when (projectile-project-p)
     (set (make-local-variable 'jedi:server-command)
