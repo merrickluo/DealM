@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2015-09-14 14:21:07 Monday by wongrichard>
+;; Last modified: <2015-09-14 14:48:54 Monday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -39,7 +39,6 @@
 (require 'compile-settings)
 (require 'auto-insert-settings)
 (require 'autopair-settings)
-(require 'ggtags-settings)
 
 
 ;; Theme, color and fonts, encoding settings.
