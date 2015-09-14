@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2015-03-14 09:40:27 Saturday by wongrichard>
+;; Last modified: <2015-04-16 14:53:46 Thursday by wongrichard>
 
 ;; Copyright (C) 2012-2013 Richard Wong
 
@@ -15,9 +15,10 @@
 
 (setq change-log-default-name   "ChangeLog"
       user-full-name            "Richard Wong"
+      user-nick-name            "@richard"
       major-mode                'text-mode
       enable-local-variables    :safe
-      log-mailing-address       "chao78787@gmail.com"
+      log-mailing-address       "log@cccc.com"
       ;; My Gmail address, Welcome letter
       user-mail-address         "chao787@gmail.com")
 
@@ -53,6 +54,8 @@
 ;; Diable backup
 (setq-default make-backup-files nil
               auto-save-default nil)
+
+(setq tramp-default-method "ssh")
 
 (add-hook 'text-mode-hook 'text-mode-hook-identify)
 (add-hook 'text-mode-hook 'turn-off-auto-fill)
@@ -168,6 +171,7 @@
 (add-to-list 'load-path (concat plugins-path-r "rust-mode/"))
 
 (autoload 'rust-mode "rust-mode" "" t)
+(autoload 'php-mode "php-mode" "" t)
 
 ;; modes definition.
 (setq auto-mode-alist
@@ -207,6 +211,7 @@
                 ("\\.markdown$" . markdown-mode)
                 ("\\.md$" . markdown-mode)
                 ("\\.[Aa][Hh][Kk]$" . xahk-mode)
+                ("\\.[Pp][Hh][Pp]$" . php-mode)
                 ("\\.textile$" . textile-mode)
                 ("\\.kfn$" . kfn-mode)
                 ("Podfile\\'" . ruby-mode)

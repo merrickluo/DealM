@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2014-12-30 16:16:31 Tuesday by wongrichard>
+;; Last modified: <2015-09-14 13:41:26 Monday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -57,12 +57,21 @@
   ;; set environment conform my python3 venv rules
   ;; alias ss='source ../.env/"${PWD##*/}"/bin/activate'
   ;; alias pss='python3 -m venv ../.env/"${PWD##*/}"'
+  ;; alias pss2='virtualenv ../.env/"${PWD##*/}"'
   ;; alias rmss='rm -rf ../.env/"${PWD##*/}"'
   (when (projectile-project-p)
     (set (make-local-variable 'jedi:server-command)
          (list "python3" (concat plugins-path-r "emacs-jedi/jediepcserver.py")
-               "--virtual-env" (concat (projectile-project-root) "../.env/" (projectile-project-name))))
-    )
+               "--virtual-env" (concat (projectile-project-root) "../.env/" (projectile-project-name)))
+
+         ))
+  ;; TODO: need cancel the lines after deactivate the python.
+  ;; (let ((virtualenv-path
+  ;;        (concat (projectile-project-root) "../.env/" (projectile-project-name))))
+  ;;   (unless (member virtualenv-path exec-path)
+  ;;     (add-to-list 'exec-path virtualenv-path)
+  ;;     (setenv "PATH" (mapconcat 'identity exec-path ":"))))
+
   (jedi:ac-setup)
   (jedi-mode 1)
   (local-set-key "\C-x\M-j" 'run-python)

@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-08-07 11:49:02 Wednesday by wongrichard>
+;; Last modified: <2015-09-11 19:32:36 Friday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -40,17 +40,13 @@
         org-cycle-include-plain-lists                  t
         org-src-fontify-natively                       t
         org-export-kill-product-buffer-when-displayed  t
+        word-wrap                                      nil
+        org-hide-leading-stars                         t
         org-src-window-setup                           'current-window)
   (turn-off-auto-fill)
-;;   (add-hook 'org-mode-hook 'soft-wrap-lines)
+  (org-indent-mode)
+  (visual-line-mode)
 
-;;   (defun soft-wrap-lines ()
-;;     "Make lines wrap at window edge and on word boundary,
-;; in current buffer."
-;;     (interactive)
-;;     (setq truncate-lines nil)
-;;     (setq word-wrap t)
-;;     )
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((ruby . t)

@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2015-03-14 09:50:32 Saturday by wongrichard>
+;; Last modified: <2015-04-16 15:30:42 Thursday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -295,7 +295,7 @@ Major mode for editing JavaScript code.
 
   "js2 mode short-cut key settings."
   (start-program-short-cut)
-  (setq js2-basic-offset 2)
+  (setq js2-basic-offset 2)             ; continuation line indent to 4
   ;; compatible with flyspell.
   (smart-operator-mode-on))
 
