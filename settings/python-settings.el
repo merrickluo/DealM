@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2015-09-11 19:06:18 Friday by wongrichard>
+;; Last modified: <2015-09-14 13:41:26 Monday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -62,8 +62,16 @@
   (when (projectile-project-p)
     (set (make-local-variable 'jedi:server-command)
          (list "python3" (concat plugins-path-r "emacs-jedi/jediepcserver.py")
-               "--virtual-env" (concat (projectile-project-root) "../.env/" (projectile-project-name))))
-    )
+               "--virtual-env" (concat (projectile-project-root) "../.env/" (projectile-project-name)))
+
+         ))
+  ;; TODO: need cancel the lines after deactivate the python.
+  ;; (let ((virtualenv-path
+  ;;        (concat (projectile-project-root) "../.env/" (projectile-project-name))))
+  ;;   (unless (member virtualenv-path exec-path)
+  ;;     (add-to-list 'exec-path virtualenv-path)
+  ;;     (setenv "PATH" (mapconcat 'identity exec-path ":"))))
+
   (jedi:ac-setup)
   (jedi-mode 1)
   (local-set-key "\C-x\M-j" 'run-python)
