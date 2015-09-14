@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2014-10-04 14:10:56 Saturday by wongrichard>
+;; Last modified: <2015-09-14 14:21:07 Monday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -15,6 +15,8 @@
   (file-name-directory (or load-file-name buffer-file-name)) "Emacs root settings path (in linux)")
 (defconst plugins-path-r
   (concat emacs-root-path "plugins/") "Reference path of emacs lisp package")
+(defconst themes-path-r
+  (concat emacs-root-path "themes/") "Reference path of emacs theme")
 (defconst settings-path-r
   (concat emacs-root-path "settings/") "Personel prefer setting of lisp package")
 (defconst template-path-r

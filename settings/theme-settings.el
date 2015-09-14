@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-10-07 17:02:54 Monday by wongrichard>
+;; Last modified: <2015-09-14 13:57:13 Monday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -8,9 +8,11 @@
 
 ;; Version: 0.1
 ;; PUBLIC LICENSE: FreeBSD
-(add-to-list 'custom-theme-load-path (concat plugins-path-r "emacs-color-theme-solarized/"))
 
-(load-theme 'tomorrow-night t)
+;; TODO: remove solarized theme support.
+(add-to-list 'custom-theme-load-path themes-path-r)
+
+(load-theme 'monokai t)
 
 (autoload 'hl-line-face "hl-line+")
 (eval-after-load "hl-line"
