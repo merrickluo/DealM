@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2013-03-26 18:11:04 Tuesday by richard>
+;; Last modified: <2015-09-14 15:13:46 Monday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -344,8 +344,8 @@ If At the first or end of line call `kill-whole-line';
 If At the comment of the line, call `kill-comment'
 If At the string (which inside \") of the line and string is not empty, kill the string inside.."
   (interactive)
-  (if (and cua-mode cua--explicit-region-start)
-      (call-interactively 'cua-cut-rectangle)
+  (if (and cua-mode cua--rectangle)
+      (call-interactively 'cua-cut-rectangle-as-text)
     (if mark-active
         (call-interactively 'kill-region)
       (if (or (bolp) (eolp))
@@ -362,8 +362,8 @@ If At the first or end of line call `kill-whole-line';
 If At the comment of the line, call `kill-comment'
 If At the string (which inside \") of the line and string is not empty, kill the string inside.."
   (interactive)
-  (if (and cua-mode cua--explicit-region-start)
-      (call-interactively 'cua-cut-rectangle)
+  (if (and cua-mode cua--rectangle)
+      (call-interactively 'cua-cut-rectangle-as-text)
     (if mark-active
         (call-interactively 'kill-region)
       (if (or (bolp) (eolp))
