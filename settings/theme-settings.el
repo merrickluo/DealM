@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2015-09-14 13:57:13 Monday by wongrichard>
+;; Last modified: <2015-09-14 14:22:36 Monday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -9,7 +9,6 @@
 ;; Version: 0.1
 ;; PUBLIC LICENSE: FreeBSD
 
-;; TODO: remove solarized theme support.
 (add-to-list 'custom-theme-load-path themes-path-r)
 
 (load-theme 'monokai t)
