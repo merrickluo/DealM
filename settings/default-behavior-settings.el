@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2015-04-16 14:53:46 Thursday by wongrichard>
+;; Last modified: <2015-09-15 17:48:00 Tuesday by wongrichard>
 
 ;; Copyright (C) 2012-2013 Richard Wong
 
@@ -260,7 +260,9 @@
                          "/usr/local/bin"))
     (unless (member ensure-path exec-path)
       (add-to-list 'exec-path ensure-path)))
-  (setenv "PATH" (mapconcat 'identity exec-path ":")))
+  (setenv "PATH" (mapconcat 'identity exec-path ":"))
+  (setenv "LC_ALL" "en_US.UTF-8")
+  (setenv "LC_CTYPE" "en_US.UTF-8"))
 
 (provide 'default-behavior-settings)
 ;; default-behavior-settings ends here.
