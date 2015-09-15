@@ -1,5 +1,5 @@
 # -*- mode: org -*-
-# Last modified: <2014-12-09 10:12:17 Tuesday by wongrichard>
+# Last modified: <2015-09-15 18:04:35 Tuesday by wongrichard>
 #+STARTUP: showall
 #+TITLE:   README
 
@@ -35,17 +35,12 @@
        [[][pylint]] (pip{2/3} install pylint)
        [[][epylint]]
        ATTENTION:You need to make the pymacs by your own.
-  3. Flymake:
-     You need to make pychecker.sh executable.
-     #+begin_src shell
-     chmod +x plugins/pychecker.sh
-     #+end_src
-  4. compile auctex compile settings.
-  5. =pip install epc= if you want to use jedi server
-  6. If you have met (Error: No word lists can be found for the language "en_US".)
+  3. compile auctex compile settings.
+  4. =pip install epc= if you want to use jedi server
+  5. If you have met (Error: No word lists can be found for the language "en_US".)
      install flymake lib aspell-en.
-     #+begin_src emacs-lisp :tangle yes
-     # pacman -S aspell-en
+     #+begin_src bash :tangle yes
+     pacman -S aspell-en
      #+end_src
 
 * Package description
@@ -91,9 +86,9 @@
 * TODO list:
   1. Try helm and
      integrated to emacs if possible.
-  2. Try nose and some python plugins.
-  3. Add cedet 1.1 with emacs.
-  4. Add grep+ plugin with emacs.
+  2. Add grep+ plugin with emacs.
+  3. try [[https://github.com/proofit404/anaconda-mode][anaconda-mode]] for python.
+  4. try [[http://tuhdo.github.io/c-ide.html][c-ide]] for C.
 
 * Known bugs:
 ** desktop and pymacs starting bug.
