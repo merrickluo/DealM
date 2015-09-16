@@ -1,5 +1,5 @@
 # -*- mode: org -*-
-# Last modified: <2015-09-15 19:07:05 Tuesday by wongrichard>
+# Last modified: <2015-09-15 19:40:31 Tuesday by wongrichard>
 #+STARTUP: showall
 #+TITLE:   README
 
@@ -21,12 +21,15 @@
 * Something out of the project.
   You may need to add this thing by your own.
   1. fonts:
-     =Adobe Source Code Pro= for English.
-     =Yayuan= for Chinese.
+     [[https://github.com/adobe-fonts/source-code-pro][Adobe Source Code Pro]] for English.
   2. Install python package by your own:
      - for ibus-mode
        [[http://sourceforge.net/projects/python-xlib/][python-xlib][xlib]]
-     - in jedi folder you need =$ sudo pip3 install --upgrade plugins/emacs-jedi=
+     - in jedi folder you need
+       #+begin_src bash
+       sudo pip3 install --upgrade plugins/emacs-jedi
+       #+end_src
+
   3. compile auctex compile settings.
   4. =pip install epc= if you want to use jedi server
   5. If you have met (Error: No word lists can be found for the language "en_US".)
