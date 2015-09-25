@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2014-05-01 19:32:31 Thursday by wongrichard>
+;; Last modified: <2015-09-25 08:07:37 Friday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -64,6 +64,27 @@
     (let ((case-fold-search isearch-case-fold-search))
       (multi-occur-in-this-mode
        (if isearch-regexp isearch-string (regexp-quote isearch-string))))))
+
+(define-key isearch-mode-map (kbd "M-w")
+  (defun isearchp-kill-ring-save (&optional arg)
+    "Copy the current search string to the kill ring.
+For example, you can then use `C-s M-y' to search for the same thing
+in another Emacs session.
+    If ARG is "
+    (interactive "P")
+    (setq arg (or arg 0))
+    (cond ((= (prefix-numeric-value arg) 0)
+           (kill-new isearch-string))
+          ((= (prefix-numeric-value arg) 4)
+           (copy-region-as-kill isearch-other-end (point)))
+          (t (copy-lines-matching-re isearch-string)
+           ;; TODO: copy all match strings probably can reuse occur pkg.
+           ))
+    (let ((message-log-max  nil))
+      (message "%s copied" (current-kill 0))
+      (sit-for 1)
+      (isearch-update))
+    ))
 
 (eval-after-load "projectile"
   '(define-key isearch-mode-map (kbd "C-S-O")
