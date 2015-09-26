@@ -1,63 +1,63 @@
 [submodule "plugins/rainbow-mode"]
 	path = plugins/rainbow-mode
-	url = git://github.com/emacsmirror/rainbow-mode.git
+	url = https://github.com/emacsmirror/rainbow-mode.git
 [submodule "plugins/magit"]
 	path = plugins/magit
-	url = git://github.com/magit/magit.git
+	url = https://github.com/magit/magit.git
 [submodule "plugins/yasnippet"]
 	path = plugins/yasnippet
-	url = git@github.com:chao787/yasnippet.git
+	url = https://github.com:chao787/yasnippet.git
 [submodule "snippets"]
 	path = snippets
-	url = git@github.com:chao787/RSnippet.git
+	url = https://github.com:chao787/RSnippet.git
 [submodule "plugins/auto-complete"]
 	path = plugins/auto-complete
-	url = git://github.com/auto-complete/auto-complete.git
+	url = https://github.com/auto-complete/auto-complete.git
 [submodule "plugins/popup"]
 	path = plugins/popup
 	url = https://github.com/auto-complete/popup-el.git
 [submodule "plugins/jade-mode"]
 	path = plugins/jade-mode
-	url = git://github.com/brianc/jade-mode.git
+	url = https://github.com/brianc/jade-mode.git
 [submodule "plugins/emacs-jedi"]
 	path = plugins/emacs-jedi
-	url = git@github.com:tkf/emacs-jedi.git
+	url = https://github.com:tkf/emacs-jedi.git
 [submodule "plugins/clojure-mode"]
 	path = plugins/clojure-mode
-	url = git@github.com:technomancy/clojure-mode.git
+	url = https://github.com:technomancy/clojure-mode.git
 [submodule "plugins/ac-nrepl"]
 	path = plugins/ac-nrepl
-	url = git@github.com:purcell/ac-nrepl.git
+	url = https://github.com:purcell/ac-nrepl.git
 [submodule "plugins/emacs-quickrun"]
 	path = plugins/emacs-quickrun
-	url = git@github.com:syohex/emacs-quickrun.git
+	url = https://github.com:syohex/emacs-quickrun.git
 [submodule "python-lib"]
 	path = python-lib
-	url = git@github.com:chao787/python-libs.git
+	url = https://github.com:chao787/python-libs.git
 [submodule "plugins/rainbow-delimiters"]
 	path = plugins/rainbow-delimiters
-	url = git@github.com:jlr/rainbow-delimiters.git
+	url = https://github.com:jlr/rainbow-delimiters.git
 [submodule "plugins/git-modes"]
 	path = plugins/git-modes
-	url = git@github.com:magit/git-modes.git
+	url = https://github.com:magit/git-modes.git
 [submodule "plugins/cider"]
 	path = plugins/cider
-	url = git@github.com:clojure-emacs/cider.git
+	url = https://github.com:clojure-emacs/cider.git
 [submodule "plugins/ggtags"]
 	path = plugins/ggtags
-	url = git@github.com:leoliu/ggtags.git
+	url = https://github.com:leoliu/ggtags.git
 [submodule "plugins/dash"]
 	path = plugins/dash
-	url = git@github.com:magnars/dash.el.git
+	url = https://github.com:magnars/dash.el.git
 [submodule "plugins/emacs-python-environment"]
 	path = plugins/emacs-python-environment
-	url = git@github.com:tkf/emacs-python-environment.git
+	url = https://github.com:tkf/emacs-python-environment.git
 [submodule "plugins/scala-mode2"]
 	path = plugins/scala-mode2
-	url = git@github.com:hvesalai/scala-mode2.git
+	url = https://github.com:hvesalai/scala-mode2.git
 [submodule "plugins/rust-mode"]
 	path = plugins/rust-mode
-	url = git@github.com:rust-lang/rust-mode.git
+	url = https://github.com:rust-lang/rust-mode.git
 [submodule "plugins/geiser"]
 	path = plugins/geiser
-	url = git@github.com:jaor/geiser.git
+	url = https://github.com:jaor/geiser.git
