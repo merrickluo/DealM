@@ -1,7 +1,7 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2015-09-14 14:22:36 Monday by wongrichard>
+;; Last modified: <2015-09-26 22:20:08 Saturday by wongrichard>
 
-;; Copyright (C) 2012 Richard Wong
+;; Copyright (C) 2012-2015 Richard Wong
 
 ;; Author: Richard Wong
 ;; Email: chao787@gmail.com
@@ -11,7 +11,7 @@
 
 (add-to-list 'custom-theme-load-path themes-path-r)
 
-(load-theme 'monokai t)
+(load-theme default-theme-r t)
 
 (autoload 'hl-line-face "hl-line+")
 (eval-after-load "hl-line"

@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2015-09-14 14:48:54 Monday by wongrichard>
+;; Last modified: <2015-09-26 22:18:59 Saturday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -21,6 +21,11 @@
   (concat emacs-root-path "settings/") "Personel prefer setting of lisp package")
 (defconst template-path-r
   (concat emacs-root-path "templates/") "Path for template")
+
+(defcustom default-theme-r 'monokai
+  "Default theme for dealM"
+  :type 'symbol
+  :group 'dealM)
 
 ;; add load path
 (add-to-list 'load-path settings-path-r)
