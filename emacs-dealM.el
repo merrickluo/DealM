@@ -1,12 +1,12 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2015-09-26 22:18:59 Saturday by wongrichard>
+;; Last modified: <2015-09-27 08:26:28 Sunday by wongrichard>
 
-;; Copyright (C) 2012 Richard Wong
+;; Copyright (C) 2012-2015 Richard Wong
 
 ;; Author: Richard Wong
 ;; Email: chao787@gmail.com
 
-;; Version: 0.1
+;; Version: 0.2
 ;; PUBLIC LICENSE: FreeBSD
 
 ;; configure path depend on system.
@@ -25,6 +25,11 @@
 (defcustom default-theme-r 'monokai
   "Default theme for dealM"
   :type 'symbol
+  :group 'dealM)
+
+(defcustom default-source-font-r "Courier-14"
+  "Default font for dealM"
+  :type 'string
   :group 'dealM)
 
 ;; add load path

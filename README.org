@@ -1,103 +1,113 @@
 # -*- mode: org -*-
-# Last modified: <2015-09-15 19:40:31 Tuesday by wongrichard>
+# Last modified: <2015-09-27 08:28:08 Sunday by wongrichard>
 #+STARTUP: showall
 #+TITLE:   README
 
+* TODO
+- [ ] replace ac-nrepl module to ac-cider.
+
+* Useful Custom variables
+#+begin_src emacs-lisp
+(setq default-theme-r 'monokai
+      default-source-font-r "Source Code Pro-12")
+#+end_src
+
+
 * packages.
-  All packages will be put inside a customized folder.(that is to say, I
-  won't using elpa.)
+All packages will be put inside a customized folder.(that is to say, I
+won't using elpa.)
 
 * Install procudure.
-  add emacs-dealM.el to your .emacs. that is to say:
-  add:
+add emacs-dealM.el to your .emacs. that is to say:
+add:
 
-  #+begin_src emacs-lisp :tangle yes
-  (load-file '/path/to/emacs-dealM.el)
-  #+end_src
+#+begin_src emacs-lisp :tangle yes
+(load-file '/path/to/emacs-dealM.el)
+#+end_src
 
-* My Environment
-  Mac OS X 10.10 + emacs 24.4
+* Tested Environment
+Mac OS X 10.10 + emacs 24.5.1
 
 * Something out of the project.
-  You may need to add this thing by your own.
-  1. fonts:
-     [[https://github.com/adobe-fonts/source-code-pro][Adobe Source Code Pro]] for English.
-  2. Install python package by your own:
-     - for ibus-mode
-       [[http://sourceforge.net/projects/python-xlib/][python-xlib][xlib]]
-     - in jedi folder you need
-       #+begin_src bash
-       sudo pip3 install --upgrade plugins/emacs-jedi
-       #+end_src
-
-  3. compile auctex compile settings.
-  4. =pip install epc= if you want to use jedi server
-  5. If you have met (Error: No word lists can be found for the language "en_US".)
-     install flymake lib aspell-en.
-     #+begin_src bash :tangle yes
-     pacman -S aspell-en
+You may need to add this thing by your own.
+1. fonts:
+   [[https://github.com/adobe-fonts/source-code-pro][Adobe Source Code Pro]] for English.
+2. Install python package by your own:
+   - for ibus-mode
+     [[http://sourceforge.net/projects/python-xlib/][python-xlib][xlib]]
+   - in jedi folder you need
+     #+begin_src bash
+     sudo pip3 install --upgrade plugins/emacs-jedi
      #+end_src
+
+3. compile auctex compile settings.
+4. =pip install epc= if you want to use jedi server
+5. If you have met (Error: No word lists can be found for the language "en_US".)
+   install flymake lib aspell-en.
+   #+begin_src bash :tangle yes
+   pacman -S aspell-en
+   #+end_src
 
 * Package description
 
 ** Python
-   - Ropemacs (Custom) : A refactoring library
-     - Auto Completion with rope (Custom) : Tested to work well with Rope
-     - Flymake
-       - latest flymake package
-         It contains pep8, epylint, and pyflake, run them all.
-     - Virtualenv : Original, In-development tool for using virtualenv in
-       emacs.
-     - Custom Yasnippet Snippets
-     - Cython Mode: a mode for highlighting cython files
-     - latest python.el (fgallina/python.el)
-     - nosetests integration (nose.el)
-     - It use nose tests to test buffer.
+- Ropemacs (Custom) : A refactoring library
+  - Auto Completion with rope (Custom) : Tested to work well with Rope
+  - Flymake
+    - latest flymake package
+      It contains pep8, epylint, and pyflake, run them all.
+  - Virtualenv : Original, In-development tool for using virtualenv in
+    emacs.
+  - Custom Yasnippet Snippets
+  - Cython Mode: a mode for highlighting cython files
+  - latest python.el (fgallina/python.el)
+  - nosetests integration (nose.el)
+  - It use nose tests to test buffer.
 
 ** HTML
-   - If you want Flymake run, you need install tidy in your system's path.(HTML tool)
-   - If you use HTML5 to write pages, you can download html tidy from [[https://github.com/w3c/tidy-html5/][github]].
+- If you want Flymake run, you need install tidy in your system's path.(HTML tool)
+- If you use HTML5 to write pages, you can download html tidy from [[https://github.com/w3c/tidy-html5/][github]].
 
 ** Compile-settings
-   - mainly reference the Drew Adams' package.
-     package info:
-     compile-settings:
-     + compile+
-       * compile-
-         - fit-frame
-         - frame-fns
-       * compile (emacs built-in package)
-       * misc-fns
-     + compile-misc(add some addition function)
-       * smart-compile
+- mainly reference the Drew Adams' package.
+  package info:
+  compile-settings:
+  + compile+
+    * compile-
+      - fit-frame
+      - frame-fns
+    * compile (emacs built-in package)
+    * misc-fns
+  + compile-misc(add some addition function)
+    * smart-compile
 
 ** molo-settings.
-   - contains org-mode settings
-   - latex-mode settings.
-     + auctex settings.
-   - markdown-mode settings.
+- contains org-mode settings
+- latex-mode settings.
+  + auctex settings.
+- markdown-mode settings.
 
 
 * TODO list:
-  1. Try helm and
-     integrated to emacs if possible.
-  2. Add grep+ plugin with emacs.
-  3. try [[https://github.com/proofit404/anaconda-mode][anaconda-mode]] for python.
-  4. try [[http://tuhdo.github.io/c-ide.html][c-ide]] for C.
+1. Try helm and
+   integrated to emacs if possible.
+2. Add grep+ plugin with emacs.
+3. try [[https://github.com/proofit404/anaconda-mode][anaconda-mode]] for python.
+4. try [[http://tuhdo.github.io/c-ide.html][c-ide]] for C.
 
 * Known bugs:
 ** desktop and pymacs starting bug.
-   temp solve method:
-   1. kill Pymacs buffer and restart emacs.
-      2. disable desktop.
+temp solve method:
+1. kill Pymacs buffer and restart emacs.
+   2. disable desktop.
 
 ** Autocomplete in elisp bug.
-   autocomplete will stuck emacs when using auto-complete in elisp
-   especially when starts a new string.
-   temp solve method:
-   stop autocomplete auto-complete when editing elisp.
+autocomplete will stuck emacs when using auto-complete in elisp
+especially when starts a new string.
+temp solve method:
+stop autocomplete auto-complete when editing elisp.
 
 * about this project
-  This project is about emacs settings *ONLY* for emacs 24.4
-  This file is another repo for compatible with emacs 24.4
-  This project is a emacs 24.4 transport version for We Master Changes.
+This project is about emacs settings *ONLY* for emacs 24.4
+This file is another repo for compatible with emacs 24.4
+This project is a emacs 24.4 transport version for We Master Changes.
