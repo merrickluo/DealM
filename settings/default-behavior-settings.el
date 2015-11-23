@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2015-09-15 17:48:00 Tuesday by wongrichard>
+;; Last modified: <2015-11-23 22:47:37 Monday by wongrichard>
 
 ;; Copyright (C) 2012-2013 Richard Wong
 
@@ -172,6 +172,8 @@
 
 (autoload 'rust-mode "rust-mode" "" t)
 (autoload 'php-mode "php-mode" "" t)
+(autoload 'typescript-mode "typescript" "typescript mode for tss" t)
+
 
 ;; modes definition.
 (setq auto-mode-alist
@@ -203,8 +205,9 @@
                 ("\\.cmake\\'" . cmake-mode)
                 ("\\.uncompressed$" . hexl-mode)
                 ("\\.js$" . js2-mode)
+                ("\\.ts$" . typescript-mode)
                 ("\\.clj$" . clojure-mode)
-                ("\\.json$" . js-mode)
+                ("\\.json$" . json-mode)
                 ("\\.y[s]?$" . snippet-mode)
                 ("headx$" . snippet-mode)
                 ("\\.ke$" . kepago-mode)

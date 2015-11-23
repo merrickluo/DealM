@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2015-09-14 15:13:46 Monday by wongrichard>
+;; Last modified: <2015-11-23 22:41:51 Monday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -445,7 +445,7 @@ If FULL is t, copy full file name."
    (let ((fn switch-major-mode-last-mode) val)
      (setq val
            (completing-read
-            (if fn (format "切换major-mode为(缺省为%s): " fn) "切换major mode为: ")
+            (if fn (format "change major-mode to(default: %s): " fn) "change major mode to:")
             obarray 'major-mode-heuristic t nil nil (symbol-name fn)))
      (list (intern val))))
   (let ((last-mode major-mode))
@@ -454,9 +454,9 @@ If FULL is t, copy full file name."
 
 ;;;###autoload
 (defun get-mode-name ()
-  "显示`major-mode'及`mode-name'"
+  "show `major-mode' and `mode-name'"
   (interactive)
-  (message "major-mode为%s, mode-name为%s" major-mode mode-name))
+  (message "major-mode: `%s', mode-name: `%s'" major-mode mode-name))
 
 ;;;###autoload
 (defmacro def-action-on-area-command (fun-name action mark-area doc)

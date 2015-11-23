@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2015-04-16 15:30:42 Thursday by wongrichard>
+;; Last modified: <2015-11-23 23:45:34 Monday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -204,6 +204,39 @@ Add this to .emacs to run gofmt on the current buffer when saving:
   (local-set-key (kbd "C-c C-q") 'indent-function)
   (local-set-key (kbd "C-c C")   'comment-function))
 
+;; typescript short cut Settings.
+;; ==================================================================
+(defun typescript-short-cut()
+  "Type Script mode short-cut key settings."
+  (start-program-short-cut)
+  (require 'tss)
+
+  ;; Key binding
+  (setq tss-popup-help-key "C-:")
+  (setq tss-jump-to-definition-key "C-c g")
+  (setq tss-implement-definition-key "C-c i")
+
+  ;; Make config suit for you. About the config item, eval the following sexp.
+  ;; (customize-group "tss")
+
+  ;; Do setting recommemded configuration
+  (tss-config-default))
+
+;; json short cut Settings.
+;; ==================================================================
+(defun json-short-cut()
+  "json mode short-cut key settings."
+  (start-program-short-cut)
+  (setq json-reformat:indent-width 2)
+  (defun json-smart-indent ()
+    (interactive)
+    (save-excursion
+      (unless mark-active
+        (call-interactively 'mark-whole-buffer))
+      (call-interactively 'json-reformat-region)))
+  (local-set-key (kbd "C-x TAB") 'json-smart-indent)
+  )
+
 ;; clojure short cut Settings.
 ;; ==================================================================
 (defun clojure-short-cut()
@@ -311,6 +344,8 @@ Major mode for editing JavaScript code.
 ;; ==================================================================
 (add-hook 'emacs-lisp-mode-hook 'elisp-short-cut)
 (add-hook 'clojure-mode-hook    'clojure-short-cut)
+(add-hook 'typescript-mode-hook 'typescript-short-cut)
+(add-hook 'json-mode-hook       'json-short-cut)
 (add-hook 'c-mode-common-hook   'c-common-short-cut)
 (add-hook 'objc-mode-hook       'objc-short-cut)
 (add-hook 'python-mode-hook     'python-short-cut)
