@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2015-11-27 13:30:30 Friday by wongrichard>
+;; Last modified: <2015-11-27 14:38:48 Friday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -133,6 +133,7 @@ Add this to .emacs to run gofmt on the current buffer when saving:
   (interactive
    (list (read-string "git grep: "
                       (shell-quote-argument (grep-tag-default)))))
+  (require 'magit)
   (with-current-buffer (generate-new-buffer "*Magit Grep*")
     (setq default-directory (projectile-project-root))
     (insert magit-git-executable " "
@@ -144,12 +145,18 @@ Add this to .emacs to run gofmt on the current buffer when saving:
     ;; probably need to change the order of these two.
     (grep-mode)
     (pop-to-buffer (current-buffer))
-    (save-window-excursion
-      (when (= (count-lines (point-min) (point-max)) 3)
-        (message "killed buffer")
-        (first-error)
-        (kill-buffer (current-buffer))))
-    ))
+    )
+  ;; Am I lucky here?
+  ;; (when (= (count-lines (point-min) (point-max)) 3)
+  ;;   (let* ((cf (current-window-configuration))
+  ;;          (grep-buffer (current-buffer))
+  ;;          (target-buffer (progn (first-error) (current-buffer))))
+  ;;     (message "killed buffer")
+  ;;     (kill-buffer (current-buffer))
+  ;;     (set-window-configuration cf)
+  ;;     (replace-buffer-in-windows target-buffer)
+  ;;     ))
+  )
 
 (defun smart-grep (&optional arg)
   (interactive "p")
