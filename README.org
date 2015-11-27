@@ -1,5 +1,5 @@
 # -*- mode: org -*-
-# Last modified: <2015-11-23 21:49:48 Monday by wongrichard>
+# Last modified: <2015-11-27 14:45:33 Friday by wongrichard>
 #+STARTUP: showall
 #+TITLE:   README
 
@@ -97,6 +97,7 @@ You may need to add this thing by your own.
 2. Add grep+ plugin with emacs.
 3. try [[https://github.com/proofit404/anaconda-mode][anaconda-mode]] for python.
 4. try [[http://tuhdo.github.io/c-ide.html][c-ide]] for C.
+5. Add I am feeling lucky feature to git grep
 
 * Known bugs:
 ** desktop and pymacs starting bug.

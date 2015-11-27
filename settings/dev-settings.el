@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2015-11-23 23:45:34 Monday by wongrichard>
+;; Last modified: <2015-11-27 13:30:30 Friday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -126,15 +126,38 @@ Add this to .emacs to run gofmt on the current buffer when saving:
 (defun smart-find-file ()
   (interactive)
   (if (projectile-project-p)
-           (call-interactively 'projectile-find-file)
+      (call-interactively 'projectile-find-file)
     (call-interactively 'ido-find-file)))
 
-(autoload 'magit-grep "magit" "" t)
+(defun feeling-lucky-grep (pattern)
+  (interactive
+   (list (read-string "git grep: "
+                      (shell-quote-argument (grep-tag-default)))))
+  (with-current-buffer (generate-new-buffer "*Magit Grep*")
+    (setq default-directory (projectile-project-root))
+    (insert magit-git-executable " "
+            (mapconcat 'identity magit-git-standard-options " ")
+            " grep -n "
+            (shell-quote-argument pattern) "\n\n")
+    (magit-git-insert "grep" "--line-number" "--color" pattern)
+    (ansi-color-apply-on-region (point-min) (point-max))
+    ;; probably need to change the order of these two.
+    (grep-mode)
+    (pop-to-buffer (current-buffer))
+    (save-window-excursion
+      (when (= (count-lines (point-min) (point-max)) 3)
+        (message "killed buffer")
+        (first-error)
+        (kill-buffer (current-buffer))))
+    ))
 
-(defun smart-grep ()
-  (interactive)
+(defun smart-grep (&optional arg)
+  (interactive "p")
+  (or arg (setq arg 1))
   (if (string-equal (projectile-project-vcs) "git")
-      (call-interactively 'magit-grep)
+      (if (= arg 1)
+          (call-interactively 'feeling-lucky-grep)
+        (call-interactively 'vc-git-grep))
     (call-interactively 'projectile-grep)))
 
 (global-set-key '[f1] 'smart-find-file)
@@ -357,7 +380,7 @@ Major mode for editing JavaScript code.
 (add-hook 'rust-mode-hook       'rust-short-cut)
 (when (string= system-type "windows-nt")
   (autoload 'powershell "powershell" "DOCSTRING" t)
-)
+  )
 
 
 (provide 'dev-settings)
