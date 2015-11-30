@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2015-11-27 11:58:32 Friday by wongrichard>
+;; Last modified: <2015-11-30 13:21:19 Monday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -43,6 +43,7 @@ then offer to initialize it as a new repository.
 
 ;; keys in magit...
 (global-set-key  (kbd "C-x v z") 'magit-status)
+(setq magit-push-always-verify nil)
 
 (add-hook 'dired-mode-hook
             (lambda ()
