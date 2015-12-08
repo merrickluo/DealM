@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2015-11-27 14:38:48 Friday by wongrichard>
+;; Last modified: <2015-12-08 12:36:39 Tuesday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -362,9 +362,20 @@ Major mode for editing JavaScript code.
   ;; compatible with flyspell.
   (smart-operator-mode-on))
 
-(defun rust-short-cut()
 
+
+(defun rust-short-cut()
   "js2 mode short-cut key settings."
+  (defun cargo-run()
+    (interactive)
+    (compile (format "cargo run"))
+    )
+  (defun cargo-test()
+    (interactive)
+    (compile (format "cargo test"))
+    )
+  (local-set-key (kbd "C-c r") 'cargo-run)
+  (local-set-key (kbd "C-c t") 'cargo-test)
   (start-program-short-cut)
   ;; compatible with flyspell.
   (smart-operator-mode-on))
