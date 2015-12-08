@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2015-12-08 13:00:30 Tuesday by wongrichard>
+;; Last modified: <2015-12-08 16:24:11 Tuesday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -29,6 +29,11 @@ Insert operators with surrounding spaces smartly.
      (set-face-background 'highlight-indentation-face "grey30")
      (set-face-background 'highlight-indentation-current-column-face "grey50")
      ))
+
+
+;; global modes
+;; ------------------------------------------------------------------
+(electric-pair-mode)
 
 
 ;; hl-line+ settings.

@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2015-09-27 08:26:28 Sunday by wongrichard>
+;; Last modified: <2015-12-08 13:36:34 Tuesday by wongrichard>
 
 ;; Copyright (C) 2012-2015 Richard Wong
 
@@ -48,7 +48,6 @@
 (require 'flymake-settings)
 (require 'compile-settings)
 (require 'auto-insert-settings)
-(require 'autopair-settings)
 
 
 ;; Theme, color and fonts, encoding settings.

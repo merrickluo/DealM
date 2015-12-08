@@ -175,7 +175,7 @@ so let's not get too insert-happy."
 
 
 ;;; Fine Tunings
-
+;; < has problem in rust
 (defun electric-spacing-< ()
   "See `electric-spacing-insert'."
   (cond
@@ -194,12 +194,19 @@ so let's not get too insert-happy."
         (derived-mode-p 'sgml-mode))
     (insert "<>")
     (backward-char))
+   ((derived-mode-p 'rust-mode)
+    (if (looking-back ":[A-Za-z ]+" (line-beginning-position))
+        (insert "<")
+      (progn (insert " < ")
+             (delete-backward-char)
+             (insert " "))))
    (t
     (electric-spacing-insert "<"))))
 
 (defun electric-spacing-: ()
   "See `electric-spacing-insert'."
-  (cond (c-buffer-is-cc-mode
+  (cond ((or c-buffer-is-cc-mode
+             (derived-mode-p 'rust-mode))
          (if (looking-back "\\?.+")
              (electric-spacing-insert ":")
            (electric-spacing-insert ":" 'middle)))
@@ -231,7 +238,7 @@ so let's not get too insert-happy."
                   (derived-mode-p 'js-mode 'js2-mode)
                   (looking-back "[a-z\)$]"))))
          (insert "."))
-        ((derived-mode-p 'cperl-mode 'perl-mode 'ruby-mode)
+        ((derived-mode-p 'cperl-mode 'perl-mode 'ruby-mode 'rust-mode)
          ;; Check for the .. range operator
          (if (looking-back ".")
              (insert ".")
@@ -296,9 +303,26 @@ so let's not get too insert-happy."
 
 (defun electric-spacing-> ()
   "See `electric-spacing-insert'."
-  (cond ((and c-buffer-is-cc-mode (looking-back " - "))
+  (cond ((and c-buffer-is-cc-mode
+              (looking-back " - "))
          (delete-char -3)
          (insert "->"))
+        ((derived-mode-p 'rust-mode)
+         (cond ((looking-back " - ")
+                (delete-char -3)
+                (insert " -> "))
+               ((looking-back " = ")
+                (delete-char -3)
+                (insert " -> "))
+               ((looking-back " > ")
+                (delete-char -3)
+                (insert " >> ")
+                (delete-backward-char)
+                (insert " "))
+               (t (insert " > ")
+                  (delete-backward-char)
+                  (insert " ")
+                  )))
         (t
          (electric-spacing-insert ">"))))
 
