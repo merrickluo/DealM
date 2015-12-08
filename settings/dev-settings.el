@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2015-12-08 12:36:39 Tuesday by wongrichard>
+;; Last modified: <2015-12-08 13:00:30 Tuesday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -16,6 +16,11 @@
 (autoload 'cuda-mode "cuda-mode" "")
 (autoload 'lua-mode "lua-mode" "")
 (autoload 'yaml-mode "yaml-mode" "")
+(autoload 'electric-spacing-mode "electric-spacing" "\
+Insert operators with surrounding spaces smartly.
+
+\(fn &optional ARG)" t nil)
+
 (add-to-list 'auto-mode-alist '("\\.cuh?\\'" . cuda-mode))
 
 (require 'sr-speedbar)
@@ -280,7 +285,7 @@ Add this to .emacs to run gofmt on the current buffer when saving:
 (defun c-common-short-cut()
   "c common mode short-cut key settings."
   (start-program-short-cut)
-  (smart-operator-mode-on)
+  (electric-spacing-mode)
   (setq c-basic-offset 2)
   (paren-toggle-open-paren-context 1)
   (local-set-key (kbd "C-c C-k") 'kill-function)
@@ -298,7 +303,7 @@ Add this to .emacs to run gofmt on the current buffer when saving:
 ;; ==================================================================
 (defun python-short-cut()
   "python mode short-cut key settings."
-  (smart-operator-mode-on)
+  (electric-spacing-mode)
   (start-program-short-cut)
   (local-set-key (kbd "C-c g") 'jedi:goto-definition)
   (local-set-key (kbd "M-/") 'jedi:complete)
@@ -308,7 +313,7 @@ Add this to .emacs to run gofmt on the current buffer when saving:
 ;; ==================================================================
 (defun awk-short-cut()
   "awk mode short-cut key settings."
-  (smart-operator-mode-on)
+  (electric-spacing-mode)
   (start-program-short-cut))
 
 ;; shell mode short cut settings.
@@ -360,7 +365,7 @@ Major mode for editing JavaScript code.
   (start-program-short-cut)
   (setq js2-basic-offset 2)             ; continuation line indent to 4
   ;; compatible with flyspell.
-  (smart-operator-mode-on))
+  (electric-spacing-mode))
 
 
 
@@ -378,7 +383,7 @@ Major mode for editing JavaScript code.
   (local-set-key (kbd "C-c t") 'cargo-test)
   (start-program-short-cut)
   ;; compatible with flyspell.
-  (smart-operator-mode-on))
+  (electric-spacing-mode))
 
 
 ;; Short cut Hooks here.

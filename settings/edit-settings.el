@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2015-09-25 08:07:37 Friday by wongrichard>
+;; Last modified: <2015-12-08 13:00:22 Tuesday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -205,29 +205,6 @@ matching the keyboard event.
 (global-hungry-delete-mode t)
 
 
-;; smart-operator
-;; ------------------------------------------------------------------
-;;;### (autoloads (smart-operator-self-insert-command smart-operator-mode-on
-;;;;;;  smart-operator-mode) "smart-operator" "smart-operator.el"
-;;;;;;  (20476 13650))
-;;; Generated autoloads from smart-operator.el
-
-(autoload 'smart-operator-mode "smart-operator" "\
-Insert operators with surrounding spaces smartly.
-
-\(fn &optional ARG)" t nil)
-
-(autoload 'smart-operator-mode-on "smart-operator" "\
-Turn on `smart-operator-mode'.
-
-\(fn)" nil nil)
-
-(autoload 'smart-operator-self-insert-command "smart-operator" "\
-Insert the entered operator plus surrounding spaces.
-
-\(fn ARG)" t nil)
-
-;; (smart-operator-mode-on)
 
 ;; mc-edit-lines settings
 ;; ----------------------------------------[mc-edit-lines settings]
