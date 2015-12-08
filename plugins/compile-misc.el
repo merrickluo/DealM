@@ -37,7 +37,7 @@
 
 ;;;###autoload
 (defun compile-buffer ()
-  "编译当前buffer文件"
+  "compile current buffer file"
   (interactive)
   (let ((file (buffer-file-name)) base-name)
     (if (not file)
@@ -59,6 +59,8 @@
           (compile (format "sh -n %s" file)))
          ((equal extension "jade")
           (compile (format "pyjade -c jinja %s" file)))
+         ((equal extension "rs")
+          (compile (format "rustc %s" file)))
          ((equal extension "py")
           (compile (format "nosetests -v %s --with-coverage" file))))))))
 
@@ -75,7 +77,8 @@
                (if (not extension)
                    (setq extension ""))
                (cond
-                ((or (equal extension "cpp") (equal (downcase extension) "c"))
+                ((or (equal extension "cpp") (equal (downcase extension) "c")
+                     (equal (downcase extension) "rs"))
                  (format "./%s" (file-name-sans-extension base-name)))
                 ((equal extension "java")
                  (format "java %s" (file-name-sans-extension base-name)))
