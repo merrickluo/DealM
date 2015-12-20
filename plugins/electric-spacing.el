@@ -62,12 +62,13 @@
     (?* . electric-spacing-*)
     (?/ . electric-spacing-/)
     (?& . electric-spacing-&)
-    (?| . electric-spacing-self-insert-command)
+    (?| . electric-spacing-|)
     (?: . electric-spacing-:)
     (?? . electric-spacing-?)
     (?, . electric-spacing-\,)
     (?~ . electric-spacing-~)
     (?. . electric-spacing-.)
+    (?{ . electric-spacing-\{)
     (?^ . electric-spacing-self-insert-command)))
 
 (defun electric-spacing-post-self-insert-function ()
@@ -175,7 +176,7 @@ so let's not get too insert-happy."
 
 
 ;;; Fine Tunings
-;; < has problem in rust
+
 (defun electric-spacing-< ()
   "See `electric-spacing-insert'."
   (cond
@@ -195,21 +196,18 @@ so let's not get too insert-happy."
     (insert "<>")
     (backward-char))
    ((derived-mode-p 'rust-mode)
-    (if (looking-back ":[A-Za-z ]+" (line-beginning-position))
-        (insert "<")
-      (progn (insert " < ")
-             (delete-backward-char)
-             (insert " "))))
+    (insert "<"))
    (t
     (electric-spacing-insert "<"))))
 
 (defun electric-spacing-: ()
   "See `electric-spacing-insert'."
-  (cond ((or c-buffer-is-cc-mode
-             (derived-mode-p 'rust-mode))
+  (cond (c-buffer-is-cc-mode
          (if (looking-back "\\?.+")
              (electric-spacing-insert ":")
            (electric-spacing-insert ":" 'middle)))
+        ((derived-mode-p 'rust-mode)
+         (insert ":"))
         ((derived-mode-p 'haskell-mode)
          (electric-spacing-insert ":"))
         ((derived-mode-p 'python-mode) (electric-spacing-python-:))
@@ -249,22 +247,46 @@ so let's not get too insert-happy."
 
 (defun electric-spacing-& ()
   "See `electric-spacing-insert'."
-  (cond (c-buffer-is-cc-mode
+  (cond ((or c-buffer-is-cc-mode (derived-mode-p 'rust-mode))
          ;; ,----[ cases ]
          ;; | char &a = b; // FIXME
          ;; | void foo(const int& a);
          ;; | char *a = &b;
          ;; | int c = a & b;
          ;; | a && b;
+         ;; | (rust) fn f(p: &str)
          ;; `----
          (cond ((looking-back (concat (electric-spacing-c-types) " *" ))
                 (electric-spacing-insert "&" 'after))
                ((looking-back "= *")
                 (electric-spacing-insert "&" 'before))
+               ((looking-back ": *")
+                (electric-spacing-insert "&" 'before))
                (t
                 (electric-spacing-insert "&"))))
         (t
          (electric-spacing-insert "&"))))
+
+(defun electric-spacing-| ()
+  "See `electric-spacing-insert'."
+  (cond ((derived-mode-p 'rust-mode)
+         (cond ((looking-back "( *")
+                (insert "|")
+                ;; (save-excursion
+                ;;  (re-search-backward " *" nil t)
+                ;;  (replace-match " *" "|")
+                ;;  )
+                )
+               ((looking-back "|[a-z_A-Z0-9]+")
+                (electric-spacing-insert "|" 'after)
+                ;; (save-excursion
+                ;;  (re-search-backward " *" nil t)
+                ;;  (replace-match " *" "|")
+                ;;  )
+                )
+               (t (electric-spacing-insert "|"))))
+        (t
+         (electric-spacing-insert "|"))))
 
 (defun electric-spacing-* ()
   "See `electric-spacing-insert'."
@@ -303,26 +325,16 @@ so let's not get too insert-happy."
 
 (defun electric-spacing-> ()
   "See `electric-spacing-insert'."
-  (cond ((and c-buffer-is-cc-mode
-              (looking-back " - "))
+  (cond ((and c-buffer-is-cc-mode (looking-back " - "))
          (delete-char -3)
          (insert "->"))
         ((derived-mode-p 'rust-mode)
-         (cond ((looking-back " - ")
-                (delete-char -3)
-                (insert " -> "))
-               ((looking-back " = ")
-                (delete-char -3)
-                (insert " -> "))
-               ((looking-back " > ")
-                (delete-char -3)
-                (insert " >> ")
-                (delete-backward-char)
-                (insert " "))
-               (t (insert " > ")
-                  (delete-backward-char)
-                  (insert " ")
-                  )))
+         (cond ((looking-back "= ") (delete-char -2)
+                (insert "=>"))   ; FIXME: always insert space
+               ((looking-back "- ") (delete-char -2)
+                (insert "->"))          ;rust function return
+               (t (insert ">")))
+         )
         (t
          (electric-spacing-insert ">"))))
 
@@ -355,7 +367,7 @@ so let's not get too insert-happy."
         ;; a = -9
         ((and (looking-back (concat electric-spacing-operators-regexp " *"))
               (not (looking-back "- *")))
-          (electric-spacing-insert "-" 'before))
+         (electric-spacing-insert "-" 'before))
 
         (t
          (electric-spacing-insert "-"))))
@@ -408,6 +420,20 @@ so let's not get too insert-happy."
          (insert "/"))
         (t
          (electric-spacing-insert "/"))))
+
+(defun electric-spacing-\{ ()
+  "See `electric-spacing-insert'."
+  ;; *nix shebangs #!
+  (cond ((and (eq 1 (line-number-at-pos))
+              (save-excursion
+                (move-beginning-of-line nil)
+                (looking-at "#!")))
+         (insert "{"))
+        (t
+         (electric-spacing-insert "{"))))
+
+
+
 
 
 (defun electric-spacing-enclosing-paren ()
