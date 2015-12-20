@@ -310,7 +310,18 @@ so let's not get too insert-happy."
                 (electric-spacing-insert "*" 'before))
                (t
                 (electric-spacing-insert "*"))))
-
+        ((derived-mode-p 'rust-mode)
+         ;; ,----
+         ;; | a * b;
+         ;; | let a = *b;
+         ;; | use std::io::*;
+         ;; `----
+         (cond ((looking-back "= *")
+                (electric-spacing-insert "*" 'before))
+               ((looking-back "::")
+                (insert "*"))
+               (t
+                (electric-spacing-insert "*"))))
         ;; Handle python *args and **kwargs
         ((derived-mode-p 'python-mode)
          ;; Can only occur after '(' ',' or on a new line, so just check
