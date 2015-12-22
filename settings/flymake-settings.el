@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2014-01-12 15:20:29 Sunday by wongrichard>
+;; Last modified: <2015-12-22 14:07:09 Tuesday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -184,8 +184,6 @@ Use CREATE-TEMP-F for creating temp copy."
 
   (setq flymake-allowed-file-name-masks
         '(("\\.\\(?:c\\(?:pp\\|xx\\|\\+\\+\\)?\\|CC\\)\\'" flymake-simple-make-gcc-init)
-          ;; ("\\.xml\\'" flymake-xml-init)
-          ("\\.html?\\'" flymake-html-init)
           ("\\.cs\\'" flymake-simple-make-init)
           ("\\.\\(?:h\\(?:pp\\)?\\)\\'" flymake-master-make-header-init flymake-master-cleanup)
           ("\\.java\\'" flymake-simple-make-java-init flymake-simple-java-cleanup)
