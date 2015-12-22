@@ -208,8 +208,9 @@ so let's not get too insert-happy."
         (derived-mode-p 'sgml-mode))
     (insert "<>")
     (backward-char))
+   ;; HACK: by rust-electric-pair-inhibit-predicate-wrap-r
    ((derived-mode-p 'rust-mode)
-    (insert "<"))
+    (electric-spacing-insert "<"))
    (t
     (electric-spacing-insert "<"))))
 
