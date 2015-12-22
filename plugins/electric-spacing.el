@@ -487,8 +487,7 @@ so let's not get too insert-happy."
                 (looking-at "#!")))
          (insert "{"))
         (t
-         (electric-spacing-insert "{"))))
-
+         (electric-spacing-insert "{" 'before))))
 
 
 
