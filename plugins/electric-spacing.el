@@ -53,7 +53,7 @@
   :group 'electricity)
 
 (defvar electric-spacing-rules
-  '((?= . electric-spacing-self-insert-command)
+  '((?= . electric-spacing-=)
     (?< . electric-spacing-<)
     (?> . electric-spacing->)
     (?% . electric-spacing-%)
@@ -176,6 +176,19 @@ so let's not get too insert-happy."
 
 
 ;;; Fine Tunings
+
+(defun electric-spacing-= ()
+  "See `electric-spacing-insert'."
+  (cond
+   ((derived-mode-p 'rust-mode)
+    (cond
+     ;; | type Result<T> = TODO
+     ;; | if a != b
+     ((looking-back "<[a-zA-Z0-9(),]+> *") (insert " = "))
+     ((looking-back "!") (electric-spacing-insert "=" 'after))
+     (t (electric-spacing-insert "="))))
+   (t
+    (electric-spacing-insert "="))))
 
 (defun electric-spacing-< ()
   "See `electric-spacing-insert'."
