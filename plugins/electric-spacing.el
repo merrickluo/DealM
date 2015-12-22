@@ -207,7 +207,16 @@ so let's not get too insert-happy."
              (electric-spacing-insert ":")
            (electric-spacing-insert ":" 'middle)))
         ((derived-mode-p 'rust-mode)
-         (insert ":"))
+         ;; ,----[ cases ]
+         ;; | fn jj(f: &mut fmt::)
+         ;; | ok_or(DoubleError::Emtpy)
+         ;; `----
+         (cond ((looking-back "\\(&\\(mut\\)?\\)? ?[a-zA-Z]+:?")
+                (insert ":"))
+               ((and (not (in-string-p))
+                     (eq (electric-spacing-enclosing-paren) ?\())
+                (electric-spacing-insert ":" 'after))
+               (t (insert ":"))))
         ((derived-mode-p 'haskell-mode)
          (electric-spacing-insert ":"))
         ((derived-mode-p 'python-mode) (electric-spacing-python-:))
