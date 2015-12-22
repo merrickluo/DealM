@@ -247,21 +247,37 @@ so let's not get too insert-happy."
 
 (defun electric-spacing-& ()
   "See `electric-spacing-insert'."
-  (cond ((or c-buffer-is-cc-mode (derived-mode-p 'rust-mode))
+  (cond (c-buffer-is-cc-mode
          ;; ,----[ cases ]
          ;; | char &a = b; // FIXME
          ;; | void foo(const int& a);
          ;; | char *a = &b;
          ;; | int c = a & b;
          ;; | a && b;
-         ;; | (rust) fn f(p: &str)
          ;; `----
          (cond ((looking-back (concat (electric-spacing-c-types) " *" ))
                 (electric-spacing-insert "&" 'after))
                ((looking-back "= *")
                 (electric-spacing-insert "&" 'before))
-               ((looking-back ": *")
+               (t
+                (electric-spacing-insert "&"))))
+        ((derived-mode-p 'rust-mode)
+         ;; ,----[ cases ]
+         ;; | char &a = b; // FIXME
+         ;; | fn foo(v: &a);
+         ;; | let a  = &b;
+         ;; | let c = a & b;
+         ;; | a && b;
+         ;; | &a < &b
+         ;; | &a > &b
+         ;; | fn f(vec: Vec<&str>)
+         ;; | Ok(data_a + &data_b);
+         ;; | file.read_to_string(&mut contents)
+         ;; `----
+         (cond ((looking-back "[=:+<>] +")
                 (electric-spacing-insert "&" 'before))
+               ((looking-back "[(<]")
+                (insert "&"))
                (t
                 (electric-spacing-insert "&"))))
         (t
