@@ -388,7 +388,9 @@ so let's not get too insert-happy."
                 (insert "=>"))   ; FIXME: always insert space
                ((looking-back "- ") (delete-char -2)
                 (insert "->"))          ;rust function return
-               (t (insert ">")))
+               ((looking-back "<[a-zA-Z0-9,()]+")
+                (electric-spacing-insert ">" 'middle))
+               (t (electric-spacing-insert ">" 'before)))
          )
         (t
          (electric-spacing-insert ">"))))
