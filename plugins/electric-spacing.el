@@ -302,7 +302,7 @@ so let's not get too insert-happy."
                 ;;  (replace-match " *" "|")
                 ;;  )
                 )
-               ((looking-back "|[a-z_A-Z0-9]+")
+               ((looking-back "|[a-z_A-Z0-9 ]+")
                 (electric-spacing-insert "|" 'after)
                 ;; (save-excursion
                 ;;  (re-search-backward " *" nil t)
