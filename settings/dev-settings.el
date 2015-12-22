@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2015-12-08 16:24:11 Tuesday by wongrichard>
+;; Last modified: <2015-12-22 13:40:47 Tuesday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -382,8 +382,26 @@ Major mode for editing JavaScript code.
     )
   (defun cargo-test()
     (interactive)
+    ;; TODO make it support C-u to test all project
     (compile (format "cargo test"))
     )
+
+  (defun rust-electric-pair-inhibit-predicate-wrap-r(char)
+    "Wraps the default `electric-pair-inhibit-predicate' to prevent
+  inserting a \"matching\" > after a < that would be treated as a
+  less than sign rather than as an opening angle bracket."
+    (cond ((= ?> char)
+           (message "wat >" char)
+           t)
+          ((= ?< char)
+           t)
+          (t (funcall (default-value 'electric-pair-inhibit-predicate) char)))
+    )
+  (setq-local electric-pair-inhibit-predicate
+              'rust-electric-pair-inhibit-predicate-wrap-r)
+
+  (message "loaded")
+
   (local-set-key (kbd "C-c r") 'cargo-run)
   (local-set-key (kbd "C-c t") 'cargo-test)
   (start-program-short-cut)
