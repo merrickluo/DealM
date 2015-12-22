@@ -340,10 +340,15 @@ so let's not get too insert-happy."
          ;; | a * b;
          ;; | let a = *b;
          ;; | use std::io::*;
+         ;; | match *self
+         ;; | for x in *s
+         ;; | FIXME: need more native way to support
          ;; `----
          (cond ((looking-back "= *")
                 (electric-spacing-insert "*" 'before))
                ((looking-back "::")
+                (insert "*"))
+               ((looking-back " ")
                 (insert "*"))
                (t
                 (electric-spacing-insert "*"))))
