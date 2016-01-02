@@ -191,7 +191,7 @@ so let's not get too insert-happy."
    ((derived-mode-p 'python-mode)
     (cond
      ;; ,----[ cases ]
-     ;; | fun(a=b, java=aa)
+     ;; | fun(a=b, java=aa)  // FIXME: need inner support here
      ;; `----
      ((looking-back "([_a-zA-Z0-9= \n,]+")
       (insert "="))
@@ -533,14 +533,32 @@ so let's not get too insert-happy."
                 (looking-at "#!")))
          (insert "{"))
         ((derived-mode-p 'rust-mode)
-         (electric-spacing-insert "{" 'before)
-         ;; also HACK the rust pairmode
-         (reindent-then-newline-and-indent)
-         (insert "}")
-         (backward-char 1)
-         (newline-and-indent)
-         (previous-line)
-         (indent-according-to-mode))
+         (cond
+          ;; ,----[ cases ]
+          ;; | use std::ops::{}
+          ;; `----
+          ((looking-back "::")
+           (insert "{}")
+           (backward-char 1))
+          (t
+           (electric-spacing-insert "{" 'before)
+           ;; also HACK the rust pairmode
+           (reindent-then-newline-and-indent)
+           (insert "}")
+           (backward-char 1)
+           (newline-and-indent)
+           (previous-line)
+           (indent-according-to-mode)
+           )))
+        ((derived-mode-p 'python-mode)
+         (cond
+          ;; ,----[ cases ]
+          ;; | filter(type__in={})
+          ;; `----
+          ((looking-back "([_a-zA-Z0-9= \n,.]+")
+           (insert "{"))
+          (t
+           (electric-spacing-insert "{" 'before))))
         (t
          (electric-spacing-insert "{" 'before))))
 
