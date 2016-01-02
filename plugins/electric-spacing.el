@@ -210,7 +210,20 @@ so let's not get too insert-happy."
     (backward-char))
    ;; HACK: by rust-electric-pair-inhibit-predicate-wrap-r
    ((derived-mode-p 'rust-mode)
-    (electric-spacing-insert "<"))
+    ;; ,----[ cases ]
+    ;; | impl Add<Bar> for Foo
+    ;; | struct Borrowed<'a>
+    ;; | enum Either<'a>
+    ;; | fn print<'a>()
+    ;; `----
+    (cond ((looking-back (concat
+                          "^\\("
+                          (regexp-opt '("impl" "struct" "enum" "fn"))
+                          "\\).+"))
+           (insert "<>")
+           (backward-char))
+          (t
+           (electric-spacing-insert "<"))))
    (t
     (electric-spacing-insert "<"))))
 
@@ -224,12 +237,20 @@ so let's not get too insert-happy."
          ;; ,----[ cases ]
          ;; | fn jj(f: &mut fmt::)
          ;; | ok_or(DoubleError::Emtpy)
+         ;; | struct foo<'a> { x: bar}
          ;; `----
-         (cond ((looking-back "\\(&\\(mut\\)?\\)? ?[a-zA-Z]+:?")
+         (cond ((looking-back "^use [A-Za-z0-9_:]+")
+                (insert "::"))
+               ((looking-back " *[A-Za-z_0-9]+")
+                (electric-spacing-insert ":" 'after))
+               ((looking-back "\\(&\\(mut\\)?\\)? ?[a-zA-Z]+:?")
                 (insert ":"))
                ((and (not (in-string-p))
                      (eq (electric-spacing-enclosing-paren) ?\())
                 (electric-spacing-insert ":" 'after))
+               ((looking-back ": ")
+                (delete-char -1)
+                (insert ":"))
                (t (insert ":"))))
         ((derived-mode-p 'haskell-mode)
          (electric-spacing-insert ":"))
@@ -486,9 +507,17 @@ so let's not get too insert-happy."
                 (move-beginning-of-line nil)
                 (looking-at "#!")))
          (insert "{"))
+        ((derived-mode-p 'rust-mode)
+         (electric-spacing-insert "{" 'before)
+         ;; also HACK the rust pairmode
+         (reindent-then-newline-and-indent)
+         (insert "}")
+         (backward-char 1)
+         (newline-and-indent)
+         (previous-line)
+         (indent-according-to-mode))
         (t
          (electric-spacing-insert "{" 'before))))
-
 
 
 

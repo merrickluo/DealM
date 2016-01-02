@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2015-12-22 13:40:47 Tuesday by wongrichard>
+;; Last modified: <2015-12-30 09:53:38 Wednesday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -385,6 +385,14 @@ Major mode for editing JavaScript code.
     ;; TODO make it support C-u to test all project
     (compile (format "cargo test"))
     )
+  (defun cargo-valgrind()
+    (interactive)
+    ;; TODO make it support C-u to test all project
+
+    (projectile-with-default-dir (projectile-project-root)
+      (shell-command (concat "valgrind target/debug/"
+                             (projectile-project-name))))
+    )
 
   (defun rust-electric-pair-inhibit-predicate-wrap-r(char)
     "Wraps the default `electric-pair-inhibit-predicate' to prevent
@@ -395,6 +403,8 @@ Major mode for editing JavaScript code.
            t)
           ((= ?< char)
            t)
+          ((= ?{ char)
+           t)
           (t (funcall (default-value 'electric-pair-inhibit-predicate) char)))
     )
   (setq-local electric-pair-inhibit-predicate
@@ -404,6 +414,7 @@ Major mode for editing JavaScript code.
 
   (local-set-key (kbd "C-c r") 'cargo-run)
   (local-set-key (kbd "C-c t") 'cargo-test)
+  (local-set-key (kbd "C-c v") 'cargo-valgrind)
   (start-program-short-cut)
   ;; compatible with flyspell.
   (electric-spacing-mode))
