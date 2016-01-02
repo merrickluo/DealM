@@ -188,6 +188,14 @@ so let's not get too insert-happy."
      ;; `----
      ((looking-back "!") (electric-spacing-insert "=" 'after))
      (t (electric-spacing-insert "="))))
+   ((derived-mode-p 'python-mode)
+    (cond
+     ;; ,----[ cases ]
+     ;; | fun(a=b, java=aa)
+     ;; `----
+     ((looking-back "([_a-zA-Z0-9= \n,]+")
+      (insert "="))
+     (t (electric-spacing-insert "="))))
    ((derived-mode-p 'rust-mode)
     (cond
      ;; ,----[ cases ]
