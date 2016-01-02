@@ -331,10 +331,13 @@ so let's not get too insert-happy."
          ;; | fn f(vec: Vec<&str>)
          ;; | Ok(data_a + &data_b);
          ;; | file.read_to_string(&mut contents)
+         ;; | match &rhs {
          ;; `----
          (cond ((looking-back "[=:+<>] +")
                 (electric-spacing-insert "&" 'before))
                ((looking-back "[(<]")
+                (insert "&"))
+               ((looking-back "match ")
                 (insert "&"))
                (t
                 (electric-spacing-insert "&"))))
