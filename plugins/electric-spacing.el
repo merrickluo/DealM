@@ -69,6 +69,7 @@
     (?~ . electric-spacing-~)
     (?. . electric-spacing-.)
     (?{ . electric-spacing-\{)
+    (?! . electric-spacing-!)
     (?^ . electric-spacing-self-insert-command)))
 
 (defun electric-spacing-post-self-insert-function ()
@@ -180,11 +181,20 @@ so let's not get too insert-happy."
 (defun electric-spacing-= ()
   "See `electric-spacing-insert'."
   (cond
+   (c-buffer-is-cc-mode
+    (cond
+     ;; ,----[ cases ]
+     ;; | if (a != b)
+     ;; `----
+     ((looking-back "!") (electric-spacing-insert "=" 'after))
+     (t (electric-spacing-insert "="))))
    ((derived-mode-p 'rust-mode)
     (cond
+     ;; ,----[ cases ]
      ;; | type Result<T> = TODO
      ;; | if a != b
-     ((looking-back "<[a-zA-Z0-9(),]+> *") (insert " = "))
+     ;; `----
+     ((looking-back "<[a-zA-Z0-9(),]+> *") (electric-spacing-insert "="))
      ((looking-back "!") (electric-spacing-insert "=" 'after))
      (t (electric-spacing-insert "="))))
    (t
@@ -522,6 +532,20 @@ so let's not get too insert-happy."
          (indent-according-to-mode))
         (t
          (electric-spacing-insert "{" 'before))))
+
+(defun electric-spacing-! ()
+  "See `electric-spacing-insert'."
+  (cond (c-buffer-is-cc-mode
+         ;; ,----[ cases ]
+         ;; | if (!a)
+         ;; | if (a != b)
+         ;; `----
+         (cond ((looking-back "(")
+                (insert "!"))
+               (t
+                (electric-spacing-insert "!" 'before))))
+        (t
+         (insert "!"))))
 
 
 
