@@ -296,10 +296,15 @@ so let's not get too insert-happy."
          ;; | char &a = b; // FIXME
          ;; | void foo(const int& a);
          ;; | char *a = &b;
+         ;; | char &a = s;
          ;; | int c = a & b;
          ;; | a && b;
          ;; `----
-         (cond ((looking-back (concat (electric-spacing-c-types) " *" ))
+         (cond ((looking-back "& ")
+                (electric-spacing-insert "&"))
+               ((looking-back " ")
+                (insert "&"))
+               ((looking-back (concat (electric-spacing-c-types) " *" ))
                 (electric-spacing-insert "&" 'after))
                ((looking-back "= *")
                 (electric-spacing-insert "&" 'before))
@@ -307,7 +312,6 @@ so let's not get too insert-happy."
                 (electric-spacing-insert "&"))))
         ((derived-mode-p 'rust-mode)
          ;; ,----[ cases ]
-         ;; | char &a = b; // FIXME
          ;; | fn foo(v: &a);
          ;; | let a  = &b;
          ;; | let c = a & b;
