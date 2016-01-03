@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2015-12-30 09:53:38 Wednesday by wongrichard>
+;; Last modified: <2016-01-03 10:27:35 Sunday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -227,6 +227,9 @@ Add this to .emacs to run gofmt on the current buffer when saving:
   (highlight-parentheses-mode t)
   (highlight-indentation-mode t)
   (esk-add-watchwords)
+  (autoload 'dash-at-point "dash-at-point"
+    "Search the word at point with Dash." t nil)
+  (local-set-key (kbd "C-c d") 'dash-at-point)
   )
 
 ;; lisp short cut Settings.
@@ -415,6 +418,7 @@ Major mode for editing JavaScript code.
   (local-set-key (kbd "C-c r") 'cargo-run)
   (local-set-key (kbd "C-c t") 'cargo-test)
   (local-set-key (kbd "C-c v") 'cargo-valgrind)
+  (setq dash-at-point-docset "rust")
   (start-program-short-cut)
   ;; compatible with flyspell.
   (electric-spacing-mode))
