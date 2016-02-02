@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2015-12-08 13:00:22 Tuesday by wongrichard>
+;; Last modified: <2016-02-02 18:31:47 Tuesday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -42,7 +42,6 @@
 (global-set-key (kbd "s-v") 'clipboard-yank) ;;paste
 
 ;; Set iedit-mode directly
-(setq iedit-mode t)
 (global-set-key (kbd "C-;") 'iedit-dwim)
 
 ;; occur
