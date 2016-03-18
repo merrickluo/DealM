@@ -11,6 +11,11 @@
 
 ;; configure path depend on system.
 
+;; workaround for tramp, see: http://goo.gl/DUKMC8
+(setq tramp-ssh-controlmaster-options
+      "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
+(require 'tramp)
+
 (defconst emacs-root-path
   (file-name-directory (or load-file-name buffer-file-name)) "Emacs root settings path (in linux)")
 (defconst plugins-path-r
