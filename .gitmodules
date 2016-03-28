@@ -61,3 +61,9 @@
 [submodule "plugins/geiser"]
 	path = plugins/geiser
 	url = https://github.com/jaor/geiser.git
+[submodule "plugins/spinner.el"]
+	path = plugins/spinner.el
+	url = https://github.com/Malabarba/spinner.el.git
+[submodule "plugins/seq.el"]
+	path = plugins/seq.el
+	url = https://github.com/NicolasPetton/seq.el.git

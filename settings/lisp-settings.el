@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2015-01-07 08:03:14 Wednesday by wongrichard>
+;; Last modified: <2016-03-27 22:57:48 Sunday by wongrichard>
 
 ;; Copyright (C) 2013 Richard Wong
 
@@ -14,6 +14,8 @@
 (add-to-list 'load-path (concat plugins-path-r "clojure-mode"))
 (add-to-list 'load-path (concat plugins-path-r "scala-mode2"))
 (add-to-list 'load-path (concat plugins-path-r "cider"))
+(add-to-list 'load-path (concat plugins-path-r "spinner.el"))
+(add-to-list 'load-path (concat plugins-path-r "seq.el"))
 (add-to-list 'load-path (concat plugins-path-r "ac-nrepl"))
 
 (eval-after-load "auto-complete"
