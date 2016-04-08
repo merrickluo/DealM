@@ -67,3 +67,9 @@
 [submodule "plugins/seq.el"]
 	path = plugins/seq.el
 	url = https://github.com/NicolasPetton/seq.el.git
+[submodule "plugins/use-package"]
+	path = plugins/use-package
+	url = https://github.com/jwiegley/use-package.git
+[submodule "plugins/ac-cider"]
+	path = plugins/ac-cider
+	url = https://github.com/clojure-emacs/ac-cider.git
