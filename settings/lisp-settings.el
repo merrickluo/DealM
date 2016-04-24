@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-04-08 20:32:40 Friday by wongrichard>
+;; Last modified: <2016-04-24 21:18:47 Sunday by wongrichard>
 
 ;; Copyright (C) 2013 Richard Wong
 
@@ -38,6 +38,8 @@
 (add-hook 'cider-mode-hook
           (lambda ()
             (define-key cider-mode-map (kbd "C-c C-f") 'yas-find-snippets)
+            (define-key cider-mode-map (kbd "C-c g") 'cider-find-var)
+
             ))
 (add-hook 'cider-repl-mode-hook
           (lambda ()
