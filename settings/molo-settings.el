@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2015-09-11 19:32:36 Friday by wongrichard>
+;; Last modified: <2016-04-25 18:18:42 Monday by wongrichard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -20,8 +20,6 @@
 ;; ------------------------------------------------------------------
 (autoload 'markdown-mode "markdown-mode"
   "Major mode for editing Markdown files" t)
-(setq auto-mode-alist
-      (cons '("\\.te?xt" . markdown-mode) auto-mode-alist))
 
 (require 'org-tree-slide)
 

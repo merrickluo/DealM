@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2015-11-23 22:47:37 Monday by wongrichard>
+;; Last modified: <2016-04-25 18:16:56 Monday by wongrichard>
 
 ;; Copyright (C) 2012-2013 Richard Wong
 
@@ -172,6 +172,7 @@
 
 (autoload 'rust-mode "rust-mode" "" t)
 (autoload 'php-mode "php-mode" "" t)
+(autoload 'cmake-mode "cmake-mode" "" t)
 (autoload 'typescript-mode "typescript" "typescript mode for tss" t)
 
 
