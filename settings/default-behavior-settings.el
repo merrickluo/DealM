@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-04-25 18:16:56 Monday by wongrichard>
+;; Last modified: <2016-05-16 18:13:40 Monday by richard>
 
 ;; Copyright (C) 2012-2013 Richard Wong
 
@@ -171,6 +171,7 @@
 (add-to-list 'load-path (concat plugins-path-r "rust-mode/"))
 
 (autoload 'rust-mode "rust-mode" "" t)
+(autoload 'json-mode "json-mode" "" t)
 (autoload 'php-mode "php-mode" "" t)
 (autoload 'cmake-mode "cmake-mode" "" t)
 (autoload 'typescript-mode "typescript" "typescript mode for tss" t)
