@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-05-16 18:13:40 Monday by richard>
+;; Last modified: <2016-05-19 08:00:46 Thursday by wongrichard>
 
 ;; Copyright (C) 2012-2013 Richard Wong
 
@@ -175,7 +175,7 @@
 (autoload 'php-mode "php-mode" "" t)
 (autoload 'cmake-mode "cmake-mode" "" t)
 (autoload 'typescript-mode "typescript" "typescript mode for tss" t)
-
+(autoload 'adoc-mode "adoc-mode" "" t)
 
 ;; modes definition.
 (setq auto-mode-alist
@@ -215,6 +215,8 @@
                 ("\\.ke$" . kepago-mode)
                 ("\\.markdown$" . markdown-mode)
                 ("\\.md$" . markdown-mode)
+                ("\\.asciidoc$" . adoc-mode)
+                ("\\.txt$" . adoc-mode)
                 ("\\.[Aa][Hh][Kk]$" . xahk-mode)
                 ("\\.[Pp][Hh][Pp]$" . php-mode)
                 ("\\.textile$" . textile-mode)
