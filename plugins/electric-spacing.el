@@ -430,6 +430,10 @@ so let's not get too insert-happy."
          (delete-char -3)
          (insert "->"))
         ((derived-mode-p 'rust-mode)
+         ;; ,----[ cases ]
+         ;; | FIXME: println!("0x80 >> 2 is 0x{:x}", 0x80u32 > >2);
+         ;; `----
+
          (cond ((looking-back "= ") (delete-char -2)
                 (insert "=>"))   ; FIXME: always insert space
                ((looking-back "- ") (delete-char -2)
@@ -462,6 +466,9 @@ so let's not get too insert-happy."
              (delete-horizontal-space)))
          (electric-spacing-insert "-" 'middle)
          (indent-according-to-mode))
+
+        ;; for rust lang
+        ;; let big_range = MinMax(-300, 300);
 
         ;; exponent notation, e.g. 1e-10: don't space
         ((looking-back "[0-9.]+[eE]")
