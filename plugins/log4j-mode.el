@@ -1,36 +1,35 @@
 ;;; log4j-mode.el --- major mode for viewing log files
 
-;; Copyright (C) 2006-2008 Johan Dykstrom
-;; Copyright (C) 2012 Richard Wong
+;; Copyright (C) 2006-2016 Johan Dykstrom
 
-;; Author: Johan Dykstrom <jody4711-sourceforge@yahoo.se>
+;; Author: Johan Dykstrom <jody4711-sf@yahoo.se>
 ;; Created: Jan 2006
-;; Version: 1.4r
-;; Keywords: log, log4j, logging viewer, convinience
+;; Version: 1.4
+;; Keywords: tools
+;; URL: http://log4j-mode.sourceforge.net
 
-;; This program is free software; you can redistribute it and/or
-;; modify it under the terms of the GNU General Public License as
-;; published by the Free Software Foundation; either version 2 of
-;; the License, or (at your option) any later version.
+;; This program is free software: you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
 
-;; This program is distributed in the hope that it will be
-;; useful, but WITHOUT ANY WARRANTY; without even the implied
-;; warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-;; PURPOSE.  See the GNU General Public License for more details.
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
 
-;; You should have received a copy of the GNU General Public
-;; License along with this program; if not, write to the Free
-;; Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
-;; MA 02111-1307 USA
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Commentary:
 
 ;; This package provides a major mode for viewing log files, including syntax
 ;; highlighting, filtering, and source code browsing.
 ;;
-;; Log records are syntax highlighted using keywords such as INFO and ERROR.
-;; Customizable regular expressions are used to find the beginning and end of
-;; multi-line log records.
+;; Log records are syntax highlighted using customizable regular expressions
+;; that contain keywords such as INFO and ERROR. Other customizable regular
+;; expressions are used to find the beginning and end of multi-line log
+;; records.
 ;;
 ;; To filter a log file buffer, type `C-c C-s', and enter the desired filter
 ;; criteria - any number of keywords separated by spaces. Log records that
@@ -52,9 +51,6 @@
 ;;
 ;; Finally, the commands `M-}' and `M-{' are redefined to move to the end
 ;; and beginning of the current log record.
-;;
-;; The latest version of Log4j mode can always be found at
-;; http://log4j-mode.sourceforge.net.
 
 ;; Installation:
 
@@ -71,13 +67,17 @@
 ;; You can customize the faces that are used for syntax highlighting.
 ;; Type `M-x customize-group' and enter group name "log4j-mode".
 ;;
-;; Log file buffers are auto reverted by default. If you don't like that,
-;; set `log4j-auto-revert-flag' to nil.
+;; To customize the regular expressions used to identify log records for
+;; syntax highlighting, change the variables `log4j-match-error-regexp'
+;; etc.
 ;;
 ;; You can also customize the regular expressions that are used to find the
 ;; beginning and end of multi-line log records. However, in many cases this
 ;; will not be necessary. Log4j mode can automatically detect single-line and
 ;; multi-line log records created by Log4j and JDK's built-in logging package.
+;;
+;; Log file buffers are auto reverted by default. If you don't like that,
+;; set `log4j-auto-revert-flag' to nil.
 ;;
 ;; If you use the arrow keys to move around in the text, you can define `C-up'
 ;; and `C-down' to move to the end and beginning of the current log record.
@@ -104,8 +104,8 @@
 
 ;;; Change Log:
 
-;;  1.4    2012-10-22  Make log searching string generalized.
-;;                     Suitable for more languages.
+;;  1.4    2016-01-08  Added customization of log level regexps and case
+;;                     sensitive syntax highlighting.
 ;;  1.3    2008-02-28  Changed load method to autoload. Fixed several XEmacs
 ;;                     bugs. Added customization of Auto Revert mode.
 ;;  1.2.1  2008-02-01  Updated to work with jtags version 0.95.
@@ -120,11 +120,9 @@
 
 ;;; Code:
 
-;; ----------------------------------------------------------------------------
-;; Other packages:
-;; ----------------------------------------------------------------------------
-
 (eval-when-compile (require 'cl))
+
+(require 'autorevert)
 
 ;; Use package jtags if available
 (condition-case nil
@@ -139,6 +137,7 @@
   "Major mode for viewing log files."
   :link '(emacs-library-link :tag "Source File" "log4j-mode.el")
   :group 'faces
+  :group 'tools
   :group 'files)
 
 (defface log4j-font-lock-debug-face '((t (:foreground "Gray45")))
@@ -154,6 +153,13 @@
   :group 'log4j-mode)
 (defvar log4j-font-lock-info-face
   (make-face 'log4j-font-lock-info-face))
+
+(defface log4j-font-lock-config-face '((t (:foreground "ForestGreen")))
+  "*Font Lock face used to highlight CONFIG log records."
+  :group 'font-lock-highlighting-faces
+  :group 'log4j-mode)
+(defvar log4j-font-lock-config-face
+  (make-face 'log4j-font-lock-config-face))
 
 (defface log4j-font-lock-warn-face '((t (:foreground "DodgerBlue")))
   "*Font Lock face used to highlight WARN log records."
@@ -175,6 +181,41 @@
   :group 'log4j-mode)
 (defvar log4j-font-lock-fatal-face
   (make-face 'log4j-font-lock-fatal-face))
+
+(defcustom log4j-case-fold-search nil
+  "*Non-nil if log record searches and matches should ignore case."
+  :type 'boolean
+  :group 'log4j-mode)
+
+(defcustom log4j-match-fatal-regexp "\\<\\(FATAL\\)\\>"
+  "*Regexp that matches a FATAL log record."
+  :type 'regexp
+  :group 'log4j-mode)
+
+(defcustom log4j-match-error-regexp "\\<\\(ERROR\\|SEVERE\\)\\>"
+  "*Regexp that matches an ERROR log record."
+  :type 'regexp
+  :group 'log4j-mode)
+
+(defcustom log4j-match-warn-regexp "\\<\\(WARN\\(?:ING\\)?\\)\\>"
+  "*Regexp that matches a WARN log record."
+  :type 'regexp
+  :group 'log4j-mode)
+
+(defcustom log4j-match-info-regexp "\\<\\(INFO\\)\\>"
+  "*Regexp that matches an INFO log record."
+  :type 'regexp
+  :group 'log4j-mode)
+
+(defcustom log4j-match-config-regexp "\\<\\(CONFIG\\)\\>"
+  "*Regexp that matches a CONFIG log record."
+  :type 'regexp
+  :group 'log4j-mode)
+
+(defcustom log4j-match-debug-regexp "\\<\\(DEBUG\\|FINE\\(?:R\\|ST\\)?\\|STATUS\\)\\>"
+  "*Regexp that matches a DEBUG log record."
+  :type 'regexp
+  :group 'log4j-mode)
 
 (defcustom log4j-record-begin-regexp "^"
   "*Regexp that matches the beginning of a multi-line log record.
@@ -215,46 +256,11 @@ restore the position of the point after auto reverting the buffer."
   :type 'boolean
   :group 'log4j-mode)
 
-(defcustom log4j-keyword-fatal "\\<\\(FATAL\\|CRITICAL\\)\\>"
-  "*string that to mark the fatal level in the log file.
-
-See also function `log4j-match-record-fatal'."
-  :type 'regexp
-  :group 'log4j-mode)
-
-(defcustom log4j-keyword-error "\\<\\(ERROR\\|SEVERE\\)\\>"
-  "*string that to mark the error level in the log file.
-
-See also function `log4j-match-record-error'."
-  :type 'regexp
-  :group 'log4j-mode)
-
-(defcustom log4j-keyword-warn "\\<\\(WARN\\(?:ING\\)?\\)\\>"
-  "*string that to mark the warning level in the log file.
-
-See also function `log4j-match-record-warn'."
-  :type 'regexp
-  :group 'log4j-mode)
-
-(defcustom log4j-keyword-info "\\<\\(CONFIG\\|INFO\\)\\>"
-  "*string that to mark the info level in the log file.
-
-See also function `log4j-match-record-info'."
-  :type 'regexp
-  :group 'log4j-mode)
-
-(defcustom log4j-keyword-debug "\\<\\(DEBUG\\|FINE\\(?:R\\|ST\\)?\\|STATUS\\)\\>"
-  "*string that to mark the debug level in the log file.
-
-See also function `log4j-match-record-debug'."
-  :type 'regexp
-  :group 'log4j-mode)
-
 ;; ----------------------------------------------------------------------------
 ;; Variables:
 ;; ----------------------------------------------------------------------------
 
-(defconst log4j-mode-version "1.3"
+(defconst log4j-mode-version "1.4"
   "The current version of Log4j mode.")
 
 (defvar log4j-mode-hook nil
@@ -307,13 +313,6 @@ This variable is set by function `log4j-guess-file-format'.")
 ;; Generic functions:
 ;; ----------------------------------------------------------------------------
 
-(defun log4j-get-point-in-buffer (buffer)
-  "Return value of point in buffer BUFFER.
-BUFFER may be a buffer or the name of an existing buffer."
-  (save-excursion
-    (set-buffer buffer)
-    (point)))
-
 (defun log4j-filter-list (predicate list)
   "Return a list containing all items satisfying PREDICATE in LIST.
 The original LIST is not modified. PREDICATE should be a function of one
@@ -359,7 +358,8 @@ This function also sets `match-data' to the entire match.
 
 This is a key function in the package. Both syntax highlighting and
 filtering depend on this function being efficient and correct."
-  (let ((org-pos (point)))
+  (let ((case-fold-search log4j-case-fold-search)
+        (org-pos (point)))
     (block while-loop
 
       ;; While there are more matches for REGEXP
@@ -442,9 +442,7 @@ this position."
         ;; file has been overwritten with a new, shorter log file
         (if (> log4j-last-filter-pos (point-max))
             (log4j-setup-buffers))
-        (setq filter-buffer-pos (save-excursion
-                                  (set-buffer filter-buffer-name)
-                                  (point)))
+        (setq filter-buffer-pos (with-current-buffer filter-buffer-name (point)))
 
         (if auto-revert-verbose
             (message "Filtering buffer `%s'." source-buffer-name))
@@ -588,7 +586,8 @@ first line of the declaration."
             (let ((file (jtags-definition-file definition))
                   (line (jtags-definition-line definition)))
               (pop-to-buffer (find-file-noselect file t))
-              (goto-line line)
+              (goto-char (point-min))
+              (forward-line (1- line))
               (message "Found tag in %s" file))))))))
 
 ;; ----------------------------------------------------------------------------
@@ -614,29 +613,34 @@ first line of the declaration."
 
 (defun log4j-match-record-fatal (bound)
   "Search forward from point to BOUND for FATAL log record."
-  (log4j-record-search-forward log4j-keyword-fatal bound))
+  (log4j-record-search-forward log4j-match-fatal-regexp bound))
 
 (defun log4j-match-record-error (bound)
   "Search forward from point to BOUND for ERROR log record."
-  (log4j-record-search-forward log4j-keyword-error bound))
+  (log4j-record-search-forward log4j-match-error-regexp bound))
 
 (defun log4j-match-record-warn (bound)
   "Search forward from point to BOUND for WARN log record."
-  (log4j-record-search-forward log4j-keyword-warn bound))
+  (log4j-record-search-forward log4j-match-warn-regexp bound))
 
 (defun log4j-match-record-info (bound)
   "Search forward from point to BOUND for INFO log record."
-  (log4j-record-search-forward log4j-keyword-info bound))
+  (log4j-record-search-forward log4j-match-info-regexp bound))
+
+(defun log4j-match-record-config (bound)
+  "Search forward from point to BOUND for CONFIG log record."
+  (log4j-record-search-forward log4j-match-config-regexp bound))
 
 (defun log4j-match-record-debug (bound)
   "Search forward from point to BOUND for DEBUG level log record."
-  (log4j-record-search-forward log4j-keyword-debug bound))
+  (log4j-record-search-forward log4j-match-debug-regexp bound))
 
 (defvar log4j-font-lock-keywords
   (list '(log4j-match-record-fatal 0 'log4j-font-lock-fatal-face)
         '(log4j-match-record-error 0 'log4j-font-lock-error-face)
         '(log4j-match-record-warn  0 'log4j-font-lock-warn-face)
         '(log4j-match-record-info  0 'log4j-font-lock-info-face)
+        '(log4j-match-record-config  0 'log4j-font-lock-config-face)
         '(log4j-match-record-debug 0 'log4j-font-lock-debug-face))
   "Describes how to syntax highlight keywords in Log4j mode buffers.")
 
@@ -783,6 +787,11 @@ of a Java identifier found in the log file.
 
 You can customize the faces that are used for syntax highlighting.
 Type `M-x customize-group' and enter group name \"log4j-mode\".
+
+To customize the regular expressions used to identify log records for
+syntax highlighting, change the variables `log4j-match-error-regexp'
+etc.
+
 You can also customize the regular expressions that are used to find
 the beginning and end of multi-line log records. However, in many
 cases this will not be necessary.
@@ -806,9 +815,6 @@ across log records.
   ;; Set major mode variables
   (setq major-mode 'log4j-mode)
   (setq mode-name "Log4j")
-
-  ;; Make search case sensitive
-  (setq case-fold-search nil)
 
   ;; Guess log file format based on patterns found in file
   (log4j-guess-file-format)
@@ -837,7 +843,7 @@ across log records.
     (add-hook 'after-revert-hook 'log4j-after-revert-function nil t))
 
   ;; Run any Log4j mode start-up hooks
-  (run-hooks 'log4j-mode-hook))
+  (run-mode-hooks 'log4j-mode-hook))
 
 (provide 'log4j-mode)
 

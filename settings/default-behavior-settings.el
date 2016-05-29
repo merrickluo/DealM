@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-05-19 08:00:46 Thursday by wongrichard>
+;; Last modified: <2016-05-29 10:29:35 Sunday by richard>
 
 ;; Copyright (C) 2012-2013 Richard Wong
 
@@ -153,12 +153,15 @@
 
 ;; log mode to replace fundamentals
 (autoload 'log4j-mode "log4j-mode" "" t )
+(autoload 'log4j-mode-hook "log4j-mode" "" t )
+(add-hook 'log4j-mode-hook (lambda () (itail-mode)))
+
 ;; settings for log4j-mode
-(setq log4j-keyword-fatal "^\\[C.*\\]\\|\\<\\(FATAL\\|CRITICAL\\)\\>"
-      log4j-keyword-error "^\\[E.*\\]\\|\\<\\(ERROR\\|SEVERE\\|\\[E.*\\]\\)\\>"
-      log4j-keyword-warn  "^\\[W.*\\]\\|\\<\\(WARN\\(?:ING\\)?\\|\\[W.*\\]\\)\\>"
-      log4j-keyword-debug "^\\[D.*\\]\\|\\<\\(DEBUG\\|FINE\\(?:R\\|ST\\)?\\|STATUS\\)\\>"
-      log4j-keyword-info  "^\\[I.*\\]\\|\\<\\(CONFIG\\|INFO\\)\\>")
+;; (setq log4j-keyword-fatal "^\\[C.*\\]\\|\\<\\(FATAL\\|CRITICAL\\)\\>"
+;;       log4j-keyword-error "^\\[E.*\\]\\|\\<\\(ERROR\\|SEVERE\\|\\[E.*\\]\\)\\>"
+;;       log4j-keyword-warn  "^\\[W.*\\]\\|\\<\\(WARN\\(?:ING\\)?\\|\\[W.*\\]\\)\\>"
+;;       log4j-keyword-debug "^\\[D.*\\]\\|\\<\\(DEBUG\\|FINE\\(?:R\\|ST\\)?\\|STATUS\\)\\>"
+;;       log4j-keyword-info  "^\\[I.*\\]\\|\\<\\(CONFIG\\|INFO\\)\\>")
 
 (autoload 'xahk-mode "xahk-mode" "" t)
 
