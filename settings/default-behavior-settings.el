@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-05-29 10:29:35 Sunday by richard>
+;; Last modified: <2016-05-29 10:36:58 Sunday by richard>
 
 ;; Copyright (C) 2012-2013 Richard Wong
 
@@ -154,6 +154,8 @@
 ;; log mode to replace fundamentals
 (autoload 'log4j-mode "log4j-mode" "" t )
 (autoload 'log4j-mode-hook "log4j-mode" "" t )
+
+(autoload 'itail-mode "itail" "" t)
 (add-hook 'log4j-mode-hook (lambda () (itail-mode)))
 
 ;; settings for log4j-mode
