@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-01-03 10:27:35 Sunday by wongrichard>
+;; Last modified: <2016-07-18 12:22:30 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -126,7 +126,6 @@ Add this to .emacs to run gofmt on the current buffer when saving:
  (add-hook 'before-save-hook #'gofmt-before-save)
 
 \(fn)" t nil)
-
 
 
 
@@ -288,6 +287,14 @@ Add this to .emacs to run gofmt on the current buffer when saving:
 
   (local-set-key (kbd "C-c C")   'comment-function))
 
+
+;; java short cut settings.
+;; ==================================================================
+(defun java-short-cut ()
+  (require 'jdee)
+  (add-to-list 'load-path (concat plugins-path-r "jdee/"))
+  (setq c-basic-offset 4))
+
 ;; c-common-mode short cut settings.
 ;; ==================================================================
 (defun c-common-short-cut()
@@ -438,6 +445,8 @@ Major mode for editing JavaScript code.
 (add-hook 'LaTex-mode-hook      'tex-short-cut)
 (add-hook 'js2-mode-hook        'js2-short-cut)
 (add-hook 'jade-mode-hook       'jade-short-cut)
+(add-hook 'java-mode-hook       'java-short-cut)
+
 (add-hook 'rust-mode-hook       'rust-short-cut)
 (when (string= system-type "windows-nt")
   (autoload 'powershell "powershell" "DOCSTRING" t)

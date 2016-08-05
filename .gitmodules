@@ -73,3 +73,6 @@
 [submodule "plugins/ac-cider"]
 	path = plugins/ac-cider
 	url = https://github.com/clojure-emacs/ac-cider.git
+[submodule "plugins/jdee"]
+	path = plugins/jdee
+	url = https://github.com/jdee-emacs/jdee.git
