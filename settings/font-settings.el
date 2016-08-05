@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2015-09-27 08:19:51 Sunday by wongrichard>
+;; Last modified: <2016-08-05 14:25:20 Friday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -21,6 +21,17 @@ default value is `unicode-fonts-fontset-names'."
 (add-hook 'org-mode-hook 'unicode-fonts-setup)
 
 (set-face-attribute 'default nil :font default-source-font-r)
+
+;; demo `default-chinese-font-family-r':
+;; - "Source Han Sans"
+;; - "PingFang SC"
+
+(when (boundp 'default-chinese-font-family-r)
+  (dolist (charset '(kana han symbol cjk-misc bopomofo))
+    (set-fontset-font (frame-parameter nil 'font)
+                      charset (font-spec :family default-chinese-font-family-r
+                                         :height 12
+                                         :size 14))))
 
 (defun special-font()
   "Change special buffer to special font.
