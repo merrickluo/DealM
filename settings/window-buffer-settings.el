@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2015-01-28 16:22:16 Wednesday by wongrichard>
+;; Last modified: <2016-08-25 16:06:18 Thursday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -71,8 +71,6 @@
   (interactive)
   (unless (minibufferp)
     (switch-to-buffer (other-buffer))))
-
-(global-set-key (kbd "M-'") 'previous-buffer)
 
 
 
