@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-04-24 21:18:47 Sunday by wongrichard>
+;; Last modified: <2016-08-26 11:29:59 Friday by richard>
 
 ;; Copyright (C) 2013 Richard Wong
 
@@ -91,10 +91,11 @@
      (define-key paredit-mode-map (kbd "M-)") 'paredit-forward-slurp-sexp)
      (define-key paredit-mode-map (kbd "M-(") 'paredit-backward-slurp-sexp)))
 
-
-(add-hook 'emacs-lisp-mode-hook       (lambda () (paredit-mode +1)))
-(add-hook 'lisp-mode-hook             (lambda () (paredit-mode +1)))
-(add-hook 'lisp-interaction-mode-hook (lambda () (paredit-mode +1)))
+(dolist (hook '(emacs-lisp-mode-hook
+                clojure-mode-hook
+                lisp-mode-hook
+                lisp-interaction-mode-hook))
+  (add-hook hook (lambda () (paredit-mode +1))))
 
 ;; Settings for elisp
 ;; -------------------------------------[Settings for elisp]
