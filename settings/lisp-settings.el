@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-08-26 11:29:59 Friday by richard>
+;; Last modified: <2016-08-27 10:37:47 Saturday by wongrichard>
 
 ;; Copyright (C) 2013 Richard Wong
 
@@ -12,55 +12,69 @@
 ;; Settings for clojure
 ;; -----------------------------------[Settings for clojure]
 (add-to-list 'load-path (concat plugins-path-r "clojure-mode"))
-(add-to-list 'load-path (concat plugins-path-r "scala-mode2"))
 (add-to-list 'load-path (concat plugins-path-r "cider"))
 (add-to-list 'load-path (concat plugins-path-r "spinner.el"))
-(add-to-list 'load-path (concat plugins-path-r "seq.el"))
 (add-to-list 'load-path (concat plugins-path-r "ac-cider"))
 
 (eval-after-load "auto-complete"
   '(add-to-list 'ac-modes 'nrepl-mode))
 
-(require 'clojure-mode)
-(require 'scala-mode2)
-(require 'cider)
+(use-package
+  paredit
+  :commands (paredit-mode)
+  :bind (:map paredit-mode-map
+              ("M-)" . paredit-forward-slurp-sexp)
+              ("M-(" . paredit-backward-slurp-sexp)))
 
-(autoload 'clojure-mode "clojure-mode" "" t)
-(autoload 'ac-cider-setup "ac-cider" "" t)
-(autoload 'ac-flyspell-workaround "ac-cider" "" t)
-(add-hook 'nrepl-mode-hook 'ac-cider-setup)
-(add-hook 'nrepl-interaction-mode-hook 'ac-cider-setup)
-(add-hook 'nrepl-interaction-mode-hook 'eldoc-mode)
-(add-hook 'cider-mode-hook 'ac-flyspell-workaround)
-(add-hook 'cider-mode-hook 'ac-cider-setup)
-(add-hook 'cider-mode-hook 'eldoc-mode)
-(add-hook 'cider-repl-mode-hook 'subword-mode)
-(add-hook 'cider-mode-hook
-          (lambda ()
-            (define-key cider-mode-map (kbd "C-c C-f") 'yas-find-snippets)
-            (define-key cider-mode-map (kbd "C-c g") 'cider-find-var)
+(use-package
+  flycheck-clojure
+  :defer t
+  :after (flycheck cider)
+  :config
+  (flycheck-clojure-setup))
 
-            ))
-(add-hook 'cider-repl-mode-hook
-          (lambda ()
-            (setq dash-at-point-docset "clojure")
-            (autoload 'dash-at-point "dash-at-point"
-              "Search the word at point with Dash." t nil)
-            (define-key cider-repl-mode-map (kbd "C-c d") 'dash-at-point)))
+(use-package
+  ac-cider
+  :defer t
+  :commands (ac-cider-setup ac-flyspell-workaround))
 
-(add-hook 'clojure-mode-hook
-          (lambda ()
-            (define-key cider-mode-map (kbd "C-c C-f") 'yas-find-snippets)))
+(use-package
+  cider
+  :defer t
+  :commands (cider-mode)
+  :init
+  (setq nrepl-hide-special-buffers t
+        nrepl-buffer-name-show-port t
+        cider-prefer-local-resources t
+        cider-repl-display-in-current-window t
+        cider-repl-history-size 10000
+        cider-repl-result-prefix ";; => "
+        cider-repl-history-file (concat emacs-root-path "cider-repl.history")
+        cider-stacktrace-fill-column 80)
+  :bind (:map cider-mode-map            ; bind keys in specific map
+              ("C-c C-f" . yas-find-snippets)
+              ("C-c g"   . cider-find-var))
+  :config
+  (add-hook 'nrepl-mode-hook 'ac-cider-setup)
+  (add-hook 'nrepl-interaction-mode-hook 'ac-cider-setup)
+  (add-hook 'nrepl-interaction-mode-hook 'eldoc-mode)
+  (add-hook 'cider-mode-hook 'ac-flyspell-workaround)
+  (add-hook 'cider-mode-hook 'ac-cider-setup)
+  (add-hook 'cider-mode-hook 'eldoc-mode)
+  (add-hook 'cider-repl-mode-hook 'subword-mode)
+  (add-hook 'cider-repl-mode-hook
+            (lambda ()
+              (setq dash-at-point-docset "clojure")
+              (autoload 'dash-at-point "dash-at-point"
+                "Search the word at point with Dash." t nil)
+              (define-key cider-repl-mode-map (kbd "C-c d") 'dash-at-point))))
 
-(setq nrepl-hide-special-buffers t
-      nrepl-buffer-name-show-port t
-      cider-prefer-local-resources t
-      cider-repl-display-in-current-window t
-      cider-repl-history-size 10000
-      cider-repl-result-prefix ";; => "
-      cider-repl-history-file (concat emacs-root-path "cider-repl.history")
-      cider-stacktrace-fill-column 80)
-
+(use-package
+  clojure-mode
+  :config
+  (paredit-mode +1)
+  (add-hook 'clojure-mode-hook 'cider-mode)
+  :mode ("\.clj\'" . clojure-mode))
 
 (eval-after-load "ob"
   ;; clojure integration for emacs
@@ -81,21 +95,16 @@
   '(progn
      (add-to-list 'ac-modes 'nrepl-mode)))
 
-;; paredit
-(autoload 'paredit-mode "paredit"
-  "Minor mode for pseudo-structurally editing Lisp code." t)
-
-(eval-after-load 'paredit
-  ;; need a binding that works in the terminal
-  '(progn
-     (define-key paredit-mode-map (kbd "M-)") 'paredit-forward-slurp-sexp)
-     (define-key paredit-mode-map (kbd "M-(") 'paredit-backward-slurp-sexp)))
-
 (dolist (hook '(emacs-lisp-mode-hook
-                clojure-mode-hook
                 lisp-mode-hook
                 lisp-interaction-mode-hook))
   (add-hook hook (lambda () (paredit-mode +1))))
+
+;; Settings for scala
+;; -------------------------------------[Settings for scala]
+(add-to-list 'load-path (concat plugins-path-r "scala-mode2"))
+;; (require 'scala-mode2)
+
 
 ;; Settings for elisp
 ;; -------------------------------------[Settings for elisp]
@@ -103,6 +112,7 @@
 (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
 (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
 (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
+
 (eval-after-load "eldoc"
   '(eldoc-add-command
     'paredit-backward-delete

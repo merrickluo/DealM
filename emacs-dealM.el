@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-08-27 08:40:56 Saturday by wongrichard>
+;; Last modified: <2016-08-27 10:22:32 Saturday by wongrichard>
 
 ;; Copyright (C) 2012-2015 Richard Wong
 
@@ -47,6 +47,7 @@
 ;; tools
 ;; ------------------------------------------------------------------
 (require 'use-package)
+(require 'flycheck-settings)
 (require 'git-settings)
 (require 'yasnippet-settings)
 (require 'unicode-settings)
