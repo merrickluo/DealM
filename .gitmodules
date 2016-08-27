@@ -76,3 +76,6 @@
 [submodule "plugins/jdee"]
 	path = plugins/jdee
 	url = https://github.com/jdee-emacs/jdee.git
+[submodule "plugins/flycheck"]
+	path = plugins/flycheck
+	url = https://github.com/flycheck/flycheck.git
