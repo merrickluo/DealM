@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2015-12-08 13:36:34 Tuesday by wongrichard>
+;; Last modified: <2016-08-27 08:21:34 Saturday by wongrichard>
 
 ;; Copyright (C) 2012-2015 Richard Wong
 
@@ -41,10 +41,12 @@
 (add-to-list 'load-path settings-path-r)
 (add-to-list 'load-path plugins-path-r)
 (add-to-list 'load-path (concat plugins-path-r "dash/"))
+(add-to-list 'load-path (concat plugins-path-r "use-package/"))
 
 
 ;; tools
 ;; ------------------------------------------------------------------
+(require 'use-package)
 (require 'git-settings)
 (require 'yasnippet-settings)
 (require 'unicode-settings)
