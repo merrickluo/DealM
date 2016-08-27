@@ -31,9 +31,6 @@
 [submodule "plugins/emacs-quickrun"]
 	path = plugins/emacs-quickrun
 	url = https://github.com/syohex/emacs-quickrun.git
-[submodule "python-lib"]
-	path = python-lib
-	url = https://github.com/chao787/python-libs.git
 [submodule "plugins/rainbow-delimiters"]
 	path = plugins/rainbow-delimiters
 	url = https://github.com/jlr/rainbow-delimiters.git
