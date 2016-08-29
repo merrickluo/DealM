@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-08-27 10:37:47 Saturday by wongrichard>
+;; Last modified: <2016-08-29 10:13:43 Monday by richard>
 
 ;; Copyright (C) 2013 Richard Wong
 
@@ -72,8 +72,9 @@
 (use-package
   clojure-mode
   :config
-  (paredit-mode +1)
-  (add-hook 'clojure-mode-hook 'cider-mode)
+  (add-hook 'clojure-mode-hook
+            (lambda () (paredit-mode +1)
+              (cider-mode +1)))
   :mode ("\.clj\'" . clojure-mode))
 
 (eval-after-load "ob"
