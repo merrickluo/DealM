@@ -76,3 +76,6 @@
 [submodule "plugins/flycheck"]
 	path = plugins/flycheck
 	url = https://github.com/flycheck/flycheck.git
+[submodule "plugins/with-editor"]
+	path = plugins/with-editor
+	url = https://github.com/magit/with-editor.git
