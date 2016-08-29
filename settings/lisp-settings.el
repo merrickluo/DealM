@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-08-29 11:51:13 Monday by richard>
+;; Last modified: <2016-08-29 18:23:47 Monday by richard>
 
 ;; Copyright (C) 2013 Richard Wong
 
@@ -18,13 +18,6 @@
 
 (eval-after-load "auto-complete"
   '(add-to-list 'ac-modes 'nrepl-mode))
-
-(use-package
-  paredit
-  :commands (paredit-mode)
-  :bind (:map paredit-mode-map
-              ("M-)" . paredit-forward-slurp-sexp)
-              ("M-(" . paredit-backward-slurp-sexp)))
 
 (use-package
   flycheck-clojure
