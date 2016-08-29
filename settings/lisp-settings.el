@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-08-29 11:08:40 Monday by richard>
+;; Last modified: <2016-08-29 11:51:13 Monday by richard>
 
 ;; Copyright (C) 2013 Richard Wong
 
@@ -65,7 +65,6 @@
   (add-hook 'cider-mode-hook 'ac-flyspell-workaround)
   (add-hook 'cider-mode-hook 'ac-cider-setup)
   (add-hook 'cider-mode-hook 'eldoc-mode)
-  (add-hook 'cider-mode-hook 'cider-macroexpansion-mode)
   (add-hook 'cider-repl-mode-hook 'subword-mode)
   (add-hook 'cider-repl-mode-hook
             (lambda ()

@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-07-18 12:22:30 Monday by richard>
+;; Last modified: <2016-08-29 11:51:23 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -212,7 +212,6 @@ Add this to .emacs to run gofmt on the current buffer when saving:
   ;; RET is reindent thisline and indent the new line.
   (local-set-key (kbd "RET")     'reindent-then-newline-and-indent)
   (local-set-key "\C-k"          'program-smart-kill)
-  (local-set-key (kbd "C-c RET") 'compile-buffer)
   (local-set-key (kbd "C-c C-c") 'comment)
   (add-to-list 'write-file-functions 'delete-trailing-whitespace)
   (linum-mode t)
