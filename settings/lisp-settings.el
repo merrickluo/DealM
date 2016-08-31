@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-08-29 18:23:47 Monday by richard>
+;; Last modified: <2016-08-31 21:03:53 Wednesday by wongrichard>
 
 ;; Copyright (C) 2013 Richard Wong
 
@@ -15,6 +15,10 @@
 (add-to-list 'load-path (concat plugins-path-r "cider"))
 (add-to-list 'load-path (concat plugins-path-r "spinner.el"))
 (add-to-list 'load-path (concat plugins-path-r "ac-cider"))
+
+(use-package
+  paredit
+  :commands (paredit-mode))
 
 (eval-after-load "auto-complete"
   '(add-to-list 'ac-modes 'nrepl-mode))
