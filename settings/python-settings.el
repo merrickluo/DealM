@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-08-27 08:22:52 Saturday by wongrichard>
+;; Last modified: <2016-09-04 21:10:00 Sunday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -47,9 +47,7 @@
    (jedi-mode 1))
 
  :mode ("\\.py\\'" . python-mode)      ; mode name is diff from package
- :interpreter ("python" . python-mode)
- :mode "\\.rb\\'"
- :interpreter "ruby")
+ :interpreter ("python" . python-mode))
 
 (add-to-list 'load-path (concat plugins-path-r "emacs-jedi/"))
 (add-to-list 'load-path (concat plugins-path-r "emacs-python-environment/"))
