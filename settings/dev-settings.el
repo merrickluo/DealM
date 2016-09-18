@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-08-29 11:51:23 Monday by richard>
+;; Last modified: <2016-09-18 10:43:58 Sunday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -23,7 +23,6 @@ Insert operators with surrounding spaces smartly.
 
 (add-to-list 'auto-mode-alist '("\\.cuh?\\'" . cuda-mode))
 
-(require 'sr-speedbar)
 (eval-after-load "highlight-indentation"
   '(progn
      (set-face-background 'highlight-indentation-face "grey30")
@@ -188,7 +187,6 @@ Add this to .emacs to run gofmt on the current buffer when saving:
 (add-to-list 'load-path (concat plugins-path-r "rainbow-delimiters/"))
 (autoload 'rainbow-delimiters-mode "rainbow-delimiters.el" "" t)
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
-(setq rainbow-delimiters-unmatched-face)
 (autoload 'highlight-parentheses-mode "highlight-parentheses")
 
 (setq hl-paren-colors '("red" "yellow" "cyan" "magenta" "green" "red"))
