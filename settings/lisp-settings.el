@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-08-31 21:03:53 Wednesday by wongrichard>
+;; Last modified: <2016-09-18 11:06:55 Sunday by richard>
 
 ;; Copyright (C) 2013 Richard Wong
 
@@ -72,9 +72,13 @@
 
 (use-package
   clojure-mode
+  :bind (:map clojure-mode-map             ; bind keys in specific map
+              ("M-SPC" . fixup-whitespace) ; from simple.el
+              ("C-c g" . cider-find-var))
   :config
   (add-hook 'clojure-mode-hook
-            (lambda () (paredit-mode +1)
+            (lambda ()
+              (paredit-mode +1)
               (cider-mode +1)))
   :mode ("\.clj\'" . clojure-mode))
 
@@ -82,10 +86,8 @@
   ;; clojure integration for emacs
   '(progn
      (defun clojure-for-org-mode()
-
        (defvar org-babel-default-header-args:clojure
          '((:results . "silent") (:tangle . "yes")))
-
        (defun org-babel-execute:clojure (body params)
          "Evaluate a block of Clojure code with Babel."
          (lisp-eval-string body)
