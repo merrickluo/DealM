@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-05-29 10:36:58 Sunday by richard>
+;; Last modified: <2016-09-20 17:47:52 Tuesday by richard>
 
 ;; Copyright (C) 2012-2013 Richard Wong
 
@@ -218,8 +218,6 @@
                 ("\\.y[s]?$" . snippet-mode)
                 ("headx$" . snippet-mode)
                 ("\\.ke$" . kepago-mode)
-                ("\\.markdown$" . markdown-mode)
-                ("\\.md$" . markdown-mode)
                 ("\\.asciidoc$" . adoc-mode)
                 ("\\.txt$" . adoc-mode)
                 ("\\.[Aa][Hh][Kk]$" . xahk-mode)
