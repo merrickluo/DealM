@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-08-27 10:22:32 Saturday by wongrichard>
+;; Last modified: <2016-09-20 17:53:43 Tuesday by richard>
 
 ;; Copyright (C) 2012-2015 Richard Wong
 
@@ -48,7 +48,6 @@
 ;; ------------------------------------------------------------------
 (require 'use-package)
 (require 'flycheck-settings)
-(require 'git-settings)
 (require 'yasnippet-settings)
 (require 'unicode-settings)
 (require 'command-frequence)
@@ -80,7 +79,7 @@
 (require 'webdev-settings)
 (require 'python-settings)
 (require 'lisp-settings)
-(require 'molo-settings)
+(require 'org-settings)
 
 ;; desktop settings
 ;; (require 'desktop-settings)

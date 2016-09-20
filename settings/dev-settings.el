@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-09-18 10:43:58 Sunday by richard>
+;; Last modified: <2016-09-20 17:54:49 Tuesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -448,6 +448,21 @@ Major mode for editing JavaScript code.
 (when (string= system-type "windows-nt")
   (autoload 'powershell "powershell" "DOCSTRING" t)
   )
+
+;; git (magit) settings here
+;; ==================================================================
+(add-to-list 'load-path (concat plugins-path-r "magit/lisp"))
+(add-to-list 'load-path (concat plugins-path-r "with-editor"))
+(add-to-list 'load-path (concat plugins-path-r "git-modes"))
+
+(use-package magit
+  :bind (("C-x v z" . magit-status)))
+
+(use-package magit
+  :after (dired)
+  :bind (:map dired-mode-map
+              ("c" . magit-status)))
+
 
 
 (provide 'dev-settings)

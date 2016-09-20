@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-09-20 17:47:52 Tuesday by richard>
+;; Last modified: <2016-09-20 17:53:06 Tuesday by richard>
 
 ;; Copyright (C) 2012-2013 Richard Wong
 
@@ -240,6 +240,13 @@
                 ("SCons\\(cript\\|truct\\)" . python-mode)
                 ("\\.gclient$" . python-mode)
                 ) auto-mode-alist))
+
+;; markdown-settings
+(use-package markdown-mode
+  :mode
+  "\\.markdown\\'"
+  "\\.md\\'"
+  "\\.text\\'")
 
 ;; tramp-settings
 (eval-after-load "tramp-sh"
