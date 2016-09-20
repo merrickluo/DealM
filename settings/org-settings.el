@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-09-20 17:43:53 Tuesday by richard>
+;; Last modified: <2016-09-20 18:04:53 Tuesday by richard>
 
 ;; Copyright (C) 2016 Richard Wong
 
@@ -9,7 +9,9 @@
 ;; Version: 0.1
 ;; PUBLIC LICENSE: GPLv3
 
-(require 'org-tree-slide)
+(use-package org-tree-slide
+  :after (org)
+  :commands (org-tree-slide-mode))
 
 (use-package org
   :commands (org-mode)

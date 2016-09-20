@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-09-20 17:53:43 Tuesday by richard>
+;; Last modified: <2016-09-20 18:05:08 Tuesday by richard>
 
 ;; Copyright (C) 2012-2015 Richard Wong
 
@@ -37,6 +37,8 @@
   :type 'string
   :group 'dealM)
 
+(set-face-attribute 'default nil :font default-source-font-r)
+
 ;; add load path
 (add-to-list 'load-path settings-path-r)
 (add-to-list 'load-path plugins-path-r)
@@ -60,7 +62,6 @@
 ;; ------------------------------------------------------------------
 (require 'theme-settings)
 (require 'modeline-settings)
-(require 'font-settings)
 (require 'auto-color-settings)
 
 
