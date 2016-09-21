@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-09-20 17:54:49 Tuesday by richard>
+;; Last modified: <2016-09-21 12:08:53 Wednesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -95,91 +95,73 @@ With a prefix argument, highlight for that many seconds.
 (autoload 'toggle-highlight-other-chars "show-wspace" "" t)
 (autoload 'toggle-highlight-trailing-whitespace "show-wspace" "" t)
 
-;; watch specific word color
-;; ------------------------------------------------------------------
-(defun esk-add-watchwords ()
-  (font-lock-add-keywords
-   nil '(("\\<\\(FIX\\(ME\\)?\\|TODO\\|HACK\\|REFACTOR\\|NOCOMMIT\\|WARN\\(ING\\)?\\)"
-          1 font-lock-warning-face t))))
-
 
 ;; Go-mode settings. (go programming language)
 ;; ------------------------------------------------------------------
-(autoload 'go-mode "go-mode" "\
-Major mode for editing Go source text.
+(use-package go-mode
+  :commands (gofmt gofmt-before-save)
+  :mode "\\.go\\'")
 
-This provides basic syntax highlighting for keywords, built-ins,
-functions, and some types.  It also provides indentation that is
-\(almost) identical to gofmt.
+
+;; git (magit) settings here
+;; ------------------------------------------------------------------
+(add-to-list 'load-path (concat plugins-path-r "magit/lisp"))
+(add-to-list 'load-path (concat plugins-path-r "with-editor"))
+(add-to-list 'load-path (concat plugins-path-r "git-modes"))
 
-\(fn)" t nil)
+(use-package magit
+  :bind (("C-x v z" . magit-status)))
 
-(autoload 'gofmt "go-mode" "\
-Pipe the current buffer through the external tool `gofmt`.
-Replace the current buffer on success; display errors on failure.
+(use-package magit
+  :after (dired)
+  :bind (:map dired-mode-map
+              ("c" . magit-status)))
 
-\(fn)" t nil)
-
-(autoload 'gofmt-before-save "go-mode" "\
-Add this to .emacs to run gofmt on the current buffer when saving:
- (add-hook 'before-save-hook #'gofmt-before-save)
-
-\(fn)" t nil)
 
 
 
 ;; Projectile settings. more smarter than ftf
 ;; ------------------------------------------------------------------
-(require 'projectile)
-(defun smart-find-file ()
-  (interactive)
-  (if (projectile-project-p)
-      (call-interactively 'projectile-find-file)
-    (call-interactively 'ido-find-file)))
 
-(defun feeling-lucky-grep (pattern)
-  (interactive
-   (list (read-string "git grep: "
-                      (shell-quote-argument (grep-tag-default)))))
-  (require 'magit)
-  (with-current-buffer (generate-new-buffer "*Magit Grep*")
-    (setq default-directory (projectile-project-root))
-    (insert magit-git-executable " "
-            (mapconcat 'identity magit-git-standard-options " ")
-            " grep -n "
-            (shell-quote-argument pattern) "\n\n")
-    (magit-git-insert "grep" "--line-number" "--color" pattern)
-    (ansi-color-apply-on-region (point-min) (point-max))
-    ;; probably need to change the order of these two.
-    (grep-mode)
-    (pop-to-buffer (current-buffer))
-    )
-  ;; Am I lucky here?
-  ;; (when (= (count-lines (point-min) (point-max)) 3)
-  ;;   (let* ((cf (current-window-configuration))
-  ;;          (grep-buffer (current-buffer))
-  ;;          (target-buffer (progn (first-error) (current-buffer))))
-  ;;     (message "killed buffer")
-  ;;     (kill-buffer (current-buffer))
-  ;;     (set-window-configuration cf)
-  ;;     (replace-buffer-in-windows target-buffer)
-  ;;     ))
-  )
 
-(defun smart-grep (&optional arg)
-  (interactive "p")
-  (or arg (setq arg 1))
-  (if (string-equal (projectile-project-vcs) "git")
-      (if (= arg 1)
-          (call-interactively 'feeling-lucky-grep)
-        (call-interactively 'vc-git-grep))
-    (call-interactively 'projectile-grep)))
+(use-package projectile
+  :defer t  ; :commands, :bind*?, :bind-keymap*?, :mode, :interpreter implies
+  :commands ; for autoload
+  (projectile-project-p projectile-find-file projectile-project-vcs)
+  :config   ; execute code after a package is loaded
+  (defun smart-find-file ()
+    (interactive)
+    (if (projectile-project-p)
+        (call-interactively 'projectile-find-file)
+      (call-interactively 'ido-find-file)))
+  (defun feeling-lucky-grep (pattern)
+    (interactive
+     (list (read-string "git grep: "
+                        (shell-quote-argument (grep-tag-default)))))
+    (require 'magit)
+    (with-current-buffer (generate-new-buffer "*Magit Grep*")
+      (let ((default-directory (projectile-project-root)))
+        (insert magit-git-executable " "
+                (mapconcat 'identity magit-git-standard-options " ")
+                " grep -n "
+                (shell-quote-argument pattern) "\n\n")
+        (magit-git-insert "grep" "--line-number" "--color" pattern)
+        (ansi-color-apply-on-region (point-min) (point-max))
+        ;; probably need to change the order of these two.
+        (grep-mode)
+        (pop-to-buffer (current-buffer)))))
+  (defun smart-grep ()
+    (interactive)
+    (if (eq (projectile-project-vcs) 'git)
+        (call-interactively 'feeling-lucky-grep)
+      (call-interactively 'projectile-grep)))
+  :bind (("<f1>" . smart-find-file)
+         ("<f2>" . smart-grep)))
 
-(global-set-key '[f1] 'smart-find-file)
-(global-set-key '[f2] 'smart-grep)
-
-(eval-after-load "dired"
-  '(define-key dired-mode-map '[f1] 'smart-find-file))
+(use-package projectile
+  :after (dired)
+  :bind (:map dired-mode-map
+              ("<f1>" . smart-find-file)))
 
 
 ;; parenthses settings
@@ -222,7 +204,12 @@ Add this to .emacs to run gofmt on the current buffer when saving:
   ;; (toggle-highlight-other-chars)
   (highlight-parentheses-mode t)
   (highlight-indentation-mode t)
-  (esk-add-watchwords)
+
+  ;; add FIXME word color
+  (font-lock-add-keywords
+   nil
+   '(("\\<\\(FIX\\(ME\\)?\\|TODO\\|HACK\\|REFACTOR\\|NOCOMMIT\\|WARN\\(ING\\)?\\)"
+      1 font-lock-warning-face t)))
   (autoload 'dash-at-point "dash-at-point"
     "Search the word at point with Dash." t nil)
   (local-set-key (kbd "C-c d") 'dash-at-point)
@@ -448,22 +435,6 @@ Major mode for editing JavaScript code.
 (when (string= system-type "windows-nt")
   (autoload 'powershell "powershell" "DOCSTRING" t)
   )
-
-;; git (magit) settings here
-;; ==================================================================
-(add-to-list 'load-path (concat plugins-path-r "magit/lisp"))
-(add-to-list 'load-path (concat plugins-path-r "with-editor"))
-(add-to-list 'load-path (concat plugins-path-r "git-modes"))
-
-(use-package magit
-  :bind (("C-x v z" . magit-status)))
-
-(use-package magit
-  :after (dired)
-  :bind (:map dired-mode-map
-              ("c" . magit-status)))
-
-
 
 (provide 'dev-settings)
 ;; dev-settings ends here.
