@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-09-21 12:13:31 Wednesday by richard>
+;; Last modified: <2016-09-21 12:34:08 Wednesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -49,74 +49,48 @@
               ("C-M-o" . smart-ido-recentf)))
 
 ;; Immediately close the current buffer.
-(global-set-key (kbd "C-x k")   'kill-this-buffer)
+(use-package menu-bar
+  :defer t
+  :bind (("C-x k" . kill-this-buffer)))
 
 (use-package buffer-move
-  :defer t  ; :commands, :bind*?, :bind-keymap*?, :mode, :interpreter implies
+  :defer t
   :bind (("C-x w u" . buf-move-up)
          ("C-x w d" . buf-move-down)
          ("C-x w l" . buf-move-left)
          ("C-x w r" . buf-move-right)))
 
 (use-package window
+  :config
+  (defvar temp-window-configuration nil "store temp window configuration.")
+  (defun smart-window-customize()
+    "Delete all other-window when not occupy whole window.
+otherwise restore."
+    (interactive)
+    (let ((wincount 0))
+      (walk-windows (lambda(w)
+                      (setq wincount (1+ wincount))))
+      (cond ((> wincount 1)
+             (setq temp-window-configuration (current-window-configuration))
+             (delete-other-windows))
+            ((= wincount 1)
+             (if temp-window-configuration
+                 (set-window-configuration temp-window-configuration)
+               (split-window-vertically))))))
   :bind (("M-N" . next-buffer)
-         ("M-P" . previous-buffer)))
+         ("M-P" . previous-buffer)
+         ("<M-return>" . smart-window-customize)))
 
 
 ;; fullscreen settings
 ;; ------------------------------------------------------------------
-(when (and window-system (string= system-type "gnu/linux"))
-  (defun fullscreen ()
-    "Fullscreen."
-    (if (string= system-type "windows-nt")
-        (message "I don't hot to fullscreen in windows-nt.")
-      (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
-                             ;; if first parameter is '1', can't toggle fullscreen status
-                             '(1 "_NET_WM_STATE_FULLSCREEN" 0))
-      ))
-
-  (defun fullscreen-toggle ()
-    "Toggle fullscreen status."
-    (interactive)
-    (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
-                           ;; if first parameter is '2', can toggle fullscreen status
-                           '(2 "_NET_WM_STATE_FULLSCREEN" 0)))
-  ;; fullscreen with chromium
-  (global-set-key '[f11] 'fullscreen-toggle)
-
-  (fullscreen))
-
-
-;; Window settings
-;; ------------------------------------------------------------------
-(defvar temp-window-configuration nil "store temp window configuration.")
-
-(defun smart-window-customize()
-  "Delete all other-window when not occupy whole window.
-otherwise restore."
-  (interactive)
-  (let ((wincount 0))
-    (walk-windows (lambda(w)
-                    (setq wincount (1+ wincount))))
-    (cond ((> wincount 1)
-           (setq temp-window-configuration (current-window-configuration))
-           (delete-other-windows))
-          ((= wincount 1)
-           (if temp-window-configuration
-               (set-window-configuration temp-window-configuration)
-             (split-window-vertically))))))
-
-(global-set-key [(meta return)]       ' smart-window-customize)
-
-
-;; Wheel settings
-;; ==================================================================
-
-;; Wheel up.
-(global-set-key (kbd "<C-mouse-4>") 'font-small)
-
-;; Wheel down.
-(global-set-key (kbd "<C-mouse-5>") 'font-big)
+(use-package frame
+  :if window-system
+  :defer t
+  :bind (("<f10>" . toggle-frame-maximized)
+         ("M-<f10>" . toggle-frame-maximized)
+         ("<f11>" . toggle-frame-fullscreen)
+         ("M-<f11>" . toggle-frame-fullscreen)))
 
 
 (provide 'window-buffer-settings)
