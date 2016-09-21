@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-09-21 12:08:53 Wednesday by richard>
+;; Last modified: <2016-09-21 15:53:20 Wednesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -122,8 +122,6 @@ With a prefix argument, highlight for that many seconds.
 
 ;; Projectile settings. more smarter than ftf
 ;; ------------------------------------------------------------------
-
-
 (use-package projectile
   :defer t  ; :commands, :bind*?, :bind-keymap*?, :mode, :interpreter implies
   :commands ; for autoload
@@ -162,6 +160,21 @@ With a prefix argument, highlight for that many seconds.
   :after (dired)
   :bind (:map dired-mode-map
               ("<f1>" . smart-find-file)))
+
+(use-package projectile
+  :after
+  (isearch)
+  :defer t
+  :config
+  (defun searchp-open-multi-occur ()
+    (interactive)
+    (let ((case-fold-search isearch-case-fold-search)
+          (search-string (if isearch-regexp
+                             isearch-string
+                           (regexp-quote isearch-string))))
+      (if (projectile-project-p)
+          (projectile-multi-occur search-string)
+        (multi-occur-in-this-mode search-string)))))
 
 
 ;; parenthses settings

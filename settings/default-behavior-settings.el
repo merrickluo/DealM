@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-09-21 11:44:11 Wednesday by richard>
+;; Last modified: <2016-09-21 16:28:40 Wednesday by richard>
 
 ;; Copyright (C) 2012-2013 Richard Wong
 
@@ -44,15 +44,11 @@
 
 (setq system-time-locale "C")
 
-;; 不要滚动条
+;; disable scroll bar
 (customize-set-variable 'scroll-bar-mode nil)
 
 ;;; Unbind the stupid minimize that I always hit.
 (global-unset-key "\C-z")
-
-;; 支持emacs和外部程序的粘贴
-;; emacs 24 default
-;; (setq x-select-enable-clipboard t)
 
 ;; Diable backup
 (setq-default make-backup-files nil
@@ -64,28 +60,26 @@
 (add-hook 'text-mode-hook 'turn-off-auto-fill)
 
 ;; insert two spaces after two colon:
-(setq colon-double-space t)
-
-;; 显示列号
-(setq column-number-mode t)
+(setq colon-double-space t
+      column-number-mode t)
 
 ;; emacs lock
 (autoload 'toggle-emacs-lock "emacs-lock" "Emacs lock" t)
 
 ;; 启用以下功能
 (put 'narrow-to-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)
-
-;; 不显示Emacs的开始画面
-(setq inhibit-startup-message t)
-(setq initial-scratch-message "")
-
-;; 不要总是没完没了的问yes or no, 为什么不能用y/n
+;; disable cursor blinking
+(blink-cursor-mode -1)
 (fset 'yes-or-no-p 'y-or-n-p)
 
-;; 不要闪烁光标, 烦不烦啊
-(blink-cursor-mode -1)
+;; disable emacs start screen
+(setq inhibit-startup-message t
+      initial-scratch-message "")
+
+
 
 ;; 简写模式
 (setq-default abbrev-mode t)

@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-02-02 18:29:03 Tuesday by wongrichard>
+;; Last modified: <2016-09-21 15:51:12 Wednesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -229,19 +229,6 @@ If NOT-WHOLE is non-nil, do not copy whole sexp."
     (save-excursion (forward-line) (setq next-is-fun (looking-at "[ \t]*(defun")))
     (if (or (looking-at "$") (and next-is-fun (not (looking-at "[ \t]*(defun"))))
         (forward-line))))
-
-;;;###autoload
-(defun case-trans ()
-  "大小写转换当前字符"
-  (interactive)
-  (let* ((ochar (char-after (point))) (char ochar))
-    (if (and (>= char ?a) (<= char ?z))
-        (setq char (upcase char))
-      (setq char (downcase char)))
-    (if (/= ochar char)
-        (save-excursion
-          (delete-char 1)
-          (insert-char char 1)))))
 
 ;;;###autoload
 (defun comment (&optional arg)

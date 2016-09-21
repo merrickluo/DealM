@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-09-21 12:13:36 Wednesday by richard>
+;; Last modified: <2016-09-21 15:20:21 Wednesday by richard>
 
 ;; Copyright (C) 2016 Richard Wong
 
@@ -12,6 +12,10 @@
 (use-package org-tree-slide
   :after (org)
   :commands (org-tree-slide-mode))
+
+(use-package org-capture
+  :bind
+  ("C-x c" . org-capture))
 
 (use-package org
   :commands (org-mode)

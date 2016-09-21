@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-09-21 12:00:39 Wednesday by richard>
+;; Last modified: <2016-09-21 16:36:06 Wednesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -9,62 +9,85 @@
 ;; Version: 0.8
 ;; PUBLIC LICENSE: GPLv3
 
-(require 'edit-functions)
+(use-package edit-functions
+  ;; :commands (def-position-command)
+  :defer t
+  :config
+  ;; other global keys.
+  (when (string= system-type "windows-nt")
+    (w32-register-hot-key (kbd "M-w")))
+  (def-position-command goto-plugins
+    (kbd "C-x g p") plugins-path-r)
+  (def-position-command goto-settings
+    (kbd "C-x g s") settings-path-r)
+  (def-position-command goto-emacs-root
+    (kbd "C-x g e") emacs-root-path)
+  (def-position-command goto-tmp
+    (kbd "C-x g t") "~/.tmp/")
+  :bind (("C-x q" . switch-major-mode)
+         ("C-x m" . get-mode-name)
+         ("C-o" . open-line-if-active-delete-then-open-line)
+         ("C-;" . iedit-dwim)
+         ("C-]" . goto-paren)
+         ("C-M-]" . ywb-indent-accoding-to-paren)
+         ("C-c M-c" . copy-file-name)
+         ("C-x M-O" . open-current-file-with-app)
+         ("C-x s"   . switch-to-scratch)
+         ("C-x M-s" . switch-to-shell)
+         ("C-x M-m" . switch-to-message)
+         ("M-SPC"   . just-one-space)
+         ("C-x j"   . jump-to-register)
+         ("<M-mouse-4>" . previous-buffer)
+         ("<M-mouse-5>" . next-buffer)
+         ("<M-wheel-up>" . previous-buffer)
+         ("<M-wheel-down>" . next-buffer)
+         ("M-J" . join-line)
+         ("M-C-k" . kill-whole-paragraph)
+         ("M-w" . smart-copy)
+         ("M-k" . kill-paragraph)
+         ("M-C" . copy-whole-paragraph)
+         ("C-M-w" . smart-insert-line)
+         ("C-k" . smart-kill)
+         ("C-a" . smart-move-beginning-of-line)
+         ("C-\\" . delete-indentation)
+         ("M-U" . del-to-begin)
+         ("C-w" . backward-kill-word-or-kill-region)
+         ("C-x S" . mark-whole-sexp)
+         ("C-x C-k" . kill-whole-sexp)
+         ("C-x M-w" . copy-sexp)
+         ("C-x TAB" . smart-indent)
+         ("C-h" . c-electric-backspace-kill)
+         ("M-Y" . redo)
+         ("M-q" . fill-paragraph-justify)
+         ;; Wheel settings
+         ("<C-mouse-4>" . text-scale-increase)
+         ("<C-mouse-5>" . text-scale-decrease)))
+
+(use-package simple
+  :if window-system
+  :defer t
+  :bind (("C-z" . undo)))
 
 
-;; global keys
-;; ------------------------------------------------------------------
-
-(global-set-key (kbd "C-x q") 'switch-major-mode)
-(global-set-key (kbd "C-x m") 'get-mode-name)
-
-(global-set-key (kbd "C-o")     'open-line-if-active-delete-then-open-line)
-(global-set-key (kbd "C-c M-c") 'copy-file-name)
-(global-set-key (kbd "C-x M-O") 'open-current-file-with-app)
-(global-set-key (kbd "C-x s")   'switch-to-scratch)
-(global-set-key (kbd "C-x M-s") 'switch-to-shell)
-(global-set-key (kbd "C-x M-m") 'switch-to-message)
-(global-set-key (kbd "M-SPC")   'just-one-space)
-(global-set-key (kbd "C-x j")   'jump-to-register)   ;; global jump
-
-(global-set-key (kbd "<M-mouse-4>") 'previous-buffer)
-(global-set-key (kbd "<M-mouse-5>") 'next-buffer)
-(global-set-key (kbd "<M-wheel-up>") 'previous-buffer)
-(global-set-key (kbd "<M-wheel-down>") 'next-buffer)
-
-(global-set-key (kbd "C-x O") (lambda () (interactive) (other-window -1))) ;; back one
-(global-set-key (kbd "C-x C-o") (lambda () (interactive) (other-window 2))) ;; forward two
-(global-set-key (kbd "C-c q") 'join-line)
-
-;; Mac integration.
-(global-set-key (kbd "s-x") 'clipboard-kill-region) ;;cut
-(global-set-key (kbd "s-c") 'clipboard-kill-ring-save) ;;copy
-(global-set-key (kbd "s-v") 'clipboard-yank) ;;paste
-
-;; Set iedit-mode directly
-(global-set-key (kbd "C-;") 'iedit-dwim)
+(use-package menu-bar
+  :defer t
+  ;; Mac integration.
+  :bind (("s-x" . clipboard-kill-region)
+         ("s-c" . clipboard-kill-ring-save)
+         ("s-v" . clipboard-yank)))
 
 ;; occur
 ;; -------------------------------------------------[ioccur]
 
 ;; using regular expression as default search
-(global-set-key (kbd "C-s") 'isearch-forward-regexp)
-(global-set-key (kbd "\C-r") 'isearch-backward-regexp)
-(global-set-key (kbd "C-M-s") 'isearch-forward)
-(global-set-key (kbd "C-M-r") 'isearch-backward)
 
-(define-key isearch-mode-map (kbd "C-o")
-  (lambda () (interactive)
+(use-package isearch
+  :defer t  ; :commands, :bind*?, :bind-keymap*?, :mode, :interpreter implies
+  :init
+  (defun isearchp-open-occur()
+    (interactive)
     (let ((case-fold-search isearch-case-fold-search))
-      (occur (if isearch-regexp isearch-string (regexp-quote isearch-string))))))
-
-(define-key isearch-mode-map (kbd "C-S-O")
-  (lambda () (interactive)
-    (let ((case-fold-search isearch-case-fold-search))
-      (multi-occur-in-this-mode
-       (if isearch-regexp isearch-string (regexp-quote isearch-string))))))
-
-(define-key isearch-mode-map (kbd "M-w")
+      (occur (if isearch-regexp isearch-string (regexp-quote isearch-string)))))
   (defun isearchp-kill-ring-save (&optional arg)
     "Copy the current search string to the kill ring.
 For example, you can then use `C-s M-y' to search for the same thing
@@ -77,155 +100,82 @@ in another Emacs session.
           ((= (prefix-numeric-value arg) 4)
            (copy-region-as-kill isearch-other-end (point)))
           (t (copy-lines-matching-re isearch-string)
-           ;; TODO: copy all match strings probably can reuse occur pkg.
-           ))
-    (let ((message-log-max  nil))
+             ;; TODO: copy all match strings probably can reuse occur pkg.
+             ))
+    (let ((message-log-max nil))
       (message "%s copied" (current-kill 0))
       (sit-for 1)
-      (isearch-update))
-    ))
+      (isearch-update)))
+  :bind (("C-s" . isearch-forward-regexp)
+         ("\C-r" . isearch-backward-regexp)
+         ("C-M-s" . isearch-forward)
+         ("C-M-r" . isearch-backward)
+         :map isearch-mode-map
+         ("C-o" . isearchp-open-occur)
+         ("M-w" . isearchp-kill-ring-save)))
 
-(eval-after-load "projectile"
-  '(define-key isearch-mode-map (kbd "C-S-O")
-     (lambda () (interactive)
-       (let ((case-fold-search isearch-case-fold-search)
-             (search-string (if isearch-regexp isearch-string (regexp-quote isearch-string))))
-         (if (projectile-project-p)
-             (projectile-multi-occur search-string)
-           (multi-occur-in-this-mode search-string))))))
 
-;; other global keys.
-(autoload 'browse-kill-ring "browse-kill-ring"
-  "Display items in the `kill-ring' in another buffer." t)
-
-(global-set-key  "\C-xc"             'org-capture)
-(global-set-key (kbd "M-C-k")        'kill-whole-paragraph)
-(global-set-key (kbd "M-C-y")        'browse-kill-ring)
-(when (string= system-type "windows-nt")
-  (w32-register-hot-key (kbd "M-w")))
-(global-set-key (kbd "M-w")          'smart-copy)
-(global-set-key (kbd "M-k")          'kill-paragraph)
-(global-set-key (kbd "M-C")          'copy-whole-paragraph)
-(global-set-key (kbd "C-M-w")        'smart-insert-line)
-(global-set-key (kbd "C-k")          'smart-kill)
-(global-set-key (kbd "C-a")          'smart-move-beginning-of-line)
-(global-set-key (kbd "C-\\")         'delete-indentation)
-(global-set-key (kbd "M-U")          'del-to-begin)
-(global-set-key (kbd "C-^")          'case-trans)
-(global-set-key (kbd "C-6")          'case-trans)
-(global-set-key (kbd "C-w")          'backward-kill-word-or-kill-region)
-(global-set-key (kbd "C-x S")        'mark-whole-sexp)
-(global-set-key (kbd "C-x C-k")      'kill-whole-sexp)
-(global-set-key (kbd "C-x M-w")      'copy-sexp)
-(global-set-key (kbd "C-x TAB")      'smart-indent)
-(global-set-key (kbd "C-h")          'c-electric-backspace-kill)
-(global-set-key (kbd "M-Y")          'redo)
-(global-set-key (kbd "M-q")          'fill-paragraph-justify)
-(global-set-key (kbd "<escape> SPC") 'just-one-space)
+(use-package browse-kill-ring
+  :bind
+  ("M-C-y" . browse-kill-ring))
 
 ;; pager: Fix windows lines bugs in scroll-up and down.
-(require 'pager)
-(global-set-key "\C-v"	   'pager-page-down)
-(global-set-key [next] 	   'pager-page-down)
-(global-set-key "\ev"	   'pager-page-up)
-(global-set-key [prior]	   'pager-page-up)
-(global-set-key '[M-up]    'pager-row-up)
-(global-set-key '[M-kp-8]  'pager-row-up)
-(global-set-key '[M-down]  'pager-row-down)
-(global-set-key '[M-kp-2]  'pager-row-down)
+(use-package pager
+  :defer t
+  :bind (("C-v"	 . pager-page-down)
+         ([next] . pager-page-down)
+         ("M-v" . pager-page-up)
+         ([prior] . pager-page-up)
+         ([M-up] . pager-row-up)
+         ([M-kp-8] . pager-row-up)
+         ([M-down] . pager-row-down)
+         ([M-kp-2] . pager-row-down)))
 
-(global-set-key [(shift home)] '(lambda () (interactive) (other-window -1)))
-(global-set-key [(shift end)]  '(lambda () (interactive) (other-window 1)))
+(use-package help
+  :defer t
+  :bind (("C-x /" . help-command)
+         ("C-x ?" . help-command)))
 
-(global-set-key '[kp-home]  'beginning-of-buffer) ; [Home]
-(global-set-key '[home]     'beginning-of-buffer) ; [Home]
-(global-set-key '[kp-end]   'end-of-buffer)       ; [End]
-(global-set-key '[end]      'end-of-buffer)       ; [End]
-
-(if window-system
-    (global-set-key (kbd "C-z")      'undo))
-
-;; replace global keys
-(global-set-key (kbd "M-r")     'query-replace-regexp)
-(global-set-key (kbd "C-x ?")   'help-command)
-(global-set-key (kbd "C-x /")   'help-command)
-
-
-(global-set-key (kbd "C-x u")
-                '(lambda ()
-                   "Revert buffer without confirmation."
-                   (interactive)
-                   (revert-buffer t t)))
-(global-set-key (kbd "C-x M-K")  'revert-buffer-with-gbk)
-
-;; Fastnav
-;; ------------------------------------------------------------------
-(autoload 'fastnav-sprint-forward "fastnav" "\
-Performs a sequence of jumping forward to the next character
-matching the keyboard event.
-
-\(fn ARG)" t nil)
-
-(autoload 'fastnav-sprint-backward "fastnav" "\
-Performs a sequence of jumping backward to the next character
-matching the keyboard event.
-
-\(fn ARG)" t nil)
-
-(global-set-key "\M-S" 'fastnav-sprint-backward)
-;; an isearch style.
-(global-set-key "\M-s" 'fastnav-sprint-forward)
-
-
-;; goto settings.
-;; ------------------------------------------------------------------
-
-(def-position-command goto-plugins
-  (kbd "C-x g p") plugins-path-r)
-(def-position-command goto-settings
-  (kbd "C-x g s") settings-path-r)
-(def-position-command goto-emacs-root
-  (kbd "C-x g e") emacs-root-path)
-(def-position-command goto-tmp
-  (kbd "C-x g t") "~/.tmp/")
-
-(global-set-key (kbd "C-]")     'goto-paren)
-(global-set-key (kbd "C-M-]")   'ywb-indent-accoding-to-paren)
+(use-package files
+  :defer t
+  :bind (("C-x u" . revert-buffer)))
 
 ;; align settings.
-(global-set-key (kbd "C-x a")   'align-current)
-(global-set-key (kbd "C-x M-a") 'align-regexp)
+(use-package align
+  :defer t
+  :bind (("C-x a" . align-current)
+         ("C-x M-a" . align-regexp)))
 
 ;; hungry delete
 ;; ------------------------------------------------------------------
-(autoload 'turn-on-hungry-delete-mode "hungry-delete")
-(define-globalized-minor-mode global-hungry-delete-mode hungry-delete-mode turn-on-hungry-delete-mode)
-(global-hungry-delete-mode t)
+(use-package hungry-delete
+  :commands (turn-on-hungry-delete-mode))
 
 
 
-;; mc-edit-lines settings
-;; ----------------------------------------[mc-edit-lines settings]
-(add-to-list 'load-path (concat plugins-path-r "multiple-cursors"))
-(autoload 'mc/edit-lines "mc-edit-lines" "" t)
-(global-set-key (kbd "C-x \\") 'mc/edit-lines)
-(global-set-key (kbd "C-x |")  'mc/edit-lines)
-
 ;; moccur settings
 ;; ----------------------------------------[moccur settings]
-(setq *moccur-buffer-name-exclusion-list*
-      '(".+TAGS.+" "*Completions*" "*magit-process*" "*Messages*"
-        ))
-(setq moccur-split-word t)
-(setq dmoccur-use-list t)
-(setq dmoccur-use-project t)
-(setq dmoccur-list
-      '(
-        ("dir" default-directory (".*") dir)
-        ("config" emacs-root-path  ("\\.py$" "\\.el$") nil)
-        ))
+(use-package color-moccur
+  :defer t
+  :init
+  (setq moccur-split-word t
+        dmoccur-use-list t
+        dmoccur-use-project t
+        *moccur-buffer-name-exclusion-list*
+        '(".+TAGS.+" "*Completions*" "*magit-process*" "*Messages*")
+        dmoccur-list
+        '(("dir" default-directory (".*") dir)
+          ("config" emacs-root-path  ("\\.py$" "\\.el$") nil)))
+  :bind (("C-x O" . moccur)
+         ("C-c C-o" . search-buffers)))
 
-(global-set-key "\C-c\C-o" 'search-buffers)
+(use-package color-moccur
+  :after
+  (isearch)
+  :defer t  ; :commands, :bind*?, :bind-keymap*?, :mode, :interpreter implies
+  :bind (:map isearch-mode-map
+              ("M-o" . isearch-moccur)
+              ("M-O" . isearch-moccur-all)))
 
 (provide 'edit-settings)
 ;; edit-settings ends here.
