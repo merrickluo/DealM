@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-02-02 18:31:47 Tuesday by wongrichard>
+;; Last modified: <2016-09-21 12:00:39 Wednesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -116,7 +116,6 @@ in another Emacs session.
 (global-set-key (kbd "C-w")          'backward-kill-word-or-kill-region)
 (global-set-key (kbd "C-x S")        'mark-whole-sexp)
 (global-set-key (kbd "C-x C-k")      'kill-whole-sexp)
-(global-set-key (kbd "C-x w")        'copy-sexp)
 (global-set-key (kbd "C-x M-w")      'copy-sexp)
 (global-set-key (kbd "C-x TAB")      'smart-indent)
 (global-set-key (kbd "C-h")          'c-electric-backspace-kill)

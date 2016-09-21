@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-09-20 18:04:53 Tuesday by richard>
+;; Last modified: <2016-09-21 12:13:36 Wednesday by richard>
 
 ;; Copyright (C) 2016 Richard Wong
 
@@ -208,7 +208,6 @@ origin move otherwise "
 
 (use-package org-agenda
   :bind (:map org-agenda-mode-map
-              ("'" . switch-to-other-buffer)
               ("1" . delete-other-windows)
               ("2" . split-window-vertically)
               ("3" . split-window-horizontally)

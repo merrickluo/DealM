@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-08-25 16:06:18 Thursday by richard>
+;; Last modified: <2016-09-21 12:13:31 Wednesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -12,66 +12,55 @@
 
 ;; Buffer settings
 ;; ------------------------------------------------------------------
-;;recentf
-(autoload 'recentf-mode "recentf" "" t)
-(setq recentf-exclude '("\\.windows\\'"
-                        "/ssh"
-                        "/tmp/"))
-(setq recentf-max-saved-items 500)
-(setq recentf-max-menu-items 60)
-(recentf-mode 1)
+(use-package recentf
+  :defer t
+  :commands (recentf-mode)
+  :init     ; before code load
+  (setq recentf-exclude '("\\.windows\\'"
+                          "/ssh"
+                          "/tmp/")
+        recentf-max-saved-items 500
+        recentf-max-menu-items 60))
 
-(defun xsteve-ido-choose-from-recentf ()
-  "Use ido to select a recently opened file from the `recentf-list'"
-  (interactive)
-  (let ((home (expand-file-name (getenv "HOME"))))
-    (find-file
-     (ido-completing-read "Recentf open: "
-                          (mapcar (lambda (path)
-                                    (replace-regexp-in-string home "~" path))
-                                  recentf-list)
-                          nil t))))
-(defalias 'recent-files 'recentf-open-files "Open recent file list.")
+(use-package recentf
+  :after (projectile dired)
+  :defer t
+  :config   ; execute code after a package is loaded
+  (defun xsteve-ido-choose-from-recentf ()
+    "Use ido to select a recently opened file from the `recentf-list'"
+    (interactive)
+    (let ((home (expand-file-name (getenv "HOME"))))
+      (find-file
+       (ido-completing-read "Recentf open: "
+                            (mapcar (lambda (path)
+                                      (replace-regexp-in-string home "~" path))
+                                    recentf-list)
+                            nil t))))
+  (defun smart-ido-recentf ()
+    (interactive)
+    (if (projectile-project-p)
+        (call-interactively 'projectile-recentf)
+      (call-interactively 'xsteve-ido-choose-from-recentf)))
+  :bind (("C-M-o" . smart-ido-recentf)))
 
-(eval-after-load "projectile"
-  `(progn
-     (defun smart-ido-recentf ()
-       (interactive)
-       (if (projectile-project-p)
-           (call-interactively 'projectile-recentf)
-         (call-interactively 'xsteve-ido-choose-from-recentf)))
+(use-package recentf
+  :after (projectile dired)
+  :bind (:map isearch-mode-map
+              ("C-M-o" . smart-ido-recentf)))
 
-     ;; global-set-key settings
-     (global-set-key (kbd "C-M-o") 'smart-ido-recentf)
-     (define-key dired-mode-map (kbd "C-M-o") 'smart-ido-recentf))
-
-  )
 ;; Immediately close the current buffer.
 (global-set-key (kbd "C-x k")   'kill-this-buffer)
 
+(use-package buffer-move
+  :defer t  ; :commands, :bind*?, :bind-keymap*?, :mode, :interpreter implies
+  :bind (("C-x w u" . buf-move-up)
+         ("C-x w d" . buf-move-down)
+         ("C-x w l" . buf-move-left)
+         ("C-x w r" . buf-move-right)))
 
-;; buffer-move settings.
-(require 'buffer-move)
-(global-set-key [M-S-up]    'buf-move-up)
-(global-set-key [M-S-down]  'buf-move-down)
-(global-set-key [M-S-left]  'buf-move-left)
-(global-set-key [M-S-right] 'buf-move-right)
-
-(global-set-key [M-left]    'windmove-left)
-(global-set-key [M-right]   'windmove-right)
-(global-set-key [M-up]      'windmove-up)
-(global-set-key [M-down]    'windmove-down)
-
-;; select buffer-stable one
-(global-set-key (kbd "M-N") 'next-buffer)
-(global-set-key (kbd "M-P") 'previous-buffer)
-
-(defun switch-to-other-buffer ()
-  "切换到最近访问的buffer"
-  (interactive)
-  (unless (minibufferp)
-    (switch-to-buffer (other-buffer))))
-
+(use-package window
+  :bind (("M-N" . next-buffer)
+         ("M-P" . previous-buffer)))
 
 
 ;; fullscreen settings
@@ -82,8 +71,8 @@
     (if (string= system-type "windows-nt")
         (message "I don't hot to fullscreen in windows-nt.")
       (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
-                           ;; if first parameter is '1', can't toggle fullscreen status
-                           '(1 "_NET_WM_STATE_FULLSCREEN" 0))
+                             ;; if first parameter is '1', can't toggle fullscreen status
+                             '(1 "_NET_WM_STATE_FULLSCREEN" 0))
       ))
 
   (defun fullscreen-toggle ()

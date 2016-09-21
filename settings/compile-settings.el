@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2014-12-30 16:24:31 Tuesday by wongrichard>
+;; Last modified: <2016-09-21 12:13:49 Wednesday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -80,7 +80,6 @@
 
   (define-key compilation-mode-map "n" 'compilation-next-error)
   (define-key compilation-mode-map "p" 'compilation-previous-error)
-  (define-key compilation-mode-map "'" 'switch-to-other-buffer)
   (define-key compilation-mode-map "u" 'View-scroll-half-page-backward)
   (define-key compilation-mode-map "f" 'am-forward-word-or-to-word)
   (define-key compilation-mode-map "d" 'scroll-up)
