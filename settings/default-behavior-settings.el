@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-09-20 17:53:06 Tuesday by richard>
+;; Last modified: <2016-09-21 11:44:11 Wednesday by richard>
 
 ;; Copyright (C) 2012-2013 Richard Wong
 
@@ -26,6 +26,9 @@
 
 ;; 在fringe上显示一个小箭头指示当前buffer的边界
 (setq-default indicate-buffer-boundaries 'left)
+
+(when (eq system-type 'darwin)
+  (setq mac-command-modifier 'meta))
 
 ;; hide menu-bar and tool-bar
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
