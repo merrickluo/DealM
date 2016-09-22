@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-09-21 16:36:06 Wednesday by richard>
+;; Last modified: <2016-09-22 23:36:42 Thursday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -66,7 +66,9 @@
 (use-package simple
   :if window-system
   :defer t
-  :bind (("C-z" . undo)))
+  :bind (("C-z" . undo)
+         ("M-n" . next-error)
+         ("M-p" . previous-error)))
 
 
 (use-package menu-bar

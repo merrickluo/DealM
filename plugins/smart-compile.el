@@ -1,13 +1,13 @@
 ;;; smart-compile.el --- an interface to `compile'
 
-;; Copyright (C) 1998-2012  by Seiji Zenitani
+;; Copyright (C) 1998-2015  by Seiji Zenitani
 
 ;; Author: Seiji Zenitani <zenitani@mac.com>
-;; $Id: smart-compile.el 764 2012-07-10 15:58:08Z zenitani $
+;; Version: 20150520
 ;; Keywords: tools, unix
 ;; Created: 1998-12-27
 ;; Compatibility: Emacs 21 or later
-;; URL(en): http://www.emacswiki.org/emacs/smart-compile.el
+;; URL(en): https://github.com/zenitani/elisp/blob/master/smart-compile.el
 ;; URL(jp): http://th.nao.ac.jp/MEMBER/zenitani/elisp-j.html#smart-compile
 
 ;; Contributors: Sakito Hisakura, Greg Pfell
@@ -63,8 +63,10 @@
   ("\\.tex\\'"        . (tex-file))
   ("\\.texi\\'"       . "makeinfo %f")
   ("\\.mp\\'"         . "mptopdf %f")
-  ("\\.pl\\'"         . "perl -cw %f")
-  ("\\.rb\\'"         . "ruby -cw %f")
+  ("\\.pl\\'"         . "perl %f")
+  ("\\.rb\\'"         . "ruby %f")
+;;  ("\\.pl\\'"         . "perl -cw %f") ; syntax check
+;;  ("\\.rb\\'"         . "ruby -cw %f") ; syntax check
 )  "Alist of filename patterns vs corresponding format control strings.
 Each element looks like (REGEXP . STRING) or (MAJOR-MODE . STRING).
 Visiting a file whose name matches REGEXP specifies STRING as the
@@ -126,7 +128,7 @@ which is defined in `smart-compile-alist'."
   (interactive "p")
   (let ((name (buffer-file-name))
         (not-yet t))
-    
+
     (if (not name)(error "cannot get filename."))
 ;;     (message (number-to-string arg))
 
@@ -157,7 +159,7 @@ which is defined in `smart-compile-alist'."
      ) ;; end of (cond ...)
 
     ;; compile
-    (let( (alist smart-compile-alist) 
+    (let( (alist smart-compile-alist)
           (case-fold-search nil)
           (function nil) )
       (while (and alist not-yet)
@@ -199,7 +201,7 @@ which is defined in `smart-compile-alist'."
               (set (make-local-variable 'compile-command) name)
             ))
       )
-    
+
     ;; compile
     (if not-yet (call-interactively 'compile) )
 
