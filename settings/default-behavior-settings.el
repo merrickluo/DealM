@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-09-21 16:28:40 Wednesday by richard>
+;; Last modified: <2016-09-23 00:16:39 Friday by richard>
 
 ;; Copyright (C) 2012-2013 Richard Wong
 
@@ -277,6 +277,7 @@
   (setenv "PATH" (mapconcat 'identity exec-path ":"))
   (setenv "LC_ALL" "en_US.UTF-8")
   (setenv "LC_CTYPE" "en_US.UTF-8"))
+
 
 (provide 'default-behavior-settings)
 ;; default-behavior-settings ends here.

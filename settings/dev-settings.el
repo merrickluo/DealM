@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-09-22 23:59:37 Thursday by richard>
+;; Last modified: <2016-09-23 00:26:00 Friday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -198,14 +198,25 @@ With a prefix argument, highlight for that many seconds.
 (autoload 'paren-toggle-open-paren-context        "mic-paren" "" t)
 (show-paren-mode t)
 
+;; rainbow-mode
+;; ------------------------------------------------------------------
+(add-to-list 'load-path (concat plugins-path-r "rainbow-mode"))
+
+(use-package rainbow-mode
+  :commands (rainbow-mode))
+
+(dolist (hook '(html-mode-hook
+                css-mode-hook
+                emacs-lisp-mode-hook))
+  (add-hook hook #'rainbow-mode))
 
 
+
 ;;----------------------------------------------------------
 ;; Mode specific shortcut settings.
 ;;----------------------------------------------------------
 (defun start-program-short-cut()
   "common program short-cut keys."
-  (yas-minor-mode)
   ;; RET is reindent thisline and indent the new line.
   (local-set-key (kbd "RET")     'reindent-then-newline-and-indent)
   (local-set-key "\C-k"          'program-smart-kill)

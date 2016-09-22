@@ -1,7 +1,7 @@
 ;; -*- Emacs-Lisp -*-
 ;; Copyright (C) 2012 Richard Wong
 
-;; Last modified: <2016-09-22 23:58:29 Thursday by richard>
+;; Last modified: <2016-09-23 00:27:05 Friday by richard>
 
 ;; Author: Richard Wong
 ;; Email: chao787@gmail.com
@@ -64,6 +64,23 @@ there, otherwise, proposes to create the first option returned by
                 (when (eq major-mode 'fundamental-mode)
                   (snippet-mode)))))
         (message "Could not guess snippet dir!")))))
+
+(dolist (hook '(emacs-lisp-mode-hook
+                clojure-mode-hook
+                json-mode-hook
+                c-mode-common-hook
+                python-mode-hook
+                awk-mode-hook
+                sh-mode-hook
+                LaTex-mode-hook
+                js2-mode-hook
+                jade-mode-hook
+                java-mode-hook
+                html-mode-hook
+                css-mode-hook
+                emacs-lisp-mode-hook))
+  (add-hook hook #'yas-minor-mode))
+
 
 (provide 'yasnippet-settings)
 ;; yasnippet-settings ends here.
