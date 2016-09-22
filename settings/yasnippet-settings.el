@@ -1,7 +1,7 @@
 ;; -*- Emacs-Lisp -*-
 ;; Copyright (C) 2012 Richard Wong
 
-;; Last modified: <2016-09-18 10:59:36 Sunday by richard>
+;; Last modified: <2016-09-22 23:58:29 Thursday by richard>
 
 ;; Author: Richard Wong
 ;; Email: chao787@gmail.com
@@ -13,7 +13,7 @@
 
 (use-package
   yasnippet
-  :commands (yas-global-mode)
+  :commands (yas-global-mode yas-expand yas-minor-mode)
   :init
   (setq yas-snippet-dirs (concat emacs-root-path "snippets/"))
   :bind
@@ -64,8 +64,6 @@ there, otherwise, proposes to create the first option returned by
                 (when (eq major-mode 'fundamental-mode)
                   (snippet-mode)))))
         (message "Could not guess snippet dir!")))))
-
-(yas-global-mode 1)
 
 (provide 'yasnippet-settings)
 ;; yasnippet-settings ends here.

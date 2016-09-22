@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-09-22 23:05:39 Thursday by richard>
+;; Last modified: <2016-09-22 23:59:37 Thursday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -205,7 +205,7 @@ With a prefix argument, highlight for that many seconds.
 ;;----------------------------------------------------------
 (defun start-program-short-cut()
   "common program short-cut keys."
-
+  (yas-minor-mode)
   ;; RET is reindent thisline and indent the new line.
   (local-set-key (kbd "RET")     'reindent-then-newline-and-indent)
   (local-set-key "\C-k"          'program-smart-kill)
