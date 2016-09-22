@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-09-21 15:53:20 Wednesday by richard>
+;; Last modified: <2016-09-22 23:05:39 Thursday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -125,7 +125,11 @@ With a prefix argument, highlight for that many seconds.
 (use-package projectile
   :defer t  ; :commands, :bind*?, :bind-keymap*?, :mode, :interpreter implies
   :commands ; for autoload
-  (projectile-project-p projectile-find-file projectile-project-vcs)
+  (projectile-project-p
+   projectile-find-file
+   projectile-project-vcs
+   projectile-project-root
+   projectile-project-name)
   :config   ; execute code after a package is loaded
   (defun smart-find-file ()
     (interactive)
@@ -223,10 +227,13 @@ With a prefix argument, highlight for that many seconds.
    nil
    '(("\\<\\(FIX\\(ME\\)?\\|TODO\\|HACK\\|REFACTOR\\|NOCOMMIT\\|WARN\\(ING\\)?\\)"
       1 font-lock-warning-face t)))
+
+  ;; use it only in specific mode.
+  (ac-config-default)
+
   (autoload 'dash-at-point "dash-at-point"
     "Search the word at point with Dash." t nil)
-  (local-set-key (kbd "C-c d") 'dash-at-point)
-  )
+  (local-set-key (kbd "C-c d") 'dash-at-point))
 
 ;; lisp short cut Settings.
 ;; ==================================================================
