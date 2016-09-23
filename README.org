@@ -1,5 +1,5 @@
 # -*- mode: org -*-
-# Last modified: <2016-08-27 10:35:04 Saturday by wongrichard>
+# Last modified: <2016-09-23 17:52:35 Friday by richard>
 #+STARTUP: showall
 #+TITLE:   README
 
@@ -72,21 +72,9 @@ You may need to add this thing by your own.
 - mainly reference the Drew Adams' package.
   package info:
   compile-settings:
-  + compile+
-    * compile-
-      - fit-frame
-      - frame-fns
-    * compile (emacs built-in package)
-    * misc-fns
+  - compile (emacs built-in package)
   + compile-misc(add some addition function)
     * smart-compile
-
-** molo-settings.
-- contains org-mode settings
-- latex-mode settings.
-  + auctex settings.
-- markdown-mode settings.
-
 
 * TODO list:
 1. Try helm and
