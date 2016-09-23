@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-09-23 00:26:00 Friday by richard>
+;; Last modified: <2016-09-23 17:45:00 Friday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -130,6 +130,8 @@ With a prefix argument, highlight for that many seconds.
    projectile-project-vcs
    projectile-project-root
    projectile-project-name)
+  :bind (("<f1>" . smart-find-file)
+         ("<f2>" . smart-grep))
   :config   ; execute code after a package is loaded
   (defun smart-find-file ()
     (interactive)
@@ -157,13 +159,10 @@ With a prefix argument, highlight for that many seconds.
     (if (eq (projectile-project-vcs) 'git)
         (call-interactively 'feeling-lucky-grep)
       (call-interactively 'projectile-grep)))
-  :bind (("<f1>" . smart-find-file)
-         ("<f2>" . smart-grep)))
+  (use-package dired
+    :bind (:map dired-mode-map
+                ("<f1>" . smart-find-file))))
 
-(use-package projectile
-  :after (dired)
-  :bind (:map dired-mode-map
-              ("<f1>" . smart-find-file)))
 
 (use-package projectile
   :after
