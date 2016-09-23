@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-09-22 23:04:18 Thursday by richard>
+;; Last modified: <2016-09-23 16:37:45 Friday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -70,6 +70,7 @@
               ("C-c p ." . nosetests-pdb-one)))
 
 (use-package quickrun
+  :defer t
   :config                               ; after load package
   (quickrun-add-command "python"
                         '((:command . "ss && python3")

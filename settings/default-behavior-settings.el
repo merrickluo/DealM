@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-09-23 11:59:17 Friday by richard>
+;; Last modified: <2016-09-23 16:54:46 Friday by richard>
 
 ;; Copyright (C) 2012-2013 Richard Wong
 
@@ -22,10 +22,12 @@
       ;; My Gmail address, Welcome letter
       user-mail-address         "chao787@gmail.com")
 
-(setq-default default-directory "~")
+(setq-default default-directory "~"
+              indicate-buffer-boundaries 'left)
 
-;; 在fringe上显示一个小箭头指示当前buffer的边界
-(setq-default indicate-buffer-boundaries 'left)
+(setq line-move-visual nil
+      visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
+
 
 (when (eq system-type 'darwin)
   (setq mac-command-modifier 'meta))
@@ -35,14 +37,12 @@
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (if (fboundp 'blink-cursor-mode) (blink-cursor-mode -1))
 
-;; 尽快显示按键序列
-(setq echo-keystrokes 0.1)
+;; speed up keystroke
+(setq echo-keystrokes 0.1
+      font-lock-maximum-decoration t
+      system-time-locale "C")
 
-;; Font lock...
 (global-font-lock-mode t)
-(setq font-lock-maximum-decoration t)
-
-(setq system-time-locale "C")
 
 ;; disable scroll bar
 (customize-set-variable 'scroll-bar-mode nil)
@@ -106,53 +106,46 @@
 
 ;; 防止页面滚动时跳动,scroll-margin 3可以在靠近屏幕边沿3行时就开始滚动,可以很好的看到上下文
 (setq scroll-margin 3
-      scroll-conservatively 10000)
-
-;; 没有提示音,也不闪屏
-(setq ring-bell-function 'ignore)
-
-;; 可以递归的使用minibuffer
-;; (setq enable-recursive-minibuffers t)
+      scroll-conservatively 10000
+      ;; enable-recursive-minibuffers t
+      ring-bell-function 'ignore
+      ;; Automatically add newlines in last of file. (Enhancing C-n)
+      next-line-add-newlines t
+      require-final-newline t)
 
 ;; 当你在shell、telnet、w3m等模式下时，必然碰到过要输入密码的情况,此时加密显出你的密码
 (add-hook 'comint-output-filter-functions 'comint-watch-for-password-prompt)
 
-;; Automatically add newlines in last of file. (Enhancing C-n)
-(setq next-line-add-newlines t)
-
 ;; 可以保存你上次光标所在的位置
-;; (require 'saveplace)
-(setq-default save-place t)
+(save-place-mode t)
 
 ;; 光标靠近鼠标指针时，让鼠标指针自动让开，别挡住视线。
 (mouse-avoidance-mode 'animate)
 
-;; 不保存连续的重复的kill
-(setq kill-do-not-save-duplicates t)
-;; 用一个很大的kill ring. 这样防止我不小心删掉重要的东西
-(setq kill-ring-max 200)
-;; 先格式化再补全
-(setq tab-always-indent 'complete)
+;; kill ring settings
+(setq kill-do-not-save-duplicates t
+      kill-ring-max 200
+      ;; format then auto complete
+      tab-always-indent 'complete)
 
 
 ;; 缩进设置
 ;; 不用TAB字符来indent
 ;; TAB 宽度设置为4
 (setq-default indent-tabs-mode nil)
-(setq tab-width 4)
-(setq tab-stop-list nil)
+(setq tab-width 4
+      tab-stop-list nil)
+
 (loop for x downfrom 40 to 1 do
       (setq tab-stop-list (cons (* x tab-width) tab-stop-list)))
-;; Automatically add a line in the end of file
-(setq require-final-newline t)
 
 ;; More generic highlight settings.
 (require 'generic-x)
 ;; time-stamp settings. Change modified style
 (add-hook 'write-file-hooks 'time-stamp)
-(setq time-stamp-start "Last modified:[ \t]+\\\\?[\"<]+")
-(setq time-stamp-format "%04y-%02m-%02d %02H:%02M:%02S %:a by %u")
-(setq time-stamp-end "\\\\?[\">]")
+(setq time-stamp-start "Last modified:[ \t]+\\\\?[\"<]+"
+      time-stamp-format "%04y-%02m-%02d %02H:%02M:%02S %:a by %u"
+      time-stamp-end "\\\\?[\">]")
 
 ;; set basic cua-mode.
 (setq cua-remap-control-z nil
@@ -165,21 +158,23 @@
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
+
 (setq buffer-file-coding-system 'utf-8)
 
-;; log mode to replace fundamentals
-(autoload 'log4j-mode "log4j-mode" "" t )
-(autoload 'log4j-mode-hook "log4j-mode" "" t )
-
-(autoload 'itail-mode "itail" "" t)
-(add-hook 'log4j-mode-hook (lambda () (itail-mode)))
-
-;; settings for log4j-mode
-;; (setq log4j-keyword-fatal "^\\[C.*\\]\\|\\<\\(FATAL\\|CRITICAL\\)\\>"
-;;       log4j-keyword-error "^\\[E.*\\]\\|\\<\\(ERROR\\|SEVERE\\|\\[E.*\\]\\)\\>"
-;;       log4j-keyword-warn  "^\\[W.*\\]\\|\\<\\(WARN\\(?:ING\\)?\\|\\[W.*\\]\\)\\>"
-;;       log4j-keyword-debug "^\\[D.*\\]\\|\\<\\(DEBUG\\|FINE\\(?:R\\|ST\\)?\\|STATUS\\)\\>"
-;;       log4j-keyword-info  "^\\[I.*\\]\\|\\<\\(CONFIG\\|INFO\\)\\>")
+(use-package log4j-mode
+  :defer t
+  :commands
+  (log4j-mode)
+  :init
+  (setq log4j-keyword-fatal "^\\[C.*\\]\\|\\<\\(FATAL\\|CRITICAL\\)\\>"
+        log4j-keyword-error "^\\[E.*\\]\\|\\<\\(ERROR\\|SEVERE\\|\\[E.*\\]\\)\\>"
+        log4j-keyword-warn  "^\\[W.*\\]\\|\\<\\(WARN\\(?:ING\\)?\\|\\[W.*\\]\\)\\>"
+        log4j-keyword-debug "^\\[D.*\\]\\|\\<\\(DEBUG\\|FINE\\(?:R\\|ST\\)?\\|STATUS\\)\\>"
+        log4j-keyword-info  "^\\[I.*\\]\\|\\<\\(CONFIG\\|INFO\\)\\>")
+  :config
+  (autoload 'itail-mode "itail" "" t)
+  (add-hook 'log4j-mode-hook #'(lambda () (itail-mode)))
+  :mode ("\\.[Ll][Oo][Gg]$" . log4j-mode))
 
 (autoload 'xahk-mode "xahk-mode" "" t)
 
@@ -190,7 +185,6 @@
 (autoload 'cython-mode "cython-mode" "" t)
 
 (add-to-list 'load-path (concat plugins-path-r "rust-mode/"))
-
 (autoload 'rust-mode "rust-mode" "" t)
 (autoload 'json-mode "json-mode" "" t)
 (autoload 'php-mode "php-mode" "" t)
@@ -206,7 +200,6 @@
                 ("\\.[Tt][Cc][Cc]$" . c++-mode)
                 ("\\.coffee$" . coffee-mode)
                 ("\\.[Yy][Aa]?[Mm][Ll]$" . yaml-mode)
-                ("\\.[Ll][Oo][Gg]$" . log4j-mode)
                 ("\\.[Cc][Uu][Hh]?$" . cuda-mode)
                 ("\\.sass$" . sass-mode)
                 ("\\.scss$" . scss-mode)
@@ -260,16 +253,13 @@
 ;; markdown-settings
 (use-package markdown-mode
   :mode
-  "\\.markdown\\'"
-  "\\.md\\'"
-  "\\.text\\'")
+  ("\\.markdown\\'" . markdown-mode)
+  ("\\.md\\'" . markdown-mode)
+  ("\\.text\\'" . markdown-mode))
 
 ;; learning from dadams
 (eval-after-load "ring"
   '(progn (require 'ring+)))
-
-(setq line-move-visual nil)
-(setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
 
 (when (string= system-type "darwin")
 ;;; ENV path correction for (Mac os x)
