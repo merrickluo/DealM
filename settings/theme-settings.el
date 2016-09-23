@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2015-09-26 22:20:08 Saturday by wongrichard>
+;; Last modified: <2016-09-23 12:03:12 Friday by richard>
 
 ;; Copyright (C) 2012-2015 Richard Wong
 
@@ -13,7 +13,6 @@
 
 (load-theme default-theme-r t)
 
-(autoload 'hl-line-face "hl-line+")
 (eval-after-load "hl-line"
   '(set-face-background hl-line-face "grey20"))
 ;; hl-line-face
