@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-09-18 11:06:55 Sunday by richard>
+;; Last modified: <2016-09-23 10:36:42 Friday by richard>
 
 ;; Copyright (C) 2013 Richard Wong
 
@@ -22,13 +22,6 @@
 
 (eval-after-load "auto-complete"
   '(add-to-list 'ac-modes 'nrepl-mode))
-
-(use-package
-  flycheck-clojure
-  :defer t
-  :after (flycheck cider)
-  :config
-  (flycheck-clojure-setup))
 
 (use-package
   ac-cider

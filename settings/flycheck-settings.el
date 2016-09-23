@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-08-27 10:27:56 Saturday by wongrichard>
+;; Last modified: <2016-09-23 10:38:16 Friday by richard>
 
 ;; Copyright (C) 2016 Richard Wong
 
@@ -15,8 +15,23 @@
 
 (use-package
   flycheck
-  :init                                 ; before load package
-  (setq flycheck-mode-line-prefix "F"))
+  :defer t
+  :commands (flycheck-mode)
+  :init
+  (setq flycheck-mode-line-prefix "F"
+        flycheck-clang-language-standard "c++14")
+  (dolist (hook '(python-mode-hook
+                  clojure-mode-hook
+                  c++-mode-hook))
+    (add-hook hook #'flycheck-mode)))
+
+(use-package
+  flycheck-clojure
+  :defer t
+  :after (flycheck)
+  :config
+  (flycheck-clojure-setup))
+
 
 (provide 'flycheck-settings)
 ;; flycheck-settings ends here.
