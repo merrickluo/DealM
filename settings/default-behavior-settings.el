@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-09-23 00:16:39 Friday by richard>
+;; Last modified: <2016-09-23 11:59:17 Friday by richard>
 
 ;; Copyright (C) 2012-2013 Richard Wong
 
@@ -50,11 +50,30 @@
 ;;; Unbind the stupid minimize that I always hit.
 (global-unset-key "\C-z")
 
-;; Diable backup
-(setq-default make-backup-files nil
-              auto-save-default nil)
 
-(setq tramp-default-method "ssh")
+(use-package files
+  :init
+  ;; Diable backup
+  (setq-default make-backup-files nil
+                auto-save-default nil))
+
+(use-package tramp-sh
+  :defer t
+  :config
+  (add-to-list 'tramp-remote-process-environment "LC_ALL=zh_CN.utf8" 'append)
+  (add-to-list 'tramp-remote-process-environment "LANG=zh_CN.utf8" 'append))
+
+(use-package tramp
+  :defer t
+  :commands (tramp-mode)
+  :init
+  (setq tramp-default-method "ssh"
+        ido-enable-tramp-completion t
+        ;; workaround for tramp, see: http://goo.gl/DUKMC8
+        tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no"
+        tramp-verbose 4                 ; 1 - 10
+        tramp-persistency-file-name
+        (concat emacs-root-path ".auto-save-list-tramp")))
 
 (add-hook 'text-mode-hook 'text-mode-hook-identify)
 (add-hook 'text-mode-hook 'turn-off-auto-fill)
@@ -244,17 +263,6 @@
   "\\.markdown\\'"
   "\\.md\\'"
   "\\.text\\'")
-
-;; tramp-settings
-(eval-after-load "tramp-sh"
-  '(progn
-     (add-to-list 'tramp-remote-process-environment "LANG=zh_CN.utf8" 'append)
-     (add-to-list 'tramp-remote-process-environment "LC_ALL=zh_CN.utf8" 'append)))
-
-(eval-after-load "tramp"
-  '(setq ido-enable-tramp-completion t
-         tramp-verbose 4                 ; 1 - 10
-         tramp-persistency-file-name (expand-file-name "~/.emacs.d/auto-save-list/tramp")))
 
 ;; learning from dadams
 (eval-after-load "ring"

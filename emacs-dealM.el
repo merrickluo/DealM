@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-09-23 00:18:22 Friday by richard>
+;; Last modified: <2016-09-23 11:58:32 Friday by richard>
 
 ;; Copyright (C) 2012-2015 Richard Wong
 
@@ -10,11 +10,6 @@
 ;; PUBLIC LICENSE: FreeBSD
 
 ;; configure path depend on system.
-
-;; workaround for tramp, see: http://goo.gl/DUKMC8
-(setq tramp-ssh-controlmaster-options
-      "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
-(require 'tramp)
 
 (defconst emacs-root-path
   (file-name-directory (or load-file-name buffer-file-name)) "Emacs root settings path (in linux)")
