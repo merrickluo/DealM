@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-09-21 12:34:08 Wednesday by richard>
+;; Last modified: <2016-09-26 11:56:22 Monday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -13,19 +13,16 @@
 ;; Buffer settings
 ;; ------------------------------------------------------------------
 (use-package recentf
-  :defer t
   :commands (recentf-mode)
   :init     ; before code load
   (setq recentf-exclude '("\\.windows\\'"
                           "/ssh"
+                          "/sudo:"
                           "/tmp/")
+        recentf-save-file (concat emacs-root-path ".recentf")
         recentf-max-saved-items 500
-        recentf-max-menu-items 60))
-
-(use-package recentf
-  :after (projectile dired)
-  :defer t
-  :config   ; execute code after a package is loaded
+        recentf-max-menu-items 60)
+  (recentf-mode 1)
   (defun xsteve-ido-choose-from-recentf ()
     "Use ido to select a recently opened file from the `recentf-list'"
     (interactive)
@@ -36,17 +33,17 @@
                                       (replace-regexp-in-string home "~" path))
                                     recentf-list)
                             nil t))))
-  (defun smart-ido-recentf ()
-    (interactive)
-    (if (projectile-project-p)
-        (call-interactively 'projectile-recentf)
-      (call-interactively 'xsteve-ido-choose-from-recentf)))
-  :bind (("C-M-o" . smart-ido-recentf)))
-
-(use-package recentf
-  :after (projectile dired)
-  :bind (:map isearch-mode-map
-              ("C-M-o" . smart-ido-recentf)))
+  :bind (("C-M-o" . smart-ido-recentf))
+  :config
+  (use-package projectile
+    :config   ; execute code after a package is loaded
+    (defun smart-ido-recentf ()
+      (interactive)
+      (recentf-mode 1)
+      (if (projectile-project-p)
+          (call-interactively 'projectile-recentf)
+        (call-interactively 'xsteve-ido-choose-from-recentf)))
+    (define-key isearch-mode-map (kbd "C-M-o") 'smart-ido-recentf)))
 
 ;; Immediately close the current buffer.
 (use-package menu-bar
