@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-09-23 10:36:42 Friday by richard>
+;; Last modified: <2016-09-28 16:04:31 Wednesday by richard>
 
 ;; Copyright (C) 2013 Richard Wong
 
@@ -31,6 +31,12 @@
 (use-package
   cider-macroexpansion
   :commands (cider-macroexpansion-mode))
+
+(use-package
+  cider-macroexpansion
+  :defer t
+  :commands (cider-macroexpand-1 cider-macroexpand-all))
+
 
 (use-package
   cider
