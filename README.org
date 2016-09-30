@@ -1,5 +1,5 @@
 # -*- mode: org -*-
-# Last modified: <2016-09-23 17:52:35 Friday by richard>
+# Last modified: <2016-09-30 22:04:27 Friday by richard>
 #+STARTUP: showall
 #+TITLE:   README
 
@@ -9,21 +9,19 @@
       default-source-font-r "Source Code Pro-12")
 #+end_src
 
-
 * packages.
-All packages will be put inside a customized folder.(that is to say, I
-won't using elpa.)
+All packages will be put inside a =plugin= folder.
 
 * Install procudure.
-add emacs-dealM.el to your .emacs. that is to say:
-add:
+add emacs-dealM.el to your .emacs.
 
+ex:
 #+begin_src emacs-lisp :tangle yes
 (load-file '/path/to/emacs-dealM.el)
 #+end_src
 
 * Tested Environment
-Mac OS X 10.10 + emacs 24.5.1
+Mac OS X 10.10 + emacs 25.1.1
 
 * Something out of the project.
 You may need to add this thing by your own.
@@ -37,66 +35,27 @@ You may need to add this thing by your own.
      sudo pip3 install --upgrade plugins/emacs-jedi
      #+end_src
 
-3. compile auctex compile settings.
-4. =pip install epc= if you want to use jedi server
-5. If you have met (Error: No word lists can be found for the language "en_US".)
+3. =pip install epc= if you want to use jedi server
+4. If you have met (Error: No word lists can be found for the language "en_US".)
    install flymake lib aspell-en.
    #+begin_src bash :tangle yes
    pacman -S aspell-en
    #+end_src
 
-* Package description
-
-** Python
-- Ropemacs (Custom) : A refactoring library
-  - Auto Completion with rope (Custom) : Tested to work well with Rope
-  - Flymake
-    - latest flymake package
-      It contains pep8, epylint, and pyflake, run them all.
-  - Virtualenv : Original, In-development tool for using virtualenv in
-    emacs.
-  - Custom Yasnippet Snippets
-  - Cython Mode: a mode for highlighting cython files
-  - latest python.el (fgallina/python.el)
-  - nosetests integration (nose.el)
-  - It use nose tests to test buffer.
+* Speacial System Support
 
 ** typescript
 =npm install -g clausreinke/typescript-tools=
 
-** HTML
+** config HTML stuff
 - If you want Flymake run, you need install tidy in your system's path.(HTML tool)
 - If you use HTML5 to write pages, you can download html tidy from [[https://github.com/w3c/tidy-html5/][github]].
 
-** Compile-settings
-- mainly reference the Drew Adams' package.
-  package info:
-  compile-settings:
-  - compile (emacs built-in package)
-  + compile-misc(add some addition function)
-    * smart-compile
-
 * TODO list:
-1. Try helm and
-   integrated to emacs if possible.
-2. Add grep+ plugin with emacs.
-3. try [[https://github.com/proofit404/anaconda-mode][anaconda-mode]] for python.
-4. try [[http://tuhdo.github.io/c-ide.html][c-ide]] for C.
-5. Add I am feeling lucky feature to git grep
+1. try [[https://github.com/proofit404/anaconda-mode][anaconda-mode]] for python.
+2. try [[http://tuhdo.github.io/c-ide.html][c-ide]] for C.
 
-* Known bugs:
-** desktop and pymacs starting bug.
-temp solve method:
-1. kill Pymacs buffer and restart emacs.
-   2. disable desktop.
-
-** Autocomplete in elisp bug.
-autocomplete will stuck emacs when using auto-complete in elisp
-especially when starts a new string.
-temp solve method:
-stop autocomplete auto-complete when editing elisp.
 
 * about this project
-This project is about emacs settings *ONLY* for emacs 24.4
-This file is another repo for compatible with emacs 24.4
-This project is a emacs 24.4 transport version for We Master Changes.
+This project is about emacs settings *ONLY* for emacs 25.1
+I majorly use this settings in mac OS X/Linux, but the setting should not break windows version emacs.
