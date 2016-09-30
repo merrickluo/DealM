@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-09-23 17:45:00 Friday by richard>
+;; Last modified: <2016-09-30 21:52:58 Friday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -144,16 +144,15 @@ With a prefix argument, highlight for that many seconds.
                         (shell-quote-argument (grep-tag-default)))))
     (require 'magit)
     (with-current-buffer (generate-new-buffer "*Magit Grep*")
-      (let ((default-directory (projectile-project-root)))
-        (insert magit-git-executable " "
-                (mapconcat 'identity magit-git-standard-options " ")
-                " grep -n "
-                (shell-quote-argument pattern) "\n\n")
-        (magit-git-insert "grep" "--line-number" "--color" pattern)
-        (ansi-color-apply-on-region (point-min) (point-max))
-        ;; probably need to change the order of these two.
-        (grep-mode)
-        (pop-to-buffer (current-buffer)))))
+      (setq default-directory (projectile-project-root))
+      (insert magit-git-executable " "
+              (mapconcat 'identity magit-git-standard-options " ")
+              " grep -n "
+              (shell-quote-argument pattern) "\n\n")
+      (magit-git-insert "grep" "--line-number" "--color" pattern)
+      (ansi-color-apply-on-region (point-min) (point-max))
+      (pop-to-buffer (current-buffer))
+      (grep-mode)))
   (defun smart-grep ()
     (interactive)
     (if (eq (projectile-project-vcs) 'git)
