@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-09-30 10:48:50 Friday by ahxxm>
+;; Last modified: <2016-09-30 21:11:13 Friday by richard>
 
 ;; Copyright (C) 2016 Richard Wong
 
@@ -20,13 +20,15 @@
   :init
   (setq flycheck-mode-line-prefix "F"
         flycheck-clang-language-standard "c++14")
+  (when (memq system-type '(darwin gnu gnu/linux gnu/kfreebsd))
+    (add-hook 'c++-mode-hook
+              #'(lambda ()
+                  (setq flycheck-clang-include-path
+                        (list (expand-file-name "/usr/local/include"))))))
   (dolist (hook '(python-mode-hook
                   clojure-mode-hook
                   c++-mode-hook))
     (add-hook hook #'flycheck-mode))
-  (add-hook 'c++-mode-hook
-            (lambda () (setq flycheck-clang-include-path
-                             (list (expand-file-name "/usr/local/include")))))
   )
 
 (use-package
