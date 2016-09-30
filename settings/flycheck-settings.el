@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-09-23 10:38:16 Friday by richard>
+;; Last modified: <2016-09-30 10:48:50 Friday by ahxxm>
 
 ;; Copyright (C) 2016 Richard Wong
 
@@ -23,7 +23,11 @@
   (dolist (hook '(python-mode-hook
                   clojure-mode-hook
                   c++-mode-hook))
-    (add-hook hook #'flycheck-mode)))
+    (add-hook hook #'flycheck-mode))
+  (add-hook 'c++-mode-hook
+            (lambda () (setq flycheck-clang-include-path
+                             (list (expand-file-name "/usr/local/include")))))
+  )
 
 (use-package
   flycheck-clojure
