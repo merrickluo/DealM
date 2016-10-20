@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-09-23 00:03:59 Friday by richard>
+;; Last modified: <2016-10-08 10:52:26 Saturday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -57,6 +57,7 @@
    "headx"             ;; snippet
    "y[s]?"             ;; yassnippet
    "yy"                ;; bison
+   "clj[xs]?"          ;; clojure
    "[Yy][Aa]?[Mm][Ll]" ;; YAML
    "el"                ;; elisp
    "sh"                ;; shell
