@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-09-28 16:04:31 Wednesday by richard>
+;; Last modified: <2016-10-24 14:53:37 Monday by richard>
 
 ;; Copyright (C) 2013 Richard Wong
 
@@ -53,6 +53,7 @@
         cider-stacktrace-fill-column 80)
   :bind (:map cider-mode-map            ; bind keys in specific map
               ("C-c C-f" . yas-find-snippets)
+              ("C-c M-c" . copy-file-name) ; originally cider-connect
               ("C-c g"   . cider-find-var))
   :config
   (add-hook 'nrepl-mode-hook 'ac-cider-setup)
