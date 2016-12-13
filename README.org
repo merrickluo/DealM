@@ -1,5 +1,5 @@
 # -*- mode: org -*-
-# Last modified: <2016-09-30 22:04:27 Friday by richard>
+# Last modified: <2016-12-13 14:38:05 Tuesday by ahxxm>
 #+STARTUP: showall
 #+TITLE:   README
 
@@ -17,7 +17,7 @@ add emacs-dealM.el to your .emacs.
 
 ex:
 #+begin_src emacs-lisp :tangle yes
-(load-file '/path/to/emacs-dealM.el)
+(load-file '"/path/to/emacs-dealM.el")
 #+end_src
 
 * Tested Environment
