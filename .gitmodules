@@ -79,3 +79,9 @@
 [submodule "plugins/with-editor"]
 	path = plugins/with-editor
 	url = https://github.com/magit/with-editor.git
+[submodule "plugins/go-mode"]
+	path = plugins/go-mode
+	url = https://github.com/dominikh/go-mode.el.git
+[submodule "plugins/go-eldoc"]
+	path = plugins/go-eldoc
+	url = https://github.com/syohex/emacs-go-eldoc.git

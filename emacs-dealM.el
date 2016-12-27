@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-09-23 11:58:32 Friday by richard>
+;; Last modified: <2016-12-27 14:18:36 Tuesday by merrick>
 
 ;; Copyright (C) 2012-2015 Richard Wong
 
@@ -75,6 +75,7 @@
 (require 'python-settings)
 (require 'lisp-settings)
 (require 'org-settings)
+(require 'go-settings)
 
 ;; desktop settings
 ;; (require 'desktop-settings)
