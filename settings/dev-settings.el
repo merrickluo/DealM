@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-12-29 21:41:12 Thursday by richard>
+;; Last modified: <2016-12-27 15:51:48 Tuesday by merrick>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -203,6 +203,14 @@ With a prefix argument, highlight for that many seconds.
                 emacs-lisp-mode-hook))
   (add-hook hook #'rainbow-mode))
 
+;; neotree settings
+;; =================================================================
+(add-to-list 'load-path (concat plugins-path-r "neotree"))
+(autoload 'neotree "neotree" t nil)
+(setq neo-theme 'nerd)
+(global-set-key (kbd "C-x n t") 'neotree-toggle)
+(global-set-key (kbd "C-x n p") 'neotree-projectile-action)
+
 
 
 ;;----------------------------------------------------------
@@ -389,6 +397,8 @@ Major mode for editing JavaScript code.
   (setq js2-basic-offset 2)             ; continuation line indent to 4
   ;; compatible with flyspell.
   (electric-spacing-mode))
+
+
 
 
 
