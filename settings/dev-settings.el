@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-12-27 15:51:48 Tuesday by merrick>
+;; Last modified: <2016-12-27 18:23:40 Tuesday by merrick>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -206,7 +206,7 @@ With a prefix argument, highlight for that many seconds.
 ;; neotree settings
 ;; =================================================================
 (add-to-list 'load-path (concat plugins-path-r "neotree"))
-(autoload 'neotree "neotree" t nil)
+(require 'neotree)
 (setq neo-theme 'nerd)
 (global-set-key (kbd "C-x n t") 'neotree-toggle)
 (global-set-key (kbd "C-x n p") 'neotree-projectile-action)
