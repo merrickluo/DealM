@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-09-30 21:52:58 Friday by richard>
+;; Last modified: <2016-12-27 14:18:15 Tuesday by merrick>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -94,13 +94,6 @@ With a prefix argument, highlight for that many seconds.
 (autoload 'toggle-highlight-hard-spaces "show-wspace" "" t)
 (autoload 'toggle-highlight-other-chars "show-wspace" "" t)
 (autoload 'toggle-highlight-trailing-whitespace "show-wspace" "" t)
-
-
-;; Go-mode settings. (go programming language)
-;; ------------------------------------------------------------------
-(use-package go-mode
-  :commands (gofmt gofmt-before-save)
-  :mode "\\.go\\'")
 
 
 ;; git (magit) settings here

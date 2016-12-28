@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-09-30 21:11:13 Friday by richard>
+;; Last modified: <2016-12-27 15:09:54 Tuesday by merrick>
 
 ;; Copyright (C) 2016 Richard Wong
 
@@ -27,7 +27,8 @@
                         (list (expand-file-name "/usr/local/include"))))))
   (dolist (hook '(python-mode-hook
                   clojure-mode-hook
-                  c++-mode-hook))
+                  c++-mode-hook
+                  go-mode-hook))
     (add-hook hook #'flycheck-mode))
   )
 
