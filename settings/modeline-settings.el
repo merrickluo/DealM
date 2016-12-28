@@ -8,6 +8,8 @@
 
 ;; Version: 0.2
 ;; PUBLIC LICENSE: GPLv3
+(add-to-list 'load-path (concat plugins-path-r "smart-mode-line"))
+(add-to-list 'load-path (concat plugins-path-r "rich-minority"))
 
 (autoload 'sml/setup "smart-mode-line" "\
 Setup the mode-line, or revert it.
