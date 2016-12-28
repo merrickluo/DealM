@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-12-27 18:17:51 Tuesday by merrick>
+;; Last modified: <2016-12-28 16:41:54 Wednesday by merrick>
 
 ;; Copyright (C) 2016 Richard Wong
 
@@ -29,5 +29,5 @@
   (add-hook 'go-mode-hook 'yas-minor-mode))
 
 (provide 'go-settings)
-;; [yas] elisp error: Symbol’s value as variable is void: el-provide-name ends here.
+;; go-settings ends here.
 ;;;
