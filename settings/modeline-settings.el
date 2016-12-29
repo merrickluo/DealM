@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2012-11-29 11:12:26 Thursday by richard>
+;; Last modified: <2016-12-29 09:53:53 Thursday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -41,9 +41,10 @@ Otherwise, setup the mode-line.
                               " Abbrev" " Rbow" " _\\\+_" " Rope")
            sml/shorten-modes nil
            sml/mode-width 16
-           sml/name-width 30)
+           sml/name-width 30)))
 
-     ))
+(setq sml/theme 'dark
+      sml/no-confirm-load-theme t)
 
 (sml/setup)
 
