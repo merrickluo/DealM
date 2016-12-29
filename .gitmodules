@@ -85,3 +85,9 @@
 [submodule "plugins/go-eldoc"]
 	path = plugins/go-eldoc
 	url = https://github.com/syohex/emacs-go-eldoc.git
+[submodule "plugins/rich-minority"]
+	path = plugins/rich-minority
+	url = https://github.com/Malabarba/rich-minority.git
+[submodule "plugins/smart-mode-line"]
+	path = plugins/smart-mode-line
+	url = https://github.com/Malabarba/smart-mode-line.git
