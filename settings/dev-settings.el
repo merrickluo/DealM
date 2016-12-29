@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-12-27 14:18:15 Tuesday by merrick>
+;; Last modified: <2016-12-29 21:41:12 Thursday by richard>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -131,10 +131,12 @@ With a prefix argument, highlight for that many seconds.
     (if (projectile-project-p)
         (call-interactively 'projectile-find-file)
       (call-interactively 'ido-find-file)))
+
   (defun feeling-lucky-grep (pattern)
     (interactive
-     (list (read-string "git grep: "
-                        (shell-quote-argument (grep-tag-default)))))
+     (list (read-string
+            "git grep: "
+            (substring-no-properties (or (thing-at-point 'symbol) "")))))
     (require 'magit)
     (with-current-buffer (generate-new-buffer "*Magit Grep*")
       (setq default-directory (projectile-project-root))
