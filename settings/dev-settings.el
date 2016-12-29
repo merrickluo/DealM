@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-12-27 18:23:40 Tuesday by merrick>
+;; Last modified: <2016-12-29 18:34:17 Thursday by merrick>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -203,13 +203,15 @@ With a prefix argument, highlight for that many seconds.
                 emacs-lisp-mode-hook))
   (add-hook hook #'rainbow-mode))
 
-;; neotree settings
-;; =================================================================
+;; neotree
+;; ------------------------------------------------------------------
 (add-to-list 'load-path (concat plugins-path-r "neotree"))
-(require 'neotree)
-(setq neo-theme 'nerd)
-(global-set-key (kbd "C-x n t") 'neotree-toggle)
-(global-set-key (kbd "C-x n p") 'neotree-projectile-action)
+(use-package neotree
+  :commands (neotree-toggle neotree-projectile-action)
+  :bind (("C-x n t" . neotree-toggle)
+         ("C-x n p" . neotree-projectile-action))
+  :config
+  (setq neo-theme 'nerd))
 
 
 
