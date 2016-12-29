@@ -9,7 +9,7 @@
 	url = https://github.com/joaotavora/yasnippet.git
 [submodule "snippets"]
 	path = snippets
-	url = https://github.com/chao787/RSnippet.git
+	url = git@github.com:merrickluo/RSnippet.git
 [submodule "plugins/auto-complete"]
 	path = plugins/auto-complete
 	url = https://github.com/auto-complete/auto-complete.git
