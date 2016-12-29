@@ -100,3 +100,6 @@
 [submodule "plugins/smart-mode-line"]
 	path = plugins/smart-mode-line
 	url = https://github.com/Malabarba/smart-mode-line.git
+[submodule "plugins/apib-mode"]
+	path = plugins/apib-mode
+	url = https://github.com/w-vi/apib-mode.git

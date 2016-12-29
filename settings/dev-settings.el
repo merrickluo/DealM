@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-12-29 18:34:17 Thursday by merrick>
+;; Last modified: <2016-12-29 18:41:40 Thursday by merrick>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -212,6 +212,12 @@ With a prefix argument, highlight for that many seconds.
          ("C-x n p" . neotree-projectile-action))
   :config
   (setq neo-theme 'nerd))
+
+;; apib settings
+;; ------------------------------------------------------------------
+(add-to-list 'load-path (concat plugins-path-r "apib-mode"))
+(use-package apib-mode
+  :mode "\\.apib\\'")
 
 
 
