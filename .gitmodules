@@ -103,3 +103,9 @@
 [submodule "plugins/apib-mode"]
 	path = plugins/apib-mode
 	url = https://github.com/w-vi/apib-mode.git
+[submodule "plugins/vue-mode"]
+	path = plugins/vue-mode
+	url = https://github.com/CodeFalling/vue-mode.git
+[submodule "plugins/mmm-mode"]
+	path = plugins/mmm-mode
+	url = https://github.com/purcell/mmm-mode.git

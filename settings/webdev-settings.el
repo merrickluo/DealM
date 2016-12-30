@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2015-02-04 16:35:36 Wednesday by wongrichard>
+;; Last modified: <2016-12-30 10:24:23 Friday by merrick>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -66,6 +66,12 @@ Special commands:
         (widen))
     (end-of-line)))
 
+;; vue-mode
+(add-to-list 'load-path (concat plugins-path-r "vue-mode/"))
+(add-to-list 'load-path (concat plugins-path-r "mmm-mode/"))
+(use-package vue-mode
+  :mode "\\.vue\\'")
+
 
 ;; fold do what I mean
 (autoload 'fold-dwim-toggle "fold-dwim" "" t)
@@ -78,6 +84,8 @@ Special commands:
             (define-key sgml-mode-map (kbd "C-c c")  'fold-dwim-toggle)
             (define-key sgml-mode-map "\C-e"         'html-end-of-line)
             (define-key sgml-mode-map (kbd "C-c c")  'folding-toggle-show-hide)))
+
+
 
 
 (provide 'webdev-settings)
