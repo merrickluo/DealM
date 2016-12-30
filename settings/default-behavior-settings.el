@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-09-23 16:54:46 Friday by richard>
+;; Last modified: <2016-12-30 14:22:22 Friday by merrick>
 
 ;; Copyright (C) 2012-2013 Richard Wong
 
@@ -276,6 +276,11 @@
   (setenv "LC_ALL" "en_US.UTF-8")
   (setenv "LC_CTYPE" "en_US.UTF-8"))
 
+(when (memq window-system '(mac ns))
+  (use-package exec-path-from-shell
+    :config
+    (exec-path-from-shell-initialize)
+    (exec-path-from-shell-copy-env "GOPATH")))
 
 (provide 'default-behavior-settings)
 ;; default-behavior-settings ends here.
