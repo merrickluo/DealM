@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-12-29 18:41:40 Thursday by merrick>
+;; Last modified: <2017-01-03 10:30:01 Tuesday by merrick>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -101,9 +101,13 @@ With a prefix argument, highlight for that many seconds.
 (add-to-list 'load-path (concat plugins-path-r "magit/lisp"))
 (add-to-list 'load-path (concat plugins-path-r "with-editor"))
 (add-to-list 'load-path (concat plugins-path-r "git-modes"))
+(add-to-list 'load-path (concat plugins-path-r "git-timemachine"))
 
 (use-package magit
   :bind (("C-x v z" . magit-status)))
+
+(use-package git-timemachine
+  :bind (("C-x v t" . git-timemachine)))
 
 (use-package magit
   :after (dired)

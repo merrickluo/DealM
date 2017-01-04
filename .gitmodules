@@ -109,3 +109,6 @@
 [submodule "plugins/mmm-mode"]
 	path = plugins/mmm-mode
 	url = https://github.com/purcell/mmm-mode.git
+[submodule "plugins/git-timemachine"]
+	path = plugins/git-timemachine
+	url = https://github.com/pidu/git-timemachine.git
