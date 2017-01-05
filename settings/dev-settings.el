@@ -207,16 +207,6 @@ With a prefix argument, highlight for that many seconds.
                 emacs-lisp-mode-hook))
   (add-hook hook #'rainbow-mode))
 
-;; neotree
-;; ------------------------------------------------------------------
-(add-to-list 'load-path (concat plugins-path-r "neotree"))
-(use-package neotree
-  :commands (neotree-toggle neotree-projectile-action)
-  :bind (("C-x n t" . neotree-toggle)
-         ("C-x n p" . neotree-projectile-action))
-  :config
-  (setq neo-theme 'nerd))
-
 ;; apib settings
 ;; ------------------------------------------------------------------
 (add-to-list 'load-path (concat plugins-path-r "apib-mode"))

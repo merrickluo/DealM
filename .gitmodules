@@ -91,9 +91,6 @@
 [submodule "plugins/smart-mode-line"]
 	path = plugins/smart-mode-line
 	url = https://github.com/Malabarba/smart-mode-line.git
-[submodule "plugins/neotree"]
-	path = plugins/neotree
-	url = https://github.com/jaypei/emacs-neotree.git
 [submodule "plugins/rich-minority"]
 	path = plugins/rich-minority
 	url = https://github.com/Malabarba/rich-minority.git
