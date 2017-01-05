@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-12-29 17:49:24 Thursday by merrick>
+;; Last modified: <2017-01-05 17:31:37 Thursday by merrick>
 
 ;; Copyright (C) 2016 Richard Wong
 
@@ -17,23 +17,23 @@
   (local-set-key (kbd "M-*") 'pop-tag-mark))
 
 (use-package go-mode
+  :defer t
   :after (go-eldoc go-autocomplete)
   :commands (gofmt gofmt-before-save)
   :mode "\\.go\\'"
   :init
+  (use-package go-eldoc)
+  (use-package go-autocomplete)
+  :config
+  (add-hook 'go-mode-hook 'go-eldoc-setup)
   (add-hook 'go-mode-hook 'go-set-shortcut)
+  (add-hook 'go-mode-hook 'auto-complete-mode)
+  (add-hook 'go-mode-hook 'linum-mode)
+  (add-hook 'go-mode-hook 'yas-minor-mode)
   (add-hook 'before-save-hook 'gofmt-before-save))
 
-(use-package go-eldoc
-  :init
-  (add-hook 'go-mode-hook 'go-eldoc-setup))
-
-(use-package go-autocomplete
-  :init
-  (add-hook 'go-mode-hook 'auto-complete-mode)
-  (add-hook 'go-mode-hook 'yas-minor-mode))
-
 (use-package protobuf-mode
+  :defer t
   :mode "\\.proto\\'")
 
 (provide 'go-settings)

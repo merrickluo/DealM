@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-12-30 10:24:23 Friday by merrick>
+;; Last modified: <2017-01-05 17:23:00 Thursday by merrick>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -70,6 +70,7 @@ Special commands:
 (add-to-list 'load-path (concat plugins-path-r "vue-mode/"))
 (add-to-list 'load-path (concat plugins-path-r "mmm-mode/"))
 (use-package vue-mode
+  :defer t
   :mode "\\.vue\\'")
 
 
