@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2017-01-03 10:30:01 Tuesday by merrick>
+;; Last modified: <2017-01-05 17:46:00 Thursday by merrick>
 
 ;; Copyright (C) 2012 Richard Wong
 
@@ -207,10 +207,11 @@ With a prefix argument, highlight for that many seconds.
                 emacs-lisp-mode-hook))
   (add-hook hook #'rainbow-mode))
 
-;; apib settings
+;; apib-mode
 ;; ------------------------------------------------------------------
 (add-to-list 'load-path (concat plugins-path-r "apib-mode"))
 (use-package apib-mode
+  :defer t
   :mode "\\.apib\\'")
 
 
