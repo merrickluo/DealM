@@ -1,5 +1,5 @@
 ;; -*- Emacs-Lisp -*-
-;; Last modified: <2016-12-27 14:18:36 Tuesday by merrick>
+;; Last modified: <2017-01-05 14:52:32 Thursday by merrick>
 
 ;; Copyright (C) 2012-2015 Richard Wong
 
@@ -78,7 +78,8 @@
 (require 'go-settings)
 
 ;; desktop settings
-;; (require 'desktop-settings)
+;;(require 'desktop-settings)
+(require 'chinese-settings)
 
 
 ;; registers.
